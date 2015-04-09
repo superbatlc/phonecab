@@ -1,0 +1,36 @@
+ <!-- whitelist modal -->
+ <div id="wh-modal" style="padding:15px;">
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="whitelist-label-div">
+        <label style="text-align: right; width: 100px;margin-right:2px;">Etichetta:</label>
+           <input type="text" class="input-medium prependedInput" placeholder="etichetta" name="etichetta" id="whitelist-label" value="{{ wl.label }}" {% if True %}disabled{% endif %}>
+    </div>
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="whitelist-phonenumber-div">
+        <label style="text-align: right; width: 100px;margin-right:2px;">Numero:</label>
+           <input type="text" class="input-medium prependedInput" placeholder="numero" name="phonenumber" id="whitelist-phonenumber" value="{{ wl.phonenumber }}">
+           <label class="muted whitelist-prefix-zone"></label>
+    </div>
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="whitelist-duration-div">
+        <label style="text-align: right; width: 100px;margin-right:2px;">Soglia:</label>
+           <input type="text" class="input-mini prependedInput" placeholder="soglia" name="duration" id="whitelist-duration" value="{{ wl.duration }}"> 
+           <label class="muted">minuti</label>
+    </div>
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="whitelist-duration-div">
+        <label style="text-align: right; width: 100px;margin-right:2px;">Tiplogia:</label>
+           <select id="whitelist-frequency">
+            <option value="0" {% if wl.frequency == 0 %}selected{% endif %}>Primo ingresso</option>
+            <option value="1" {% if wl.frequency == 1 %}selected{% endif %}>Avvocato</option>
+            {% if wl.phoneuser.four_bis_limited == 0 %}
+                <option value="2" {% if wl.frequency == 2 %}selected{% endif %}>Ordinaria</option>
+            {% else %}
+                <option value="3" {% if wl.frequency == 3 %}selected{% endif %}>Ordinaria 4bis limitato</option>
+            {% endif %}
+           </select>
+    </div>
+    <div class="form-inline control-group hide" style="margin-bottom:10px;" id="whitelist-real-mobile-div">
+    <label style="text-align: right; width: 100px;margin-right:6px;">Cellulare:</label>
+      <input type="checkbox" id="whitelist-real-mobile" name="real_mobile" value="1" {% if wl.real_mobile %}checked{% endif %}> 
+    </div>
+     <br>
+    <input type="hidden" name="phoneuser_id" id="whitelist-phoneuser-id" value="{{ phoneuser_id }}">
+    <input type="hidden" name="whitelist_id" id="whitelist-id" value="{{ wl.id }}">
+ </div>

@@ -1,0 +1,18 @@
+.accordion-inner {
+    border-top: 0;
+    padding: 9px 5px;
+}
+
+.table th.acentro, .table td.acentro{
+    text-align:center;
+}
+
+.table th.adestra, .table td.adestra{
+    text-align:right;
+}
+.input-small {
+    width: 93px;
+}
+button.filtra, a.filtra { margin: 0 0 10px 6px;}
+
+.cdr-valid > .icon-ok.icon-black, .cdr-valid > .icon-remove.icon-black { cursor: pointer;}

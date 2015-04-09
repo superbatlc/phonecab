@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% load phonecabtags %}
+    {% block title %}PhoneCab - Anagrafica{% endblock %}
+    {% block application %}
+    <div class="colmain">
+        <div id="anagrafica">
+            <h2>Scheda Anagrafica
+            </h2>
+            <div class="main" style="width:75%;">
+               <div class="form-inline" style="margin-bottom:20px;">
+                   <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }} 
+                   {% if phoneuser.four_bis_limited %}(4bis limitato){% endif %}
+                   <span style="float: right;">
+                   {% if phoneuser.listening_enabled %}
+                    <span class="label label-success">
+                       <i class="icon-white icon-headphones"></i> Ascolto
+                    </span>
+                    {% else %}
+                    <span class="label label-important">
+                       <i class="icon-white icon-headphones"></i> Ascolto
+                    </span>
+                    {% endif %}
+                    {% if phoneuser.recording_enabled %}
+                    <span class="label label-success">
+                       <i class="icon-white icon-headphones"></i> Registrazione
+                    </span>
+                    {% else %}
+                    <span class="label label-important">
+                       <i class="icon-white icon-headphones"></i> Registrazione
+                    </span>
+                    {% endif %}
+                    </span>
+                </h3>
+               </div>
+                <div class="form-inline" style="float:right;margin: 10px 0 0;">
+                    <label style="text-align:right;margin-right:2px; font-size:130%;color:#666;">Matricola:</label>
+                    <span style="font-size:130%;">{{ phoneuser.serial_no }}</span>
+                    <br/>
+                    <label style="text-align:right;margin-right:2px; font-size:130%;color:#666;">Lingua:</label>
+                    <span style="font-size:130%;">{{ phoneuser.get_language_display }}</span>
+                </div>
+                <div class="form-inline pin" style="margin-bottom:10px;">
+                   <label style="font-size:160%;margin-right:2px;">Codice:</label>
+                    <span class="phoneuser-pincode" style="font-size:160%;">{{ phoneuser.pincode }}</span>
+                </div>
+                {% if phoneuser.enabled %}
+                <button class="btn btn-success enable-ana" data-action="0" style="margin-right: 20px;">
+                   <i class="icon-white icon-ok"></i> SCHEDA ATTIVA{% if phoneuser.vipaccount %} (SENZA RESTRIZIONI){% endif %}
+                </button>
+                {% else %}
+                <button class="btn btn-danger enable-ana" data-action="1" style="margin-right: 20px;">
+                   <i class="icon-white icon-remove"></i> SCHEDA DISATTIVA
+                </button>
+                {% endif %}
+                
+                {% if priv_anagrafica > 1 %}
+                <br /><br />
+                <div style="text-align:right;">
+                    <a href="#myModal" class="btn btn-warning edit-ana" tabindex="-1" data-toggle="modal" data-dynamic="true">Modifica</a>
+                    <a href="#" class="btn btn-primary archive-ana" tabindex="-1">Archivia</a>
+                </div>
+                {% endif %}
+                         
+            </div>
+        </div>
+
+        {% if priv_whitelist > 0 %}
+        <hr>
+        <div id="whitelist">
+           <h2>Numeri Autorizzati</h2>
+           <div class="main" style="width:75%;">
+            <table cellspacing="0" cellpadding="4" border="0" class="table table-striped">
+                <tr>
+                <th style="width:40px;">Stato</th>
+                 <th style="width:auto;">Etichetta</th>
+                 <th style="width:50px;text-align:center;">Numero</th>
+                 <th style="width:30px; text-align:center;">Cellulare</th>
+                 <!--<th style="width:100px; text-align:center;">Soglia</th>-->
+                 <th style="width:120px; text-align:center;">Tipologia</th>
+                 <th style="width:30px; text-align:center;">Straordinaria</th>
+                 <th style="width:120px; text-align:center;" class="print-azioni">Azioni</th>
+                 </tr>
+     {% for wl in whitelists %}
+     <tr>
+     <td style="text-align:center;">
+        {% if wl.enabled %}
+            <a href="#" tabindex="-1" class="btn btn-mini btn-success enable-whitelist" title="Premi per disabilitare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="icon-ok icon-white"></i></a>
+        {% else %}
+            <a href="#" tabindex="-1" class="btn btn-mini btn-danger enable-whitelist" title="Premi per abilitare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="icon-remove icon-white"></i></a>
+        {% endif %}
+     </td>
+     <td>{{ wl.label }}</td>
+     <td style="text-align:center;">{{ wl.phonenumber }}</td>
+     <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No"  }}</td>
+     <!--<td style="text-align:center;">{{ wl.duration|format_time }}</td>-->
+     <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
+     <td style="text-align:center;">
+        {% if wl.extraordinary %}
+            <a href="#" tabindex="-1" class="btn btn-mini btn-success extra-whitelist" title="Premi per rendere ordinaria" data-id="{{ wl.id }}"><i class="icon-ok icon-white"></i></a>
+        {% else %}
+            <a href="#" tabindex="-1" class="btn btn-mini btn-danger extra-whitelist" title="Premi per rendere straordinaria" data-id="{{ wl.id }}"><i class="icon-remove icon-white"></i></a>
+        {% endif %}
+     </td>
+     <td style="text-align:center;" class="print-azioni">
+	 {% if priv_whitelist > 1 %}
+         <a href="#myModal" tabindex="-1" data-toggle="modal" data-dynamic="true" class="btn btn-mini btn-info show-whitelist-modal" title="Premi per modificar l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="icon-pencil icon-white"></i></a>
+         <a href="#" tabindex="-1" class="btn btn-mini btn-warning remove-whitelist" title="Premi per eliminare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="icon-minus icon-white"></i></a>
+     {% endif %}
+	 </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% if priv_whitelist > 1 %}
+             <br>
+             <a href="#myModal" tabindex="-1" data-toggle="modal" class="btn btn-info show-whitelist-modal" data-dynamic="true" data-id="">Nuova autorizzazione</a>
+            {% endif %}
+            </div>
+         </div>
+         {% endif %}
+                 
+                 
+        {% if priv_credit > 0 %}
+            <hr>
+            <div id="ricariche">{{ credits }}</div>
+        {% endif %}
+        </div>
+        <input type="hidden" id="phoneuser-id" value="{{ phoneuser.id }}">
+    </div>
+     {% endblock application %}   
+     {% block script %}
+     <script src="{% static "js/anagrafica.js" %}" type="text/javascript" charset="utf-8"></script>
+     {% endblock script %}    

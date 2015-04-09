@@ -1,0 +1,42 @@
+<div id="ana-modal" style="padding:5px;">
+    <label style="text-align: right; width: 120px;margin-right:6px;">Scheda Attiva:</label>
+      <input type="checkbox" id="ana-enabled" name="enabled" value="1" {% if phoneuser.enabled %}checked{% endif %}> 
+     <br>
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="ana-first-name-div">
+        <label style="text-align: right; width: 120px;margin-right:2px;">Nome:</label>
+           <input type="text" class="input-medium prependedInput" placeholder="nome" id="ana-first-name" name="first_name" style="width: 200px;" value="{{ phoneuser.first_name }}">
+    </div>
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="ana-last-name-div">
+        <label style="text-align: right; width: 120px;margin-right:2px;">Cognome:</label>
+           <input type="text" class="input-medium prependedInput" placeholder="cognome" id="ana-last-name" name="last_name" style="width: 200px;" value="{{ phoneuser.last_name }}">
+     </div>
+     <div class="form-inline control-group" style="margin-bottom:10px;" id="ana-serial-no-div">
+        <label style="text-align: right; width: 120px;margin-right:2px;">Matricola:</label>
+           <input type="text" class="input-medium prependedInput" placeholder="matricola" id="ana-serial-no" name="serial_no" maxlength="16" style="width: 145px;" value="{{ phoneuser.serial_no }}">
+     </div>
+     <div class="form-inline control-group" style="margin-bottom:10px;" id="ana-pincode-div">
+        <label style="text-align: right; width: 120px;margin-right:2px;">Codice:</label>
+           <input type="text" class="input-medium prependedInput" placeholder="Codice" id="ana-pincode" name="ana_pincode" value="{{ phoneuser.pincode }}" maxlength="8" style="width: 65px;">
+           <span class="pincode-check hide" style="margin-left:4px; color: red;">Gi&agrave; in uso</span>
+     </div>
+     <div class="form-inline" style="margin-bottom:10px;">
+        <label style="text-align: right; width: 120px;margin-right:2px;">Lingua:</label>
+        <select id="ana-language">
+            <option value="it"{% if phoneuser.language == 'it' %} selected{% endif %}>Italiano</option>
+            <option value="en"{% if phoneuser.language == 'en' %} selected{% endif %}>Inglese</option>
+            <option value="fr"{% if phoneuser.language == 'fr' %} selected{% endif %}>Francese</option>
+        </select>
+     </div>
+      <label style="text-align: right; width: 120px;margin-right:6px;">4 bis limitato:</label>
+      <input type="checkbox" id="ana-four-bis-limited" name="four_bis_limited" value="1" {% if phoneuser.four_bis_limited %}checked{% endif %}> 
+     <br>
+     <label style="text-align: right; width: 120px;margin-right:6px;">Ascoltare:</label>
+      <input type="checkbox" id="ana-listening-enabled" name="listening_enabled" value="Ascoltare" {% if phoneuser.listening_enabled %}checked{% endif %}> 
+     <br>
+      <label style="text-align: right; width: 120px;margin-right:6px;">Registrare:</label>
+      <input type="checkbox" id="ana-recording-enabled" name="recording_enabled" value="Registrare" {% if phoneuser.recording_enabled %}checked{% endif %}>
+     <!--<br>
+      <label style="text-align: right; width: 120px;margin-right:6px;">Senza Restrizioni:</label>
+      <input type="checkbox" id="ana-vipaccount" name="vipaccount" value="1" {% if phoneuser.vipaccount %}checked{% endif %}>-->
+      <input type="hidden" id="ana-phoneuser-id" value={{ phoneuser.id }}>
+</div>

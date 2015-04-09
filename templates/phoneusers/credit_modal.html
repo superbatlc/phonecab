@@ -1,0 +1,12 @@
+ <!-- ricariche modal -->
+ <div id="ric-modal" style="padding:15px;">
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="credit-recharge-div">
+        <label style="text-align: right; width: 100px;margin-right:2px;">Importo:</label>
+            <input type="text" class="input-mini prependedInput" style="text-align: center;" placeholder="importo" name="recharge" id="credit-recharge"> &nbsp;&euro;
+    </div>
+    <div class="form-inline control-group" style="margin-bottom:10px;" id="credit-reason-div">
+        <label style="text-align: right; width: 100px;margin-right:2px;">Causale:</label>
+            <textarea rows="3" name="reason" id="credit-reason"></textarea>
+    </div>
+    <input type="hidden" name="phoneuser_id" id="credit-phoneuser-id" value="{{ phoneuser_id }}">
+ </div>

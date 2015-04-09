@@ -1,0 +1,24 @@
+/***************login page*/
+.pattern{
+	background:#FDFAF3 url(../img/diagEFEDE1.png) repeat;
+	margin: 100px;
+}
+img.logo{
+	margin: -50px 0 40px;
+}
+.control-group {
+    margin: 0 auto;
+    width: 500px;
+}
+
+.well {
+    background-color: #FDFAF3;
+    border: 1px solid red;
+    border-radius: 4px 4px 4px 4px;
+    -moz-box-shadow: -2px -2px 12px #CCCCCC;
+ -webkit-box-shadow: -2px -2px 12px #CCCCCC;
+         box-shadow: -2px -2px 12px #CCCCCC;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
+}
