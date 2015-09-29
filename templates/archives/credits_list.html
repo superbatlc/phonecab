@@ -1,0 +1,30 @@
+{% load tz %}
+<h2>Ricariche</h2>
+<div class="main" style="width:75%;">
+    <table cellspacing="0" cellpadding="4" border="0" class="table table-striped">
+        <tr>
+        <th style="width:120px;">Data</th>
+        <th style="width:auto;">Causale</th>
+        <th style="width:100px;text-align:right;">Importo</th>
+        </tr>
+        {% if items %}
+            {% for c in items %}
+            <tr>
+            <td>{{ c.recharge_date|utc|date:"d-m-Y" }}</td>
+            <td>{{ c.reason }}</td>
+            <td style="text-align:right;">{{ c.recharge }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+    {% if items %}
+        <div class="pagination pagination-right">
+            {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
+            <a href="?page={{ prev_page }}" class="btn prev-page {{ prev_page_disabled }}"><i class="icon-chevron-left prev-page"> </i></a>
+            <a href="?page={{ next_page }}" class="btn next-page {{ next_page_disabled }}"><i class="icon-chevron-right next-page"> </i></a>
+            <input type="hidden" id="items-current-page" value="{{ current_page }}"></input>
+        </div>
+    {% endif %}
+    <!-- chiude paginazione cdr -->
+    <div class="pagination pagination-right"><h4>Credito residuo: {{ balance }} &euro;</h4></div>
+</div>

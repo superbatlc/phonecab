@@ -182,7 +182,6 @@ def cdr_valid(request):
 
 
 def cdr_export_excel(request):
-    import time
     import xlwt
     book = xlwt.Workbook(encoding='utf8')
     sheet = book.add_sheet('Esportazione')

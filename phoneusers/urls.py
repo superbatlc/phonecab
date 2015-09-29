@@ -1,5 +1,6 @@
 from django.conf.urls import patterns
 from .views import *
+from archives.views import archived_phoneuser_view
 
 urlpatterns = patterns(
     '',
@@ -17,6 +18,8 @@ urlpatterns = patterns(
      phoneuser_view),
     (r'^phoneusers/archive/(?P<phoneuser_id>[0-9]*)$',
      phoneuser_archive),
+    (r'^phoneusers/archives/view/(?P<archived_phoneuser_id>[0-9]*)$',
+     archived_phoneuser_view),
     (r'^phoneusers/enable/(?P<phoneuser_id>[0-9]*)$',
      phoneuser_enable),
     (r'^phoneusers/disable/(?P<phoneuser_id>[0-9]*)$',

@@ -152,7 +152,8 @@ def phoneuser_archive(request, phoneuser_id):
     ret = "1"
     try:
         phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-        archived_phoneuser = ArchivedPhoneUser(phoneuser=phoneuser)
+        archived_phoneuser = ArchivedPhoneUser()
+        archived_phoneuser.phoneuser = phoneuser
         archived_phoneuser.archive()
         #phoneuser.enabled = 0
         #phoneuser.save()

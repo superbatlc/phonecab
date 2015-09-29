@@ -29,7 +29,7 @@ class ArchivedPhoneUser(models.Model):
         (ARABIC, 'Arabo'),
     )
 
-    phoneuser = PhoneUser
+    phoneuser = None
 
     first_name = models.CharField(max_length=35, verbose_name="nome")
     last_name = models.CharField(max_length=50, verbose_name="cognome")
@@ -44,14 +44,21 @@ class ArchivedPhoneUser(models.Model):
         max_length=4, verbose_name="lingua", choices=LANGUAGES)
     vipaccount = models.BooleanField(
         verbose_name="senza restizioni", default=False)
+    balance = models.DecimalField(
+        verbose_name="credito residuo",
+        default=0,
+        max_digits=5,
+        decimal_places=2)
     four_bis_limited = models.BooleanField(
         verbose_name="4bis limitato", default=False)
     archived_date = models.DateTimeField(default=datetime.datetime.now)
 
+    """
     def __init__(self, *args, **kwargs):
         self.phoneuser = kwargs.pop('phoneuser')
         super(ArchivedPhoneUser, self).__init__(*args, **kwargs)
-
+    """
+    
     def copy(self):
         """Copys values between phoneuser and archivephoneuser"""
         self.first_name = self.phoneuser.first_name
@@ -63,6 +70,7 @@ class ArchivedPhoneUser(models.Model):
         self.language = self.phoneuser.language
         self.vipaccount = self.phoneuser.vipaccount
         self.four_bis_limited = self.phoneuser.four_bis_limited
+        self.balance = self.phoneuser.balance
 
     def delete_related(self):
         self.phoneuser.delete()
@@ -177,9 +185,9 @@ class ArchivedWhitelist(models.Model):
         verbose_name="frequenza",
         choices=CALL_FREQUENCY)
     extraordinary = models.BooleanField(
-        verbose_name='straordinaria')
+        verbose_name='straordinaria', default=False)
     real_mobile = models.BooleanField(
-        verbose_name='cellulare')
+        verbose_name='cellulare', default=False)
 
     def copy(self, whitelist):
         self.label = whitelist.label

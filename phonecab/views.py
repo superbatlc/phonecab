@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from acls.models import Acl
 from cdrs.models import RealTimeCall
 from phoneusers.models import PhoneUser
+from archives.models import ArchivedPhoneUser
 from prefs.models import Fare
 from helper.Helper import Helper
 
@@ -98,7 +99,18 @@ def phonecab_search(request):
 
         variables['anagrafiche'] = anagrafiche
 
-        if request.user.is_staff:
+        if user.is_staff:
+            # Archives
+            if query == "*":
+                archives = ArchivedPhoneUser.objects.all().order_by('last_name')
+            else:
+                q_obj = Q(last_name__icontains=query)
+                q_obj.add(Q(serial_no__icontains=query), Q.OR)
+                q_obj.add(Q(pincode__contains=query), Q.OR)
+                archives = ArchivedPhoneUser.objects.filter(q_obj).order_by('last_name')
+
+            variables['archives'] = archives
+            # Users
             q_obj = Q(last_name__icontains=query)
             q_obj.add(Q(username__icontains=query), Q.OR)
             utenti = User.objects.filter(q_obj)

@@ -5,8 +5,8 @@ class DetailManager(models.Manager):
 
     """Custom Manager per recuperare solo le chiamate"""
 
-    def get_query_set(self):
-        return super(DetailManager, self).get_query_set().filter(
+    def get_queryset(self):
+        return super(DetailManager, self).get_queryset().filter(
             lastapp='Dial')
 
 

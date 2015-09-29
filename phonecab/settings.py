@@ -73,7 +73,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = ''
+SECRET_KEY = 'dr-a*1et&hso645hjua&0(plo6v=cpn9ve3gerdg9ydmpk0hxt'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -117,7 +117,7 @@ INSTALLED_APPS = (
     'audits',
     'prefs',
     'archives',
-    'south',
+    #'south',
 )
 
 
@@ -144,6 +144,9 @@ LOGGING = {
         },
     }
 }
+
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
 try:
