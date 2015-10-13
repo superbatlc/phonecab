@@ -1,0 +1,65 @@
+{% load tz %}
+{% load phonecabtags %}
+<!-- tabella cdr -->
+    <br>
+    <table class="table table-striped" id="cdr-table">
+        <tr>
+        <th></th>
+        <th style="width:120px;">Data Ora</th>
+        <th style="width:40px;">Tipo</th>
+        <th style="width:60px;" class="acentro">Codice</th>
+        <th style="width:80px;" class="acentro">Matricola</th>
+        <th style="width:auto;">Nome Cognome</th>
+        <th style="width:90px;">Sorgente</th>
+        <th style="width:90px;">Destinazione</th>
+        <th style="width:220px;">Numero Autorizzato</th>
+        <th style="width:60px;" class="adestra">Durata</th>
+        <th style="width:60px;" class="adestra">Costo</th>
+        </tr>
+        <tbody>
+        {% for item in items %}                                                 
+        <tr>
+            <td class="acentro">
+                <span>
+                    {% if item.custom_valid %}
+                        <i class="icon-ok icon-black"></i>
+                    {% else %}
+                        <i class="icon-remove icon-black"></i>
+                    {% endif %}
+                </span>
+            </td>
+            <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
+            <td class="acentro">{{ item.custom_calltype|calltype|safe }}</td>
+            <td class="acentro">{{ item.accountcode }}</td>
+            <td class="acentro">{{ item.archived_phoneuser.serial_no }}</td>
+            <td>{{ item.archived_phoneuser.get_full_name }}</td>
+            {% if privacy_mode == '1' %}
+                <td>{{ item.custom_src|privacymode:3 }}</td>
+                <td>{{ item.custom_dst|privacymode:3 }}</td>
+            {% else %}
+                <td>{{ item.custom_src }}</td>
+                <td>{{ item.custom_dst }}</td>
+            {% endif %}
+            <td>{{ item.whitelist.label }}</td>
+            <td class="adestra">{{ item.billsec|format_time }}</td>
+            <td class="adestra">{{ item.price }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        <!-- chiude tabella cdr -->
+        <!-- dati complessivi -->
+        {% if items %}
+        <div style="float:left; font-size:16px;margin-bottom:8px;">Numero Chiamate: {{ total_items }} - Costo Chiamate: {{ total_costs }}&nbsp;&euro; </div>
+        <!-- fine dati complessivi -->
+        <!-- paginazione cdr -->
+
+        <div class="pagination pagination-right">
+            {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
+            <a href="?page={{ prev_page }}&{{ query_string }}" class="btn prev-page {{ prev_page_disabled }}"><i class="icon-chevron-left prev-page"> </i></a>
+           <a href="?page={{ next_page }}&{{ query_string }}" class="btn next-page {{ next_page_disabled }}"><i class="icon-chevron-right next-page"> </i></a>
+        <input type="hidden" id="items-current-page" value="{{ current_page }}"></input>
+        </div>
+        <div style="height:30px;"><a href="/archives/cdrs/export/excel/?{{ query_string }}" class="btn btn-success" style="float:left;">Esporta dati</a></div>
+        {% endif %}
+        <!-- chiude paginazione cdr -->

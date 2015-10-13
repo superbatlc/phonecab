@@ -13,13 +13,14 @@ from helper.Helper import Helper
 
 
 @login_required
-def archived_phoneuser_view(request, archived_phoneuser_id):
+def archived_phoneuser_view(request, archive_id):
     user = request.user
     variables = Acl.get_permissions_for_user(user.id, user.is_staff)
 
-    if int(archived_phoneuser_id):
+    if int(archive_id):
         try:
-            archived_phoneuser = ArchivedPhoneUser.objects.get(pk=archived_phoneuser_id)
+            archived_phoneuser = ArchivedPhoneUser.objects.get(pk=archive_id)
+            archived_phoneuser.phoneuser
             variables['archived_phoneuser'] = archived_phoneuser
             variables['archived_whitelists'] = archived_phoneuser.archivedwhitelist_set.order_by('label')
             # Credit.objects.filter(phoneuser_id=phoneuser_id).order_by('-recharge_date')
@@ -100,3 +101,27 @@ def archivedcredit_list(request, archived_phoneuser_id):
             'archives/credits_list.html', RequestContext(request, variables))
     return render_to_string(
         'archives/credits_list.html', RequestContext(request, variables))
+    
+def archive_cdrs_home(request, archive_id):
+    import time
+    d = request.GET.dict()
+    user = request.user
+    variables = Acl.get_permissions_for_user(user.id, user.is_staff)
+    variables['archive_cdr'] = cdr_items(request)
+    variables['d'] = d
+
+    data_inizio_cal = time.strftime("%d-%m-%Y")
+    if 'start_date' in d.keys():
+        data_inizio_cal = d['start_date']
+    data_fine_cal = time.strftime("%d-%m-%Y")
+    if 'end_date' in d.keys():
+        data_fine_cal = d['end_date']
+
+    variables['data_inizio_cal'] = data_inizio_cal
+    variables['data_fine_cal'] = data_fine_cal
+
+    return render_to_response(
+        'archives/cdrs/home.html', RequestContext(request, variables))
+
+def archive_cdrs_items(request):
+    pass

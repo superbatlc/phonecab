@@ -56,10 +56,10 @@
                 <td style="text-align:center;">
                     <a href="/phoneusers/archives/view/{{ archive.id }}" class="btn btn-primary btn-mini"><i class="icon-white icon-zoom-in"></i> visualizza</a>
                     {% if priv_cdr > 0 %}
-                    <a href="#" class="btn btn-info btn-mini show-cdr" data-id="{{ archive.pincode }}" data-toggle="modal" data-dynamic="true"><i class="icon-white icon-asterisk"></i> chiamate</a>
+                    <a href="/cdrs/archives/{{ archive.id }}" class="btn btn-info btn-mini"><i class="icon-white icon-asterisk"></i> chiamate</a>
                     {% endif %}
                     {% if priv_record > 0 %}
-                    <a href="#" class="btn btn-info btn-mini show-record" data-id="{{ archive.pincode }}" data-toggle="modal" data-dynamic="true"><i class="icon-white icon-headphones"></i> registrazioni</a>
+                    <a href="/cdrs/archives/{{ archive.id }}" class="btn btn-info btn-mini"><i class="icon-white icon-headphones"></i> registrazioni</a>
                     {% endif %}
                 </td>
                 </tr>
