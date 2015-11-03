@@ -9,7 +9,7 @@
             </h2>
             <div class="main" style="width:75%;">
                <div class="form-inline" style="margin-bottom:20px;">
-                   <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ archived_phoneuser.last_name }} {{ archived_phoneuser.first_name }} 
+                   <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ archived_phoneuser.last_name }} {{ archived_phoneuser.first_name }}
                    {% if archived_phoneuser.four_bis_limited %}(4bis limitato){% endif %}
                    <span style="float: right;">
                    {% if archived_phoneuser.listening_enabled %}
@@ -17,7 +17,7 @@
                        <i class="icon-white icon-headphones"></i> Ascolto
                     </span>
                     {% else %}
-                    <span class="label label-important">
+                    <span class="label label-danger">
                        <i class="icon-white icon-headphones"></i> Ascolto
                     </span>
                     {% endif %}
@@ -26,7 +26,7 @@
                        <i class="icon-white icon-headphones"></i> Registrazione
                     </span>
                     {% else %}
-                    <span class="label label-important">
+                    <span class="label label-danger">
                        <i class="icon-white icon-headphones"></i> Registrazione
                     </span>
                     {% endif %}
@@ -89,7 +89,7 @@
         </div>
         <input type="hidden" id="phoneuser-id" value="{{ phoneuser.id }}">
     </div>
-     {% endblock application %}   
+     {% endblock application %}
      {% block script %}
      <script src="{% static "js/anagrafica.js" %}" type="text/javascript" charset="utf-8"></script>
-     {% endblock script %}    
+     {% endblock script %}

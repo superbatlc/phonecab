@@ -9,7 +9,7 @@
             </h2>
             <div class="main" style="width:75%;">
                <div class="form-inline" style="margin-bottom:20px;">
-                   <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }} 
+                   <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
                    {% if phoneuser.four_bis_limited %}(4bis limitato){% endif %}
                    <span style="float: right;">
                    {% if phoneuser.listening_enabled %}
@@ -17,7 +17,7 @@
                        <i class="icon-white icon-headphones"></i> Ascolto
                     </span>
                     {% else %}
-                    <span class="label label-important">
+                    <span class="label label-danger">
                        <i class="icon-white icon-headphones"></i> Ascolto
                     </span>
                     {% endif %}
@@ -26,7 +26,7 @@
                        <i class="icon-white icon-headphones"></i> Registrazione
                     </span>
                     {% else %}
-                    <span class="label label-important">
+                    <span class="label label-danger">
                        <i class="icon-white icon-headphones"></i> Registrazione
                     </span>
                     {% endif %}
@@ -53,7 +53,7 @@
                    <i class="icon-white icon-remove"></i> SCHEDA DISATTIVA
                 </button>
                 {% endif %}
-                
+
                 {% if priv_anagrafica > 1 %}
                 <br /><br />
                 <div style="text-align:right;">
@@ -61,7 +61,7 @@
                     <a href="#" class="btn btn-primary archive-ana" tabindex="-1">Archivia</a>
                 </div>
                 {% endif %}
-                         
+
             </div>
         </div>
 
@@ -118,8 +118,8 @@
             </div>
          </div>
          {% endif %}
-                 
-                 
+
+
         {% if priv_credit > 0 %}
             <hr>
             <div id="ricariche">{{ credits }}</div>
@@ -127,7 +127,7 @@
         </div>
         <input type="hidden" id="phoneuser-id" value="{{ phoneuser.id }}">
     </div>
-     {% endblock application %}   
+     {% endblock application %}
      {% block script %}
      <script src="{% static "js/anagrafica.js" %}" type="text/javascript" charset="utf-8"></script>
-     {% endblock script %}    
+     {% endblock script %}

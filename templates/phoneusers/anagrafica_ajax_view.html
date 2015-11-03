@@ -10,7 +10,7 @@
            <i class="icon-white icon-headphones"></i> Ascolto
         </span>
         {% else %}
-        <span class="label label-important">
+        <span class="label label-danger">
            <i class="icon-white icon-headphones"></i> Ascolto
         </span>
         {% endif %}
@@ -19,7 +19,7 @@
            <i class="icon-white icon-headphones"></i> Registrazione
         </span>
         {% else %}
-        <span class="label label-important">
+        <span class="label label-danger">
            <i class="icon-white icon-headphones"></i> Registrazione
         </span>
         {% endif %}
@@ -31,7 +31,7 @@
         <br/>
         <label style="text-align:right;margin-right:2px; font-size:130%;color:#666;">Lingua:</label>
         <span style="font-size:130%;">{{ phoneuser.get_language_display }}</span>
-      </div>   
+      </div>
       <div class="form-inline pin" style="margin-bottom:10px;">
                    <label style="font-size:160%;margin-right:2px;">Codice:</label>
                     <span class="phoneuser-pincode" style="font-size:160%;">{{ phoneuser.pincode }}</span>
