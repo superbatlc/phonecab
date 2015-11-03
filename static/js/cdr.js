@@ -82,7 +82,7 @@ $('.cdr-page').on('click',function(e){
  * ==========================================================
  * Copyright 2015 SuperbatTLC
  * ========================================================== */
-$('.cdr-valid').live('click',function(e){
+$('.cdr-valid').on('click',function(e){
 	
 	var button = confirm("Attenzione! L\'abilitazione/disabilitazione di una chiamata influisce sul calcolo complessivo.\nSei sicuro di voler continuare?")
     

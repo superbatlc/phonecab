@@ -79,7 +79,7 @@ $('.records-page').on('click',function(e){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$('.records-confirm-remove').live('click',function(e){
+$('.records-confirm-remove').on('click',function(e){
 	//e.preventDefault()
 	do_remove = confirm("Attenzione! i file saranno cancellati definitivamente. Continuare?")
 
@@ -95,7 +95,7 @@ $('.records-confirm-remove').live('click',function(e){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$('.remove-record').live('click',function(e){
+$('.remove-record').on('click',function(e){
     e.preventDefault()                           
     record_id = $(this).attr("data-id")
     
@@ -118,7 +118,7 @@ $('.remove-record').live('click',function(e){
 })
 
 
-$('.records-export').live('click',function(e){
+$('.records-export').on('click',function(e){
         //e.preventDefault()
         $(this).addClass('hide')
         //$('.records-confirm-remove').removeClass('hide')

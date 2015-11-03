@@ -3,92 +3,105 @@
     "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8"> 
-    <link rel="stylesheet" href="{% static "css/bootstrap-scroll-modal.css" %}" type="text/css" media="screen" title="no title" charset="utf-8"> 
-    <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" media="screen" title="no title" charset="utf-8"> 
-    <link rel="stylesheet" href="{% static "css/bootstrap.print.css" %}" type="text/css" media="print" title="no title" charset="utf-8"> 
-    {% block stylesheet %}{% endblock stylesheet %}
+    <!-- <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/bootstrap-scroll-modal.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/bootstrap.print.css" %}" type="text/css" media="print" title="no title" charset="utf-8">  -->
+		<!-- <link rel="stylesheet" href="{% static "css/materialism/vendors.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8"> -->
+		<link rel="stylesheet" href="{% static "css/vendors/bootstrap.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/materialism/styles.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/vendors/ripples.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/vendors/material-design-iconic-font.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/phonegap/style.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		{% block stylesheet %}{% endblock stylesheet %}
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body class="pattern">
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container" style="width:1100px;">
-            <div class="nav-collapse collapse logo"  style="width:100px; position: absolute;">
-                    <a href="/phonecab" target="_self">PHONECAB</a>
-            </div>
-            <div class="nav-collapse collapse right">
-                <ul class="nav">
-                    {% if priv_cdr > 0 or priv_record > 0 %}
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-list-alt icon-white" ></i></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            {% if priv_cdr > 0 %}
-                            <li>
-                            <a href="/cdr/" tabindex="-1"><i class="icon-asterisk"></i> Dettaglio chiamate</a>
-                            </li>
-                            {% endif %}
-                            {% if priv_cdr > 0 and priv_record > 0 %}
-                            <hr style="margin: 5px 0;">
-                            {% endif %}
-                            {% if priv_record > 0 %}
-                            <li>
-                            <a href="/records/" tabindex="-1"><i class="icon-headphones"></i> Registrazioni</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                    <li class="divider"></li>
-                    {% endif %}
-                    {% if priv_anagrafica > 1 %}
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-plus-sign icon-white" ></i></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li>
-                            <a href="#myModal" id="new-ana" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-file"></i> Nuova anagrafica</a>
-                            </li>
-                            {% if user.is_staff %}
-                            <hr style="margin: 5px 0;">
-                            <li>
-                            <a href="#myModal" id="new-user" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-user"></i> Nuovo utente</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                    <li class="divider"></li>
-                    {% endif %}
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ user.get_full_name }}</i></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            {% if user.is_staff %}
-                            <li>
-                            <a href="#myModal" id="open-prefs" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-wrench"></i> Preferenze</a>
-                            </li>
-                            <hr style="margin: 5px 0;">
-                            {% endif %}
-                            <li><a href="/logout/" tabindex="-1"><i class="icon-off"></i> Esci</a></li>
-                        </ul>
-                    </li>
-                    <li class="divider"></li>
-                    <li class="dropdown">
-                    <form class="navbar-search pull-left" action="/phonecab/search/" method="post">{% csrf_token %} 
-                        <input type="text" name="search_query" class="search-query white" style="margin-left:10px;" placeholder="cerca" value="{{ search_query }}">
-                        <!--<a href="#"><i class="icon-search icon-white"></i></a>-->  
-                    </form> 
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-    <div class="container-fluid">
+<body class="theme-template-dark theme-pink alert-open alert-with-mat-grow-top-right">
+
+
+	<main>
+		<aside class="sidebar fixed" style="width: 260px; left: 0px; ">
+			<div class="brand-logo">Phonecab</div>
+			<!-- <div class="user-logged-in">
+				<div class="content">
+					<div class="user-name"></div>
+				</div>
+			</div> -->
+			<ul class="menu-links">
+				<li> <a href="/"><i class="zmdi zmdi-time"></i>&nbsp;<span>Tempo reale</span></a></li>
+				{% if priv_anagrafica > 1 %}
+				<li> <a href="/"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafica</span></a></li>
+				{% endif %}
+				{% if priv_cdr > 0 %}
+				<li> <a href="/cdr/"><i class="zmdi zmdi-phone"></i>&nbsp;<span>Chiamate</span></a></li>
+				{% endif %}
+				{% if priv_record > 0 %}
+				<li> <a href="/records/"><i class="zmdi zmdi-mic"></i>&nbsp;<span>Registrazioni</span></a></li>
+				{% endif %}
+				<li> <a href="/"><i class="zmdi zmdi-account-circle"></i>&nbsp;<span>Utenti</span></a></li>
+				{% if user.is_staff %}
+				<li> <a href="/prefs/edit"><i class="zmdi zmdi-settings"></i>&nbsp;<span>Preferenze</span></a></li>
+				{% endif %}
+				<li> <a href="/"><i class="zmdi zmdi-search-in-file"></i>&nbsp;<span>Audit</span></a></li>
+			</ul>
+		</aside>
+		<div class="main-container">
+
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+
+			<div class="container-fluid">
+			            <!-- <div class="navbar-header pull-left">
+			              <button type="button" class="navbar-toggle pull-left m-15" data-activates=".sidebar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+			              <ul class="breadcrumb">
+			                <li><a href="#/">Materialism</a></li>
+			                <li class="active">Cards</li>
+			              </ul>
+			            </div> -->
+			            <ul class="nav navbar-nav navbar-right navbar-right-no-collapse">
+			              <li class="logout pull-right">
+											<form action="/logout/">
+			                	 <button type="submit" class="pointer btn btn-round-sm btn-link withoutripple"><i class="zmdi zmdi-sign-in"></i> </button>
+											</form>
+			              </li>
+			              <li class="username pull-right">
+											{{ user.get_full_name }}
+			              </li>
+			              <!-- <li navbar-search="" class="search pull-right">
+			                <div>
+			                  <div class="mat-slide-right pull-right">
+			                    <form class="search-form form-inline pull-left" action="/phonecab/search/" method="post">
+			                      <div class="form-group">
+															{% csrf_token %}
+			                        <label class="sr-only" for="search-input">Search</label>
+			                        <input name="search_query" type="text" class="form-control" id="search-input" placeholder="cerca" autofocus="" value="{{ search_query }}">
+														</div>
+			                    </form>
+			                  </div>
+			                  <div class="pull-right">
+			                    <i class="zmdi zmdi-search zmdi-hc-2x"></i>
+			                  </div>
+			                </div>
+			              </li> -->
+			            </ul>
+			          </div>
+
+
+		</nav>
+		<div class="main-content" autoscroll="true" bs-affix-target="" init-ripples="">
+
+                    <!-- <a href="#myModal" id="new-ana" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-file"></i> Nuova anagrafica</a>
+                    <a href="#myModal" id="new-user" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-user"></i> Nuovo utente</a>
+                    <a href="#myModal" id="open-prefs" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-wrench"></i> Preferenze</a> -->
+
+
+    <section>
         <div class="row-fluid">
         <div class="message">{{ custom_msg|safe }}</div>
             {% block application %}
             <div id="realtime">{{ realtime_table }}</div>
             {% endblock application %}
         </div>
-    </div>
+    </section>
 
     <!-- CODICE FINESTRA MODALE -->
     <div class="modal hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  style="display:block;overflow: auto;">
@@ -103,11 +116,22 @@
         </div>
     </div>
    <!-- FINE CODICE FINESTRA MODALE -->
-    <script src="{% static "js/jquery.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "js/bootstrap.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "js/bootstrap-scroll-modal.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "js/jquery.xml2json.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "js/base.js" %}" type="text/javascript" charset="utf-8"></script>
+ </div><!--#maincontent-->
+    <!-- <script src="{% static "js/jquery.js" %}" type="text/javascript" charset="utf-8"></script> -->
+		<!-- <script src="{% static "js/materialism/vendors.min.js" %}" type="text/javascript" charset="utf-8"></script> -->
+		<!-- <script src="{% static "js/materialism/app.min.js" %}" type="text/javascript" charset="utf-8"></script> -->
+
+    <!-- <script src="{% static "js/bootstrap.js" %}" type="text/javascript" charset="utf-8"></script> -->
+    <!-- <script src="{% static "js/bootstrap-scroll-modal.js" %}" type="text/javascript" charset="utf-8"></script> -->
+    <!-- <script src="{% static "js/jquery.xml2json.js" %}" type="text/javascript" charset="utf-8"></script> -->
+    <!-- <script src="{% static "js/base.js" %}" type="text/javascript" charset="utf-8"></script> -->
+
+		<script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/vendors/sidenav.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/app.js" %}" type="text/javascript" charset="utf-8"></script>
+
     {% block script %}{% endblock script %}
 </body>
 </html>

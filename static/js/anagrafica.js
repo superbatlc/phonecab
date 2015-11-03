@@ -54,7 +54,7 @@ function reload_credits(phoneuser_id){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$('.show-whitelist-modal').live('click',function(e){
+$('.show-whitelist-modal').on('click',function(e){
     e.preventDefault()
     
     
@@ -106,7 +106,7 @@ $('.show-whitelist-modal').live('click',function(e){
  * ==========================================================
  * Copyright 2013 SuperbatTLC
  * ========================================================== */
-$('#whitelist-frequency').live('change',function(e){
+$('#whitelist-frequency').on('change',function(e){
 	var value = $(this).val();
 	
 	if(value == '0' || value == '1'){
@@ -124,7 +124,7 @@ $('#whitelist-frequency').live('change',function(e){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$(".save-whitelist").live('click', function(e){
+$(".save-whitelist").on('click', function(e){
     e.preventDefault()
                                     
     var ok = check_whitelist_form()
@@ -194,7 +194,7 @@ $(".save-whitelist").live('click', function(e){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$('.remove-whitelist').live('click',function(e){
+$('.remove-whitelist').on('click',function(e){
     e.preventDefault()
     
     var button = confirm("Sei sicuro di voler eliminare il Numero Autorizzato?")
@@ -241,7 +241,7 @@ $('.remove-whitelist').live('click',function(e){
  * ==========================================================
  * Copyright 2013 SuperbatTLC
  * ========================================================== */
-$('.enable-whitelist').live('click',function(e){
+$('.enable-whitelist').on('click',function(e){
 	
 	var button = $(this);
 	var icon = $("i", this);
@@ -282,7 +282,7 @@ $('.enable-whitelist').live('click',function(e){
  * ==========================================================
  * Copyright 2013 SuperbatTLC
  * ========================================================== */
-$('.extra-whitelist').live('click',function(e){
+$('.extra-whitelist').on('click',function(e){
 	
 	var button = $(this);
 	var icon = $("i", this);
@@ -382,7 +382,7 @@ $('.extra-whitelist').live('click',function(e){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$('.new-credit').live('click',function(e){
+$('.new-credit').on('click',function(e){
     e.preventDefault()
     phoneuser_id = $('#phoneuser-id').val() //$(this).attr('data-id')                           
     $('.modal-body').html('<div style="text-align:center;"><img id=\"loading\" src=\"' + loading_path + '\"></div>')
@@ -415,7 +415,7 @@ $('.new-credit').live('click',function(e){
  * ==========================================================
  * Copyright 2012 SuperbatTLC
  * ========================================================== */
-$(".save-credit").live('click', function(e){
+$(".save-credit").on('click', function(e){
     e.preventDefault()
                                     
     ok = check_credit_form()
@@ -563,7 +563,7 @@ $('.show-record').click(function(e){
 
 
 
-$('.phoneuser-export-cdr').live('click',function(e){
+$('.phoneuser-export-cdr').on('click',function(e){
 
 	accountcode = $('.phoneuser-pincode').text()
 

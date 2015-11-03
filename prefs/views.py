@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 #from django.http import Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 #from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 #from django.core.exceptions import ObjectDoesNotExist
@@ -48,7 +48,7 @@ def prefs_edit(request):
         'privacy_mode': privacy_mode,
     }
     return render_to_response(
-        'prefs_modal.html', RequestContext(request, variables))
+        'prefs.html', RequestContext(request, variables))
 
 
 @login_required
@@ -58,11 +58,11 @@ def prefs_save(request):
         # DISTRETTUALI -----------------------------------------------------------
         dist_connection_charge = get_fee(
             request.POST.get(
-                "data[dist_connection_charge]",
+                "dist_connection_charge",
                 "0.00"))
         dist_fee_per_second = get_fee(
             request.POST.get(
-                "data[dist_fee_per_second]",
+                "dist_fee_per_second",
                 "0.00")) / 60
 
         f = Fare.objects.get(direction='distrettuale')
@@ -72,11 +72,11 @@ def prefs_save(request):
         # NAZIONALI -----------------------------------------------------------
         naz_connection_charge = get_fee(
             request.POST.get(
-                "data[naz_connection_charge]",
+                "naz_connection_charge",
                 "0.00"))
         naz_fee_per_second = get_fee(
             request.POST.get(
-                "data[naz_fee_per_second]",
+                "naz_fee_per_second",
                 "0.00")) / 60
 
         f = Fare.objects.get(direction='nazionale')
@@ -87,13 +87,13 @@ def prefs_save(request):
         # INTERNAZIONALI 1 ----------------------------------------------------
         int1_connection_charge = get_fee(
             request.POST.get(
-                "data[int1_connection_charge]",
+                "int1_connection_charge",
                 "0.00"))
         int1_fee_per_second = get_fee(
             request.POST.get(
-                "data[int1_fee_per_second]",
+                "int1_fee_per_second",
                 "0.00")) / 60
-        int1_prefix_list = request.POST.get("data[int1_prefix_list]", "")
+        int1_prefix_list = request.POST.get("int1_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 1')
         f.connection_charge = int1_connection_charge
@@ -104,13 +104,13 @@ def prefs_save(request):
         # INTERNAZIONALI 2 ----------------------------------------------------
         int2_connection_charge = get_fee(
             request.POST.get(
-                "data[int2_connection_charge]",
+                "int2_connection_charge",
                 "0.00"))
         int2_fee_per_second = get_fee(
             request.POST.get(
-                "data[int2_fee_per_second]",
+                "int2_fee_per_second",
                 "0.00")) / 60
-        int2_prefix_list = request.POST.get("data[int2_prefix_list]", "")
+        int2_prefix_list = request.POST.get("int2_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 2')
         f.connection_charge = int2_connection_charge
@@ -121,13 +121,13 @@ def prefs_save(request):
         # INTERNAZIONALI 3 ----------------------------------------------------
         int3_connection_charge = get_fee(
             request.POST.get(
-                "data[int3_connection_charge]",
+                "int3_connection_charge",
                 "0.00"))
         int3_fee_per_second = get_fee(
             request.POST.get(
-                "data[int3_fee_per_second]",
+                "int3_fee_per_second",
                 "0.00")) / 60
-        int3_prefix_list = request.POST.get("data[int3_prefix_list]", "")
+        int3_prefix_list = request.POST.get("int3_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 3')
         f.connection_charge = int3_connection_charge
@@ -138,13 +138,13 @@ def prefs_save(request):
         # INTERNAZIONALI 4 ----------------------------------------------------
         int4_connection_charge = get_fee(
             request.POST.get(
-                "data[int4_connection_charge]",
+                "int4_connection_charge",
                 "0.00"))
         int4_fee_per_second = get_fee(
             request.POST.get(
-                "data[int4_fee_per_second]",
+                "int4_fee_per_second",
                 "0.00")) / 60
-        int4_prefix_list = request.POST.get("data[int4_prefix_list]", "")
+        int4_prefix_list = request.POST.get("int4_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 4')
         f.connection_charge = int4_connection_charge
@@ -155,13 +155,13 @@ def prefs_save(request):
         # INTERNAZIONALI 5 ----------------------------------------------------
         int5_connection_charge = get_fee(
             request.POST.get(
-                "data[int5_connection_charge]",
+                "int5_connection_charge",
                 "0.00"))
         int5_fee_per_second = get_fee(
             request.POST.get(
-                "data[int5_fee_per_second]",
+                "int5_fee_per_second",
                 "0.00")) / 60
-        int5_prefix_list = request.POST.get("data[int5_prefix_list]", "")
+        int5_prefix_list = request.POST.get("int5_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 5')
         f.connection_charge = int5_connection_charge
@@ -172,13 +172,13 @@ def prefs_save(request):
         # INTERNAZIONALI 6 ----------------------------------------------------
         int6_connection_charge = get_fee(
             request.POST.get(
-                "data[int6_connection_charge]",
+                "int6_connection_charge",
                 "0.00"))
         int6_fee_per_second = get_fee(
             request.POST.get(
-                "data[int6_fee_per_second]",
+                "int6_fee_per_second",
                 "0.00")) / 60
-        int6_prefix_list = request.POST.get("data[int6_prefix_list]", "")
+        int6_prefix_list = request.POST.get("int6_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 6')
         f.connection_charge = int6_connection_charge
@@ -189,13 +189,13 @@ def prefs_save(request):
         # INTERNAZIONALI 7 ----------------------------------------------------
         int7_connection_charge = get_fee(
             request.POST.get(
-                "data[int7_connection_charge]",
+                "int7_connection_charge",
                 "0.00"))
         int7_fee_per_second = get_fee(
             request.POST.get(
-                "data[int7_fee_per_second]",
+                "int7_fee_per_second",
                 "0.00")) / 60
-        int7_prefix_list = request.POST.get("data[int7_prefix_list]", "")
+        int7_prefix_list = request.POST.get("int7_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 7')
         f.connection_charge = int7_connection_charge
@@ -206,13 +206,13 @@ def prefs_save(request):
         # INTERNAZIONALI 8 ----------------------------------------------------
         int8_connection_charge = get_fee(
             request.POST.get(
-                "data[int8_connection_charge]",
+                "int8_connection_charge",
                 "0.00"))
         int8_fee_per_second = get_fee(
             request.POST.get(
-                "data[int8_fee_per_second]",
+                "int8_fee_per_second",
                 "0.00")) / 60
-        int8_prefix_list = request.POST.get("data[int8_prefix_list]", "")
+        int8_prefix_list = request.POST.get("int8_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 8')
         f.connection_charge = int8_connection_charge
@@ -223,13 +223,13 @@ def prefs_save(request):
         # INTERNAZIONALI 9 ----------------------------------------------------
         int9_connection_charge = get_fee(
             request.POST.get(
-                "data[int9_connection_charge]",
+                "int9_connection_charge",
                 "0.00"))
         int9_fee_per_second = get_fee(
             request.POST.get(
-                "data[int9_fee_per_second]",
+                "int9_fee_per_second",
                 "0.00")) / 60
-        int9_prefix_list = request.POST.get("data[int9_prefix_list]", "")
+        int9_prefix_list = request.POST.get("int9_prefix_list", "")
 
         f = Fare.objects.get(direction='internazionale 9')
         f.connection_charge = int9_connection_charge
@@ -240,11 +240,11 @@ def prefs_save(request):
         # MOBILE --------------------------------------------------------------
         mob_connection_charge = get_fee(
             request.POST.get(
-                "data[mob_connection_charge]",
+                "mob_connection_charge",
                 "0.00"))
         mob_fee_per_second = get_fee(
             request.POST.get(
-                "data[mob_fee_per_second]",
+                "mob_fee_per_second",
                 "0.00")) / 60
 
         f = Fare.objects.get(direction='mobile')
@@ -253,9 +253,9 @@ def prefs_save(request):
         f.save(request.user)
 
         # ALTRE PREFERENZE CHIAMATA -------------------------------------------
-        min_duration = request.POST.get("data[min_duration]", "0")
-        alert_before_end = request.POST.get("data[alert_before_end]", "0")
-        privacy_mode = request.POST.get("data[privacy_mode]", "0")
+        min_duration = request.POST.get("min_duration", "0")
+        alert_before_end = request.POST.get("alert_before_end", "0")
+        privacy_mode = request.POST.get("privacy_mode", "0")
 
         p = Pref.objects.get(key='min_duration')
         p.value = min_duration
@@ -269,7 +269,8 @@ def prefs_save(request):
         p.value = privacy_mode
         p.save(request.user)
 
-        return HttpResponse(ret, mimetype='text/plain')
+        # return HttpResponse(ret, mimetype='text/plain')
+        return redirect('/prefs/edit/')
 
     except Exception as e:
         print '%s (%s)' % (e.message, type(e))
