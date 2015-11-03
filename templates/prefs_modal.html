@@ -11,7 +11,13 @@
             <th style="width:60px; text-align:center;">Tariffa (&euro;/minuto)</th>
             </tr>
             <tr>
-            <td><i class="icon-home"></i> Nazionale</td>
+            <td><i class="icon-home"></i> Distrettuali <br/><small>(prefissi)</small></td>
+            <td style="text-align:center;"><input style="text-align:center;" type="text" class="input-mini" id="prefs-dist-scatto" value="{{ dist.connection_charge|floatformat:4 }}" /></td>
+            <td style="text-align:center;"><input style="text-align:center;" type="text" class="input-mini" id="prefs-dist-tariffa" value="{{ dist.fee_per_second|per_minute|floatformat:4 }}" /></td>
+            </tr>
+            <tr><td colspan="3"></td></tr>
+            <tr>
+            <td><i class="icon-flag"></i> Interdistrettuali</td>
             <td style="text-align:center;"><input style="text-align:center;" type="text" class="input-mini" id="prefs-naz-scatto" value="{{ naz.connection_charge|floatformat:4 }}" /></td>
             <td style="text-align:center;"><input style="text-align:center;" type="text" class="input-mini" id="prefs-naz-tariffa" value="{{ naz.fee_per_second|per_minute|floatformat:4 }}" /></td>
             </tr>

@@ -12,6 +12,7 @@ from prefs.models import Fare, Pref
 @login_required
 def prefs_edit(request):
     # recuperiamo le preferenze
+    dist = Fare.objects.get(direction='distrettuale')
     naz = Fare.objects.get(direction='nazionale')
     int1 = Fare.objects.get(direction='internazionale 1')
     int2 = Fare.objects.get(direction='internazionale 2')
@@ -31,6 +32,7 @@ def prefs_edit(request):
     variables = {
         'tooltip_text': 'Premi per mostrare/nascondere i prefissi di questa area geografica',
         'naz': naz,
+        'dist': dist,
         'int1': int1,
         'int2': int2,
         'int3': int3,
@@ -53,6 +55,20 @@ def prefs_edit(request):
 def prefs_save(request):
     try:
         ret = "1"
+        # DISTRETTUALI -----------------------------------------------------------
+        dist_connection_charge = get_fee(
+            request.POST.get(
+                "data[dist_connection_charge]",
+                "0.00"))
+        dist_fee_per_second = get_fee(
+            request.POST.get(
+                "data[dist_fee_per_second]",
+                "0.00")) / 60
+
+        f = Fare.objects.get(direction='distrettuale')
+        f.connection_charge = dist_connection_charge
+        f.fee_per_second = dist_fee_per_second
+        f.save(request.user)
         # NAZIONALI -----------------------------------------------------------
         naz_connection_charge = get_fee(
             request.POST.get(

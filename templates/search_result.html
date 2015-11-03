@@ -11,13 +11,15 @@
         <table cellspacing="0" cellpadding="4" border="0" class="table table-striped">
             <tr>
             <th style="width:360px;">Cognome Nome (Codice)</th>
-            <th style="width:60px;">Matricola</th>
+            <th style="width:100px;">Matricola</th>
+            <th style="width:60px;">Stato</th>
             <th style="width:auto;text-align:center;">Azioni</th>
             </tr>
             {% for anagrafica in anagrafiche %}
             <tr>
             <td><i class="icon-file"></i>{{ anagrafica.last_name }} {{ anagrafica.first_name }} ({{ anagrafica.pincode }})</td>
             <td>{{ anagrafica.serial_no}}</td>
+            <td>{{ anagrafica.enabled|yesno:"Attivo,Disattivo"}}</td>
             <td style="text-align:center;">
                 <a href="/phoneusers/view/{{ anagrafica.id }}" class="btn btn-primary btn-mini"><i class="icon-white icon-zoom-in"></i> visualizza</a>
                 {% if priv_whitelist > 1 and false %}   
@@ -36,9 +38,18 @@
             </tr>
             {% endfor %}
         </table>
+        <!-- paginazione cdr -->
+        <div class="pagination pagination-right">
+            {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
+            <a href="?page={{ prev_page }}&{{ query_string }}" class="btn prev-page {{ prev_page_disabled }}"><i class="icon-chevron-left prev-page"> </i></a>
+           <a href="?page={{ next_page }}&{{ query_string }}" class="btn next-page {{ next_page_disabled }}"><i class="icon-chevron-right next-page"> </i></a>
+        <input type="hidden" id="items-current-page" value="{{ current_page }}"></input>
+        </div>
+        <div style="height:30px;"><a href="/cdr/export/excel/?{{ query_string }}" class="btn btn-success" style="float:left;">Esporta dati</a></div>
         {% else %}
             <p style="border-top: 1px dashed #CCCCCC;">Non ci sono anagrafiche corrispondenti alla ricerca effettuata.</p>
         {% endif %}
+        
         {% if user.is_staff %}
             <br>
             <h3>Anagrafiche Archiviate</h3>
