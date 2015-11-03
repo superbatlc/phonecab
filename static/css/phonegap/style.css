@@ -29,3 +29,23 @@ position: relative;
 	font-size:1.2em;
   margin: 5px 5px 0 5px;
 }
+
+a.btn.btn-primary, a.btn.btn-success {
+	color:white;
+}
+
+input.timepicker {
+	width:60px;
+	text-align:center;
+}
+input.datepicker {
+	width:90px;
+	text-align:center;
+}
+
+.bootstrap-datetimepicker-widget table td span {
+	width:30%;
+}
+.bootstrap-datetimepicker-widget {
+	top:92px !important;
+}
