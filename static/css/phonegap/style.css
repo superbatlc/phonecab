@@ -143,11 +143,8 @@ select {
   background-color:white;
 }
 
-@media (min-width: 993px) {
-  .navbar-fixed-top {
-    margin-left: 200px!important;
-  }
-  main {
-    padding-left: 200px!important;
+@media (max-width: 992px) {
+  .navbar-toggle {
+      display: block !important; /* fix */
   }
 }
