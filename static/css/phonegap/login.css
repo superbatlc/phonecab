@@ -1,5 +1,5 @@
 /***************login page*/
-.pattern{
+/*.pattern{
 	background:#FDFAF3 url(../img/diagEFEDE1.png) repeat;
 	margin: 100px;
 }
@@ -21,4 +21,22 @@ img.logo{
     margin-bottom: 20px;
     min-height: 20px;
     padding: 19px;
+}*/
+
+.page-login {
+	background:#ff5722;
+}
+
+input:-webkit-autofill {
+	background-color:white !important;
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
 }

@@ -1,44 +1,70 @@
 {% load static %}
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <title>PhoneCab</title>
     <link rel="stylesheet" href="{% static "css/vendors/bootstrap.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="{% static "css/login.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/materialism/styles.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/vendors/ripples.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/vendors/material-design-iconic-font.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/phonegap/style.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/phonegap/login.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+  </head>
 
-    <title>PhoneCab - login</title>
-</head>
-<body class="pattern">
-	<div class="container-fluid">
-    	<div class="row-fluid">
-        	<div class="span12">
-                <div class="control-group" style="text-align:center;">
-                	<form class="well form-inline login" method="post" action="/login/">{% csrf_token %}
-                	<img class="logo" src="{% static "img/phonecab-logo.png" %}" border="0">
-                	<br>
-                    </ul>
-                		<div class="input-prepend" style="margin-bottom:10px;">
-							<span class="add-on"><i class="icon-user"></i></span>
-	                    	<input type="text" class="input-medium prependedInput" placeholder="username" name="username">
-                    	</div>
-                    	<br>
-                    	<div class="input-prepend" style="margin-bottom:30px;">
-	                    	<span class="add-on"><i class="icon-lock"></i></span>
-	                        <input type="password" class="input-medium prependedInput" placeholder="password" name="password">
-	                    </div>
-	                    <br>
-                        <button type="submit" class="btn btn-success" style="width:195px; margin-bottom:30px;">Entra</button>
-                        <input type="hidden" name="next" value="{{ next }}">
-                        {% if error %}
-                            <div class="alert alert-error" style="width:360px;">{{ err_msg }}</div>
-                        {% endif %}
-                	</form>
-                </div>
+  <body class="theme-template-dark theme-deep-orange page-login" init-ripples="">
+    <div class="center">
+      <div class="card bordered z-depth-2" style="margin:0% auto; max-width:400px;">
+      <form class="form-floating" action="/login/" method="POST">
+        <div class="card-header">
+          <div class="brand-logo">
+            <div class="phonegap-logo"><div class="phonegap-wave"><span>PHONEGAP</span></div></div>
+          </div>
+        </div>
+          {% if error %}
+        <div class="card-header">
+          <div class="alert alert-danger" style="margin:0;">
+            <h4>Errore</h4>
+            {{ err_msg }}
+          </div>
+        </div>
+        {% endif %}
+        <div class="card-content">
+          <div class="m-b-30">
+            <div class="card-title strong pink-text">Login</div>
+            <p class="card-title-desc">
+              Phonegap
+            </p>
+          </div>
+            {% csrf_token %}
+            <div class="form-group filled">
+              <label class="control-label" for="inputEmail">Nome utente</label>
+              <input class="form-control" type="text" name="username">
             </div>
-    	</div>
-	</div>
-	<script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
-	<script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
-</body>
+            <div class="form-group filled">
+              <label class="control-label" for="inputPassword">Password</label>
+              <input class="form-control" id="inputPassword" name="password" type="password">
+            </div>
+        </div>
+        <div class="card-action clearfix">
+          <div class="pull-right">
+            <button class="btn btn-primary" type="submit">Login</button>
+            <input name="next" type="hidden" value="{{ next }}">
+          </div>
+        </div>
+      </form>
+      </div>
+    </div>
+
+
+		<script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/login.js" %}" type="text/javascript" charset="utf-8"></script>
+
+  </body>
 </html>
