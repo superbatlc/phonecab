@@ -17,9 +17,7 @@
 		{% block stylesheet %}{% endblock stylesheet %}
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body class="theme-template-dark theme-pink alert-open alert-with-mat-grow-top-right">
-
-
+<body class="theme-template-dark theme-deep-orange alert-open alert-with-mat-grow-top-right">
 	<main>
 		<aside class="sidebar fixed" style="width: 260px; left: 0px; ">
 			<div class="brand-logo">Phonecab</div>
@@ -31,17 +29,17 @@
 			<ul class="menu-links">
 				<li> <a href="/"><i class="zmdi zmdi-time"></i>&nbsp;<span>Tempo reale</span></a></li>
 				{% if priv_anagrafica > 1 %}
-				<li> <a href="/"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafica</span></a></li>
+				<li> <a href="/phoneusers/"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafica</span></a></li>
 				{% endif %}
 				{% if priv_cdr > 0 %}
-				<li> <a href="/cdr/"><i class="zmdi zmdi-phone"></i>&nbsp;<span>Chiamate</span></a></li>
+				<li> <a href="/cdrs/"><i class="zmdi zmdi-phone"></i>&nbsp;<span>Chiamate</span></a></li>
 				{% endif %}
 				{% if priv_record > 0 %}
 				<li> <a href="/records/"><i class="zmdi zmdi-mic"></i>&nbsp;<span>Registrazioni</span></a></li>
 				{% endif %}
-				<li> <a href="/"><i class="zmdi zmdi-account-circle"></i>&nbsp;<span>Utenti</span></a></li>
+				<li> <a href="/users/"><i class="zmdi zmdi-account-circle"></i>&nbsp;<span>Utenti</span></a></li>
 				{% if user.is_staff %}
-				<li> <a href="/prefs/edit"><i class="zmdi zmdi-settings"></i>&nbsp;<span>Preferenze</span></a></li>
+				<li> <a href="/prefs/edit/"><i class="zmdi zmdi-settings"></i>&nbsp;<span>Preferenze</span></a></li>
 				{% endif %}
 				<li> <a href="/"><i class="zmdi zmdi-search-in-file"></i>&nbsp;<span>Audit</span></a></li>
 			</ul>
@@ -89,15 +87,8 @@
 
 		</nav>
 		<div class="main-content" autoscroll="true" bs-affix-target="" init-ripples="">
-
-                    <!-- <a href="#myModal" id="new-ana" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-file"></i> Nuova anagrafica</a>
-                    <a href="#myModal" id="new-user" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-user"></i> Nuovo utente</a>
-                    <a href="#myModal" id="open-prefs" tabindex="-1" data-toggle="modal" data-dynamic="true"><i class="icon-wrench"></i> Preferenze</a> -->
-
-
     <section>
         <div class="row-fluid">
-        <div class="message">{{ custom_msg|safe }}</div>
             {% block application %}
             <div id="realtime">{{ realtime_table }}</div>
             {% endblock application %}
@@ -105,19 +96,34 @@
     </section>
 
     <!-- CODICE FINESTRA MODALE -->
-    <div class="modal hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  style="display:block;overflow: auto;">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-            <h4 id="myModalLabel">{{ modalLabel }}</h4>
-        </div>
-        <div class="modal-body" style="margin: 0 auto;text-align: left;width: 75%;"></div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true" id="modal-cancel">Annulla</button>
-            <button class="btn btn-primary" id="modal-action"></button>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onCLick="Modal.remove()">Annulla</button>
+        <button type="button" class="btn btn-primary" onCLick="Modal.save()">Salva</button>
+      </div>
+    </div>
+  </div>
+</div>
+   <!-- FINE CODICE FINESTRA MODALE -->
+   <!-- CODICE MESSAGGIO -->
+   <div class="bs-component hide" id="messagebox">
+        <div class="alert alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <h4 class="title"></h4>
+        <p class="content"></p>
         </div>
     </div>
-   <!-- FINE CODICE FINESTRA MODALE -->
+    <!-- FINE CODICE MESSAGGIO -->       
  </div><!--#maincontent-->
+ </main>
     <!-- <script src="{% static "js/jquery.js" %}" type="text/javascript" charset="utf-8"></script> -->
 		<!-- <script src="{% static "js/materialism/vendors.min.js" %}" type="text/javascript" charset="utf-8"></script> -->
 		<!-- <script src="{% static "js/materialism/app.min.js" %}" type="text/javascript" charset="utf-8"></script> -->

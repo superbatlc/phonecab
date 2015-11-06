@@ -4,6 +4,10 @@ top: 3px;
 position: relative;
 }
 
+.navbar-inverse {
+    background-color: #ff5722;
+}
+
 .nav .logout button {
 	color:white;
 }
@@ -30,8 +34,12 @@ position: relative;
   margin: 5px 5px 0 5px;
 }
 
-a.btn.btn-primary, a.btn.btn-success {
+a.btn  {
 	color:white;
+}
+
+a.btn.btn-default {
+	color:#666;
 }
 
 input.timepicker {
@@ -48,4 +56,17 @@ input.datepicker {
 }
 .bootstrap-datetimepicker-widget {
 	top:92px !important;
+}
+
+#messagebox {
+	position: fixed;
+    top: 70px;
+    right: 10px;
+    max-width: 40%;
+
+}
+
+select {
+	padding: 2px;
+    background-color: transparent;
 }

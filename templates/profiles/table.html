@@ -1,0 +1,51 @@
+<div class="card">
+<div class="table-responsive white">
+    <table class="table table-striped table-full table-full-small">
+        <thead>
+        <tr>
+        <th style="width:auto;">Cognome Nome</th>
+        <th style="width:120px;text-align:center;">Username</th>
+        <th style="width:120px;text-align:center;">Amministratore</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if items %}
+            {% for item in items %}
+            <tr>
+            <td>{{ item.last_name }} {{ item.first_name }}</td>
+            <td style="text-align:center;">{{ item.username}}</td>
+            <td style="text-align:center;">
+                {% if item.is_staff %}
+                    <i class="zmdi zmdi-check"></i>
+                {% else %}
+                    <i class="zmdi zmdi-close"></i>
+                {% endif%}
+            </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="4" style="text-align:center;">Non ci sono utenti corrispondenti alla ricerca effettuata.</td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+    </div>
+    </div>
+    {% if items %}
+    <!-- paginazione cdr -->
+    <div class="card">
+        <div class="card-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Numero utenti: {{ total_items }}&nbsp;&nbsp;</h4>
+                </div>
+                <div class="col-md-6" style="text-align:right;">
+                    {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
+                    <a href="?page={{ prev_page }}&amp;{{ query_string }}" class="btn btn-primary {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
+                    <a href="?page={{ next_page }}&amp;{{ query_string }}" class="btn btn-primary {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>
+                    <input type="hidden" id="items-current-page" value="{{ current_page }}"></input>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    

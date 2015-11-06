@@ -1,0 +1,60 @@
+{% load phonecabtags %}
+{% load tz %}
+<!-- tabella cdr -->
+    <br>
+    <table class="table table-striped" id="records-table">
+        <thead>
+        <tr style="background-color: #9C6;">
+        <th style="width:120px;">Data Ora</th>
+        <th style="width:40px;">Tipo</th>
+        <th style="width:60px;" class="acentro">Codice</th>
+        <th style="width:80px;" class="acentro">Matricola</th>
+        <th style="width:auto;">Cognome Nome</th>
+        <th style="width:100px;">Sorgente</th>
+        <th style="width:100px;">Destinazione</th>
+        <th style="width:200px;">Numero Autorizzato</th>
+        <th style="width:60px;" class="acentro">File</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}                                                 
+        <tr>
+            <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
+            <td class="acentro">{{ item.detail.custom_calltype|calltype|safe }}</td>
+            <td class="acentro">{{ item.pincode }}</td>
+            <td class="acentro">{{ item.phoneuser.serial_no }}</td>
+            <td>{{ item.phoneuser.get_full_name }}</td>
+            {% if privacy_mode == '1' %}
+                <td>{{ item.detail.custom_src|privacymode:3 }}</td>
+                <td>{{ item.detail.custom_dst|privacymode:3 }}</td>
+            {% else %}
+                <td>{{ item.detail.custom_src }}</td>
+                <td>{{ item.detail.custom_dst }}</td>
+            {% endif %}
+            <td>{{ item.whitelist.label }}</td>
+            <td class="acentro">
+                {% if item.filename != '' %}
+                <a href="{{item.filename}}" target="_blank"><i class="icon-headphones"></i></a>
+                {% else %}
+                -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- chiude tabella archived_phoneusers -->
+    <!-- paginazione archived_phoneusers -->
+        {% if items %}
+        <div class="pagination pagination-right">
+            {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
+            <a href="?page={{ prev_page }}&{{ query_string }}" class="btn prev-page {{ prev_page_disabled }}"><i class="icon-chevron-left prev-page"> </i></a>
+           <a href="?page={{ next_page }}&{{ query_string }}" class="btn next-page {{ next_page_disabled }}"><i class="icon-chevron-right next-page"> </i></a>
+        <input type="hidden" id="items-current-page" value="{{ current_page }}"></input>
+        </div>
+        <div style="height:30px;">
+            <a href="/records/export/?{{ query_string }}" class="btn btn-success records-export" style="float:left;">Esporta archivi</a>
+        </div>
+        {% endif %}
+    <!-- chiude paginazione archived_phoneusers -->
+        

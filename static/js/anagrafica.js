@@ -536,18 +536,6 @@ function check_whitelist_form(){
 }
 
 
-/* ==========================================================
- * PhoneCab
- * Funzione Mostra Dettaglio Chiamate 
- * ==========================================================
- * Copyright 2012 SuperbatTLC
- * ========================================================== */ 
-$('.show-cdr').click(function(e){
-    e.preventDefault()
-    window.location.href="/cdr/?accountcode="+$(this).attr('data-id')
-
-})
-
 
 
 /* ==========================================================

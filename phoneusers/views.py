@@ -1,4 +1,5 @@
 import json
+from urllib import urlencode
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.conf import settings
+from django.db.models import Q
 from phoneusers.models import PhoneUser, Whitelist, Credit
 #from acls.models import Acl
 
@@ -18,58 +21,152 @@ from archives.models import ArchivedPhoneUser
 
 
 @login_required
-def phoneuser_view(request, phoneuser_id):
+def phoneuser_home(request):
+    """Phoneusers page"""
+    import time
+    d = request.GET.dict()
     user = request.user
     variables = Acl.get_permissions_for_user(user.id, user.is_staff)
+    variables['phoneusers'] = phoneuser_items(request)
+    variables['d'] = d
 
-    if int(phoneuser_id):
-        # richiesta di modifica di un'anagrafica esistente
-        try:
-            variables['phoneuser'] = PhoneUser.objects.get(pk=phoneuser_id)
-            variables['whitelists'] = Whitelist.objects.filter(
-                phoneuser_id=phoneuser_id).order_by('label')
-            # Credit.objects.filter(phoneuser_id=phoneuser_id).order_by('-recharge_date')
-            variables['credits'] = credit_list(request, phoneuser_id)
+    return render_to_response(
+        'phoneusers/home.html', RequestContext(request, variables))
 
-            return render_to_response(
-                'phoneusers/home.html', RequestContext(request, variables))
+def phoneuser_items(request):
+    """Phoneuser Items List"""
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
 
-        except Exception as e:  # ObjectDoesNotExist:
-            print '%s (%s)' % (e.message, type(e))
-            # print "No phoneuser associated with id: %s" % phoneuser_id
-            raise Http404
-    else:
-        raise Http404
+    items_per_page = settings.ITEMS_PER_PAGE
+
+    keyword = request.GET.get("keyword", "")
+    enabled = request.GET.get("enabled", "")
+    page = int(request.GET.get("page", "1"))
+
+    d = request.GET.dict()
+
+    page = 1
+    if 'page' in d.keys():
+        page = int(d['page'])
+        # elimino la pagina dal dizionario
+        del d['page']
+
+    q_obj = Q(last_name__icontains=keyword)
+    q_obj.add(Q(pincode__icontains=keyword), Q.OR)
+    q_obj.add(Q(serial_no__icontains=keyword), Q.OR)
+
+    items_list = PhoneUser.objects.filter(q_obj).order_by('last_name')
+    if enabled != "":
+        items_list = items_list.filter(enabled=enabled)
+
+    total_items = items_list.count()
+
+    items, items_range, items_next_page = Helper.make_pagination(
+        items_list, page, items_per_page)
+
+
+    prev_page = page - 1
+    prev_page_disabled = ''
+    if prev_page < 1:
+        prev_page = 1
+        prev_page_disabled = 'disabled'
+
+    next_page = 1
+    next_page_disabled = ''
+    if items:
+        next_page = page + 1
+        if next_page > items.paginator.num_pages:
+            next_page = items.paginator.num_pages
+            next_page_disabled = 'disabled'
+
+    # print "range: %s - next: %s" % (items_range, next_page)
+
+    start_item = 1
+    if page > 0:
+        start_item = (page - 1) * items_per_page + 1
+    end_item = start_item + items_per_page - 1
+    if end_item > total_items:
+        end_item = total_items
+
+    variables['items'] = items
+    variables['total_items'] = total_items
+    variables['prev_page'] = prev_page
+    variables['next_page'] = next_page
+    variables['prev_page_disabled'] = prev_page_disabled
+    variables['next_page_disabled'] = next_page_disabled
+    variables['current_page'] = page
+    variables['start_item'] = start_item
+    variables['end_item'] = end_item
+    variables['query_string'] = urlencode(d)
+    variables['d'] = d
+
+    if request.is_ajax():
+        return render_to_response(
+            'phoneusers/table.html', RequestContext(request, variables))
+
+    return render_to_string(
+        'phoneusers/table.html', RequestContext(request, variables))
 
 
 @login_required
-def phoneuser_edit(request, phoneuser_id="0"):
-    """Gestisce sia il new che l'edit"""
+def phoneuser_view(request, phoneuser_id="0"):
+    """Phoneuser page"""
+    phoneuser_id = int(phoneuser_id)
+    if not phoneuser_id:
+        raise Http404 #TODO redirect con messaggio
+
+
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
+    phoneuser = phoneuser_data(request, phoneuser_id)
+    whitelists = whitelist_items(request, phoneuser_id)
+    credits = credit_items(request, phoneuser_id)
+   
+    variables['phoneuser'] = phoneuser
+    variables['whitelists'] = whitelists
+    variables['credits'] = credits
+    return render_to_response('phoneusers/page.html',
+        RequestContext(request,variables))
+
+
+@login_required
+def phoneuser_data(request, phoneuser_id="0"):
+    """Recupera e visualizza le informazioni sul phoneuser"""
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff) #TODO solo priv_anagrafica
     if int(phoneuser_id):
         # richiesta di modifica di un'anagrafica esistente
         try:
             phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-            variables = {
-                'phoneuser': phoneuser,
-            }
-            return render_to_response(
-                'phoneusers/anagrafica_modal.html',
-                RequestContext(
-                    request,
-                    variables))
-
         except ObjectDoesNotExist:
-            print "No phoneuser associated with id: %s" % phoneuser_id
+            print "No phoneuser associated with id: %s" % phoneuser_id #TODO Gestire errori in interfaccia. Muovere sopra
+            raise Http404
+    variables['phoneuser'] = phoneuser
+    if request.is_ajax():
+        return render_to_response(
+            'phoneusers/phoneuser.html', RequestContext(request, variables))
+
+    return render_to_string(
+        'phoneusers/phoneuser.html', RequestContext(request, variables))
+
+
+@login_required
+def phoneuser_edit(request):
+    """Gestisce sia il new che l'edit"""
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
+    phoneuser_id = request.POST.get("id", "0")
+    if int(phoneuser_id):
+        # richiesta di modifica di un'anagrafica esistente
+        try:
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+        except ObjectDoesNotExist:
+            print "No phoneuser associated with id: %s" % phoneuser_id #TODO Gestire errori in interfaccia
             raise Http404
     else:
         phoneuser = PhoneUser
         phoneuser.id = 0
-        variables = {
-                'phoneuser': phoneuser,
-            }
 
-        return render_to_response(
-            'phoneusers/anagrafica_modal.html', RequestContext(request, {}))
+    variables['phoneuser'] = phoneuser
+    return render_to_response('phoneusers/phoneuser_modal.html',
+        RequestContext(request,variables))
 
 
 @login_required
@@ -77,9 +174,9 @@ def phoneuser_save(request):
     """Save or update user"""
     phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
     enabled = int(request.POST.get("data[enabled]", "0"))
-    first_name = request.POST.get('data[first_name]', '')
+    first_name = request.POST.get("data[first_name]", "")
     last_name = request.POST.get("data[last_name]", "")
-    serial_no = request.POST.get('data[serial_no]', '')
+    serial_no = request.POST.get("data[serial_no]", "")
     pincode = request.POST.get("data[pincode]", "")
     four_bis_limited = int(request.POST.get("data[four_bis_limited]", "0"))
     listening_enabled = int(request.POST.get("data[listening_enabled]", "0"))
@@ -105,23 +202,26 @@ def phoneuser_save(request):
         phoneuser.vipaccount = vipaccount
 
         phoneuser.save()
-        ret = phoneuser.id
-    except:
-        ret = "0"
+        variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
+        variables['phoneuser'] = phoneuser
+        return render_to_response(
+            'phoneusers/phoneuser.html', RequestContext(request, variables))
+    except Exception as e:
+        print "error: %s" % format(e)
+        return HttpResponse("0", content_type='text/plain')
 
-    return HttpResponse(ret, mimetype='text/plain')
+    
 
 
 @login_required
 def phoneuser_check_pincode(request):
     """Verifica che il pincode sia univoco"""
     pincode = request.POST.get("pincode", "")
+    print "pincode to check: %s" % pincode
     check = PhoneUser.objects.filter(pincode=pincode).count()
 
-    if(check > 0):
-        return HttpResponse('1')
-    return HttpResponse('0')
-
+    return HttpResponse(str(check))
+    
 
 @login_required
 def phoneuser_enable(request, phoneuser_id):
@@ -132,7 +232,7 @@ def phoneuser_enable(request, phoneuser_id):
         phoneuser.save()
     except:
         ret = "0"
-    return HttpResponse(ret, mimetype='text/plain')
+    return HttpResponse(ret, content_type='text/plain')
 
 
 @login_required
@@ -144,7 +244,7 @@ def phoneuser_disable(request, phoneuser_id):
         phoneuser.save()
     except:
         ret = "0"
-    return HttpResponse(ret, mimetype='text/plain')
+    return HttpResponse(ret, content_type='text/plain')
 
 
 @login_required
@@ -160,7 +260,7 @@ def phoneuser_archive(request, phoneuser_id):
     except Exception as e:
         print "Errore archiviazione %s" % format(e)
         ret = "0"
-    return HttpResponse(ret, mimetype='text/plain')
+    return HttpResponse(ret, content_type='text/plain')
 
 
 @login_required
@@ -216,7 +316,7 @@ def phoneuser_export(request, accountcode="0"):
         sheet.write(row + 2, 4, "Valore residuo:", style=default_style)
         sheet.write(row + 2, 5, residuo, style=default_style)
 
-        response = HttpResponse(mimetype='application/vnd.ms-excel')
+        response = HttpResponse(content_type='application/vnd.ms-excel')
         filename = 'Estratto_conto_telefonico_%s.xls' % phoneuser.get_full_name().replace(" ","_")
         response[
             'Content-Disposition'] = 'attachment; filename=%s' % filename
@@ -278,10 +378,10 @@ def phoneuser_name(request, accountcode):
 
 
 @login_required
-def whitelist_list(request, phoneuser_id):
+def whitelist_items(request, phoneuser_id):
     phoneuser_id = int(phoneuser_id)
     user = request.user
-    variables = Acl.get_permissions_for_user(user.id, user.is_staff)
+    variables = Acl.get_permissions_for_user(user.id, user.is_staff) #TODO recuperare solo privilegio whitelist
     whitelists = Whitelist.objects.filter(
         phoneuser_id=phoneuser_id).order_by('label')
 
@@ -291,8 +391,12 @@ def whitelist_list(request, phoneuser_id):
 
     variables['whitelists'] = whitelists
 
-    return render_to_response(
-        'phoneusers/whitelists_list.html', RequestContext(request, variables))
+    if request.is_ajax():
+        return render_to_response(
+            'phoneusers/whitelists/table.html', RequestContext(request, variables))
+
+    return render_to_string(
+        'phoneusers/whitelists/table.html', RequestContext(request, variables))
 
 
 @login_required
@@ -496,7 +600,7 @@ def whitelist_check_prefix(request):
 
 
 @login_required
-def credit_list(request, phoneuser_id):
+def credit_items(request, phoneuser_id):
 
     items_per_page = 10
 
@@ -536,8 +640,6 @@ def credit_list(request, phoneuser_id):
             next_page = items.paginator.num_pages
             next_page_disabled = 'disabled'
 
-    # print "range: %s - next: %s" % (items_range, next_page)
-
     start_item = 1
     if page > 0:
         start_item = (page - 1) * items_per_page + 1
@@ -559,9 +661,9 @@ def credit_list(request, phoneuser_id):
 
     if request.is_ajax():
         return render_to_response(
-            'phoneusers/credits_list.html', RequestContext(request, variables))
+            'phoneusers/credits/table.html', RequestContext(request, variables))
     return render_to_string(
-        'phoneusers/credits_list.html', RequestContext(request, variables))
+        'phoneusers/credits/table.html', RequestContext(request, variables))
 
 
 @login_required

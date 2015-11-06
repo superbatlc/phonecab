@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 #from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
 
+from acls.models import Acl
 from prefs.models import Fare, Pref
 
 
@@ -47,6 +48,9 @@ def prefs_edit(request):
         'alert_before_end': alert_before_end,
         'privacy_mode': privacy_mode,
     }
+
+    variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))
+
     return render_to_response(
         'prefs.html', RequestContext(request, variables))
 
@@ -278,3 +282,5 @@ def prefs_save(request):
 
 def get_fee(value):
     return float(value.replace(",", "."))
+
+    

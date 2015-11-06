@@ -374,11 +374,11 @@ $(".archive-ana").click(function(e){
 $(".enable-ana").click(function(e){
     e.preventDefault()
     var phoneuser_id = $('#phoneuser-id').val();
-    var url = '/phoneusers/disable/'+phoneuser_id;
+    var url = '/phoneusers/disable/' + phoneuser_id;
 
     var enable = $(this).attr("data-action") == '1';
     if(enable){
-    	url = '/phoneusers/enable/'+phoneuser_id;
+    	url = '/phoneusers/enable/' + phoneuser_id;
     }
 
     $.ajax({
@@ -387,7 +387,7 @@ $(".enable-ana").click(function(e){
        async: true,
        dataType: 'json',
        success: function(response){
-            location.reload()
+            reload_phoneuser_data();
        },
        error: function(jqXHR, textStatus, errorThrown){
     	   //

@@ -37,7 +37,7 @@ $('.cdr-do-filter').on('click',function(){
     
     $.ajax({
            type: 'GET',
-           url: '/cdr/ajax/filter/',
+           url: '/cdrs/ajax/filter/',
            data: dict,
            success: function(data){
                 $('.log-cdr').html(data)                            
@@ -63,7 +63,7 @@ $('.cdr-page').on('click',function(e){
     
     $.ajax({
            type: 'GET',
-           url: '/cdr/ajax/filter/'+query,
+           url: '/cdrs/ajax/filter/'+query,
            success: function(data){
                 $('.log-cdr').html(data)                            
            },
@@ -96,7 +96,7 @@ $('.cdr-valid').on('click',function(e){
 		
 		$.ajax({
 		       type: 'POST',
-		       url: '/cdr/valid/',
+		       url: '/cdrs/valid/',
 		       async: true,
 		       data: {detail_id: detail_id, valid: valid},
 		       dataType: 'json',

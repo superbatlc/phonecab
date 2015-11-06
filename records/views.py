@@ -53,7 +53,7 @@ def record_items(request):
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", "00:00")
     end_time = request.GET.get("end_time", "23:59")
-    pincode = request.GET.get("accountcode", "")
+    pincode = request.GET.get("pincode", "")
     page = int(request.GET.get("page", "1"))
     d = request.GET.dict()
 
