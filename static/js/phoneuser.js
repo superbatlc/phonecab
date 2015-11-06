@@ -25,7 +25,7 @@ var Phoneuser = {
             ok &= checkEmptyField("#serial-no");
             console.log(ok);
             if(isNew && ok){
-              checkUniquePincode("#pincode",callback);
+              checkUniquePincode("#pincode", callback);
             } else {
               callback({success:ok}); return;
             }
@@ -42,11 +42,10 @@ var Phoneuser = {
                 isNew = true;
             }
 
-            var postCheck = function(data){
-              // async post save
-              // chiama il callback di save con {success:bool} al termine
-              console.log(data);
-                if (!data.success) { callback({success:false}); return; }
+            var postCheck = function(callback_return){
+                // async post save
+                // chiama il callback di save con {success:bool} al termine
+                if (!callback_return.success) { callback({success:false}); return; }
 
                 data.enabled = 0
                 if($("input[type=checkbox]#enabled").is(':checked')){
@@ -70,7 +69,7 @@ var Phoneuser = {
                 }
                 data.recording_enabled = 0
                 if($("input[type=checkbox]#recording-enabled").is(':checked')){
-                    phoneuser.recording_enabled = 1
+                    data.recording_enabled = 1
                 }
 
                 //data.vipaccount = 0
@@ -82,7 +81,7 @@ var Phoneuser = {
                 requestDataDjango("POST", "html", '/phoneusers/save/', {data : data},
                 function(response){
                   if(isNew) {
-                    alert('update list');
+                    Phoneuser.updateDOM('#phoneusers', response); 
                   }
                   else Phoneuser.updateDOM('#phoneuser', response);
                   callback({success:true}); return;
@@ -95,7 +94,19 @@ var Phoneuser = {
             Phoneuser.check(isNew,postCheck);
         },
 
-        enable : function(id){
+        changeStatus : function(id, newstatus){
+            var data = {};
+            data.phoneuser_id = id;
+            data.newstatus = newstatus;
+
+            requestDataDjango("POST", "html", '/phoneusers/changestatus/', {data : data},
+                function(response){
+                    if(response != "-1"){
+                        Phoneuser.updateDOM('#phoneuser', response);
+                    }else{
+                        alert('error');
+                    }
+                });
 
         },
 

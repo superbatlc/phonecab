@@ -7,59 +7,58 @@
     {% endblock stylesheet %}
     {% block application %}
 
-		<div class="page-header">
+	<div class="page-header">
       <h1><i class="zmdi zmdi-phone"></i> Chiamate</h1>
       <!-- <p class="lead">Descrizione</p> -->
     </div>
-		<div class="card">
-			<div class="card-content">
-				<form method="GET">
+	<div class="card bordered">
+		<div class="card-content">
+			<form method="GET">
 
-				<div style="float:right;">
-						<button class="btn filtra btn-success cdr-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
-						<a href="/cdr" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
-				</div>
-                <span>
-                    <label>Dal</label>
-                    <input type="text" name="start_date" value="{{ d.start_date }}" maxlength="12" size="8" class="input-small datepicker">
-                </span>
-                <span>
-                    <label>@</label>
-                    <input type="text" name="start_time" value="{{ d.start_time }}" maxlength="5" size="5" class="input-small timepicker">
-                </span>
-                <span>
-                    <label>al</label>
-                    <input type="text" name="end_date" value="{{ d.end_date }}" maxlength="12" size="8" class="input-small datepicker">
-                </span>
-                <span>
-                    <label>@</label>
-                    <input type="text" name="end_time" value="{{ d.end_time }}" maxlength="5" size="5" class="input-small timepicker">
-                </span>
-                <span>
-                    <label>Codice:</label>
-                    <input name="accountcode" type="text" value="{{ d.accountcode }}" maxlength="10" size="10">
-                </span>
-                <span>
-                    <label>Destinazione:</label>
-                    <input name="dst" type="text" value="{{ d.dst }}" maxlength="10" size="10">
-                </span>
-				<span>
-                <label>Stato&nbsp;</label>
-                <select name="custom_calltype" style="width: 160px;">
-                    <option value=""{% if d.enabled == ""%} selected{% endif %}>Tutte</option>
-                    <option value="0"{% if d.enabled == "0"%} selected{% endif %}>Ordinaria</option>
-                    <option value="1"{% if d.enabled == "1"%} selected{% endif %}>Straordinaria</option>
-                </select>
-                </span>
-                </form>
-			     <div style="clear:both;"></div>
-          </div>
+			<div style="float:right;">
+					<button class="btn filtra btn-success cdr-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
+					<a href="/cdr" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
+			</div>
+            <span>
+                <label>Dal</label>
+                <input type="text" name="start_date" value="{{ d.start_date }}" maxlength="12" size="8" class="input-small datepicker">
+            </span>
+            <span>
+                <label>@</label>
+                <input type="text" name="start_time" value="{{ d.start_time }}" maxlength="5" size="5" class="input-small timepicker">
+            </span>
+            <span>
+                <label>al</label>
+                <input type="text" name="end_date" value="{{ d.end_date }}" maxlength="12" size="8" class="input-small datepicker">
+            </span>
+            <span>
+                <label>@</label>
+                <input type="text" name="end_time" value="{{ d.end_time }}" maxlength="5" size="5" class="input-small timepicker">
+            </span>
+            <span>
+                <label>Codice:</label>
+                <input name="accountcode" type="text" value="{{ d.accountcode }}" maxlength="10" size="10">
+            </span>
+            <span>
+                <label>Destinazione:</label>
+                <input name="dst" type="text" value="{{ d.dst }}" maxlength="10" size="10">
+            </span>
+			<span>
+            <label>Stato&nbsp;</label>
+            <select name="custom_calltype" style="width: 160px;">
+                <option value=""{% if d.enabled == ""%} selected{% endif %}>Tutte</option>
+                <option value="0"{% if d.enabled == "0"%} selected{% endif %}>Ordinaria</option>
+                <option value="1"{% if d.enabled == "1"%} selected{% endif %}>Straordinaria</option>
+            </select>
+            </span>
+            </form>
+		     <div style="clear:both;"></div>
         </div>
-
         <div class="log-cdr">{{ cdr }}</div>
+    </div>
 
-    {% endblock application %}
-    {% block script %}
-    <!-- <script src="{% static "js/bootstrap-datepicker.js" %}" type="text/javascript" charset="utf-8"></script> -->
-    <!-- <script src="{% static "js/cdr.js" %}" type="text/javascript" charset="utf-8"></script> -->
-    {% endblock script %}
+{% endblock application %}
+{% block script %}
+<!-- <script src="{% static "js/bootstrap-datepicker.js" %}" type="text/javascript" charset="utf-8"></script> -->
+<!-- <script src="{% static "js/cdr.js" %}" type="text/javascript" charset="utf-8"></script> -->
+{% endblock script %}

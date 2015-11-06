@@ -148,3 +148,7 @@ select {
       display: block !important; /* fix */
   }
 }
+
+span.label {
+  font-size: 1.0em;
+}

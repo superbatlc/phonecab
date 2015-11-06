@@ -117,7 +117,7 @@ function checkEmptyField(selector){
     return true;
 }
 
-function checkUniquePincode(pincode_sel,callback){
+function checkUniquePincode(pincode_sel, callback){
     // async check
     // chiama il callback con {success:bool} al termine
     var pincode = $(pincode_sel).val();
@@ -135,7 +135,7 @@ function checkUniquePincode(pincode_sel,callback){
         callback({success:true}); return;
       }else{
         parent.addClass('has-error');
-        $('.pincode-check').show();
+        $('.pincode-check').removeClass('hide');
         callback({success:false}); return;
       }
     })

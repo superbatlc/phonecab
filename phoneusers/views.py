@@ -184,11 +184,14 @@ def phoneuser_save(request):
     language = request.POST.get("data[language]", "")
     vipaccount = int(request.POST.get("data[vipaccount]", "0"))
 
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
+    is_new = False
     try:
         if phoneuser_id:
             phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
         else:
             phoneuser = PhoneUser()
+            is_new = True
 
         phoneuser.enabled = enabled
         phoneuser.first_name = first_name.title()
@@ -202,7 +205,9 @@ def phoneuser_save(request):
         phoneuser.vipaccount = vipaccount
 
         phoneuser.save()
-        variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
+        
+        if is_new:
+            return phoneuser_items(request)
         variables['phoneuser'] = phoneuser
         return render_to_response(
             'phoneusers/phoneuser.html', RequestContext(request, variables))
@@ -224,27 +229,19 @@ def phoneuser_check_pincode(request):
     
 
 @login_required
-def phoneuser_enable(request, phoneuser_id):
-    ret = "1"
+def phoneuser_change_status(request):
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
+    newstatus = request.POST.get("data[newstatus]", "")
+    ret = newstatus
+
     try:
         phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-        phoneuser.enabled = 1
+        phoneuser.enabled = int(newstatus)
         phoneuser.save()
-    except:
-        ret = "0"
-    return HttpResponse(ret, content_type='text/plain')
-
-
-@login_required
-def phoneuser_disable(request, phoneuser_id):
-    ret = "1"
-    try:
-        phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-        phoneuser.enabled = 0
-        phoneuser.save()
-    except:
-        ret = "0"
-    return HttpResponse(ret, content_type='text/plain')
+    except Exception as e:
+        print "%s" % format(e)
+        ret = "-1"
+    return phoneuser_data(request, phoneuser_id)
 
 
 @login_required

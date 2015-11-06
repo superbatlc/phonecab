@@ -1,67 +1,63 @@
 {% load phonecabtags %}
 {% load tz %}
-<div class="card">
-    <div class="card-content">
-    <legend><i class="zmdi zmdi-format-list-numbered"></i> Numeri Autorizzati</legend>
-    <div class="row">
-        <div class="col-md-12">
-    <div class="table-responsive white">
-    <table class="table table-striped table-full table-full-small">
-        <thead>
-        <tr>
-        <th style="width:40px;">Stato</th>
-        <th style="width:auto;">Etichetta</th>
-        <th style="width:50px;text-align:center;">Numero</th>
-        <th style="width:30px; text-align:center;">Cellulare</th>
-        <!--<th style="width:100px; text-align:center;">Soglia</th>-->
-        <th style="width:120px; text-align:center;">Tipologia</th>
-        <th style="width:30px; text-align:center;">Straordinaria</th>
-        <th style="width:120px; text-align:center;">Azioni</th>
-        </tr>
-        </thead>
-        <tbody>
-         {% for wl in whitelists %}
-         <tr>
-         <td style="text-align:center;">
-            {% if wl.enabled %}
-                <a href="#" tabindex="-1" class="btn btn-xs btn-success enable-whitelist" title="Premi per disabilitare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="zmdi zmdi-check"></i></a>
-            {% else %}
-                <a href="#" tabindex="-1" class="btn btn-xs btn-danger enable-whitelist" title="Premi per abilitare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="zmdi zmdi-close"></i></a>
-            {% endif %}
-         </td>
-         <td>{{ wl.label }}</td>
-         <td style="text-align:center;">{{ wl.phonenumber }}</td>
-         <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No"  }}</td>
-         <!--<td style="text-align:center;">{{ wl.duration|format_time }}</td>-->
-         <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
-         <td style="text-align:center;">
-            {% if wl.extraordinary %}
-                <a href="#" tabindex="-1" class="btn btn-xs btn-success extra-whitelist" title="Premi per rendere ordinaria" data-id="{{ wl.id }}"><i class="zmdi zmdi-check"></i></a>
-            {% else %}
-                <a href="#" tabindex="-1" class="btn btn-xs btn-danger extra-whitelist" title="Premi per rendere straordinaria" data-id="{{ wl.id }}"><i class="zmdi zmdi-close"></i></a>
-            {% endif %}
-         </td>
-         <td style="text-align:center;">
-         {% if priv_whitelist > 1 %}
-             <a href="#myModal" tabindex="-1" data-toggle="modal" data-dynamic="true" class="btn btn-sm btn-default show-whitelist-modal" title="Premi per modificare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="zmdi zmdi-edit"></i></a>
-             <a href="#" tabindex="-1" class="btn btn-sm btn-default remove-whitelist" title="Premi per eliminare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="zmdi zmdi-delete"></i></a>
-        {% endif%}
-         </td>
-         </tr>
-         {% endfor %}
-         </tbody>
-    </table>
+<div class="card bordered">
+    <div class="card-header">
+    <span class="card-title"><i class="zmdi zmdi-format-list-numbered"></i> Numeri Autorizzati</span>
     </div>
-    </div>
-     {% if priv_whitelist > 1 %}
-     <div class="row">
-        <div class="col-md-12" style="margin:20px 0 0 10px;">
-            <button class="btn btn-primary show-whitelist-modal"><i class="zmdi zmdi-plus"></i> Nuova Autorizzazione</button>
+        <div class="table-responsive white">
+            <table class="table table-striped table-full table-full-small">
+                <thead>
+                <tr>
+                <th style="width:40px;">Stato</th>
+                <th style="width:auto;">Etichetta</th>
+                <th style="width:50px;text-align:center;">Numero</th>
+                <th style="width:30px; text-align:center;">Cellulare</th>
+                <!--<th style="width:100px; text-align:center;">Soglia</th>-->
+                <th style="width:120px; text-align:center;">Tipologia</th>
+                <th style="width:30px; text-align:center;">Straordinaria</th>
+                <th style="width:120px; text-align:center;">Azioni</th>
+                </tr>
+                </thead>
+                <tbody>
+                 {% for wl in whitelists %}
+                 <tr>
+                 <td style="text-align:center;">
+                    {% if wl.enabled %}
+                        <a href="#" tabindex="-1" class="btn btn-xs btn-success" onClick="Whitelist.changeStatus({{ wl.id }},0)" title="Premi per disabilitare l&apos;autorizzazione"><i class="zmdi zmdi-check"></i></a>
+                    {% else %}
+                        <a href="#" tabindex="-1" class="btn btn-xs btn-danger"  onClick="Whitelist.changeStatus({{ wl.id }},0)" title="Premi per abilitare l&apos;autorizzazione"><i class="zmdi zmdi-close"></i></a>
+                    {% endif %}
+                 </td>
+                 <td>{{ wl.label }}</td>
+                 <td style="text-align:center;">{{ wl.phonenumber }}</td>
+                 <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No"  }}</td>
+                 <!--<td style="text-align:center;">{{ wl.duration|format_time }}</td>-->
+                 <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
+                 <td style="text-align:center;">
+                    {% if wl.extraordinary %}
+                        <a href="#" tabindex="-1" class="btn btn-xs btn-success extra-whitelist" title="Premi per rendere ordinaria" data-id="{{ wl.id }}"><i class="zmdi zmdi-check"></i></a>
+                    {% else %}
+                        <a href="#" tabindex="-1" class="btn btn-xs btn-danger extra-whitelist" title="Premi per rendere straordinaria" data-id="{{ wl.id }}"><i class="zmdi zmdi-close"></i></a>
+                    {% endif %}
+                 </td>
+                 <td style="text-align:center;">
+                 {% if priv_whitelist > 1 %}
+                     <a href="#myModal" tabindex="-1" data-toggle="modal" data-dynamic="true" class="btn btn-sm btn-default show-whitelist-modal" title="Premi per modificare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="zmdi zmdi-edit"></i></a>
+                     <a href="#" tabindex="-1" class="btn btn-sm btn-default remove-whitelist" title="Premi per eliminare l&apos;autorizzazione" data-id="{{ wl.id }}"><i class="zmdi zmdi-delete"></i></a>
+                {% endif%}
+                 </td>
+                 </tr>
+                 {% endfor %}
+                 </tbody>
+            </table>
         </div>
+
+    {% if priv_whitelist > 1 %}
+    <div class="card-action">
+            <button class="btn btn-primary show-whitelist-modal"><i class="zmdi zmdi-plus"></i> Nuova Autorizzazione</button>
     </div>
-     {% endif %}
-     </div>
-     </div>
+    {% endif %}
 </div>
+
 
 

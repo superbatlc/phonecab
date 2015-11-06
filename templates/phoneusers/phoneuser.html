@@ -1,43 +1,51 @@
-<div class="card">
+<div class="card bordered">
     <div class="card-content">
-        <div class="form-inline" style="margin-bottom:20px;">
-            <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }} </h3>
-                   {% if phoneuser.four_bis_limited %}(4bis limitato){% endif %}
-                   <span style="float: right;">
-                    <span class="label {{phoneuser.listening_enabled|yesno:"green,red"}}">
-                       <i class="zmdi zmdi-headphone"></i> Ascolto
-                    </span>
-                    &nbsp;&nbsp;
-                    <span class="label {{phoneuser.recording_enabled|yesno:"green,red"}}">
-                       <i class="zmdi zmdi-mic"></i> Registrazione
-                    </span>
+        <div style="float: right;">
+            <span class="label {{phoneuser.listening_enabled|yesno:"green,red"}}">
+               <i class="zmdi zmdi-headset"></i> Ascolto
+            </span>
+            &nbsp;&nbsp;
+            <span class="label {{phoneuser.recording_enabled|yesno:"green,red"}}">
+               <i class="zmdi zmdi-mic"></i> Registrazione
+            </span>
         </div>
-        <div class="form-inline" style="float:right;margin: 10px 0 0;">
-            <label style="text-align:right;margin-right:2px; font-size:130%;color:#666;">Matricola:</label>
-            <span style="font-size:130%;">{{ phoneuser.serial_no }}</span>
-            <br/>
-            <label style="text-align:right;margin-right:2px; font-size:130%;color:#666;">Lingua:</label>
-            <span style="font-size:130%;">{{ phoneuser.get_language_display }}</span>
+        <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
+       {% if not phoneuser.four_bis_limited %}<small>(4bis limitato)</small>{% endif %}</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <h4 style="color:#666;">Codice: {{ phoneuser.pincode }}</h4>
+            </div>
+            <div class="col-md-4" style="text-align:center;">
+                <h4 style="color:#666;">Matricola: {{ phoneuser.serial_no }}</h4>
+                
+            </div>
+            <div class="col-md-4" style="text-align:right;">
+                <h4 style="color:#666;">Lingua: {{ phoneuser.get_language_display }}</h4>
+            </div>
         </div>
-        <div class="form-inline pin" style="margin-bottom:10px;">
-           <label style="font-size:160%;margin-right:2px;">Codice:</label>
-            <span class="phoneuser-pincode" style="font-size:160%;">{{ phoneuser.pincode }}</span>
+    </div>
+    <div class="card-action">
+        <div class="row">
+            <div class="col-md-6">
+            {% if phoneuser.enabled %}
+                <button class="btn btn-success light-green accent-4" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)">
+                <i class="zmdi zmdi-check"></i> SCHEDA ATTIVA{% if phoneuser.vipaccount %} (SENZA RESTRIZIONI){% endif %}
+                </button>
+            {% else %}
+                <button class="btn btn-danger" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)">
+                <i class="zmdi zmdi-clear"></i> SCHEDA DISATTIVA
+                </button>
+            {% endif %} 
+            </div>
+            <div class="col-md-6" style="text-align:right;">
+            {% if priv_anagrafica > 1 %}
+                <button data-target="#myModal" class="btn btn-primary" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1">
+                <i class="zmdi zmdi-edit"></i> Modifica
+                </button>
+                <a href="#" class="btn btn-info archive-ana" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1">
+                <i class="zmdi zmdi-archive"></i> Archivia</a>
+            {% endif %}
+            </div>
         </div>
-        {% if phoneuser.enabled %}
-        <button class="btn btn-success light-green accent-4 enable-ana" data-action="0" style="margin-right: 20px;">
-           <i class="zmdi zmdi-check"></i> SCHEDA ATTIVA{% if phoneuser.vipaccount %} (SENZA RESTRIZIONI){% endif %}
-        </button>
-        {% else %}
-        <button class="btn btn-danger enable-ana" data-action="1" style="margin-right: 20px;">
-           <i class="zmdi zmdi-clear"></i> SCHEDA DISATTIVA
-        </button>
-        {% endif %}
-        {% if priv_anagrafica > 1 %}
-        <br /><br />
-        <div style="text-align:right;">
-            <button data-target="#myModal" class="btn btn-primary" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1"><i class="zmdi zmdi-edit"></i> Modifica</button>
-            <a href="#" class="btn btn-info archive-ana" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1"><i class="zmdi zmdi-archive"></i> Archivia</a>
-        </div>
-        {% endif %}
     </div>
 </div>

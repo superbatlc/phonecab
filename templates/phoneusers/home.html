@@ -8,7 +8,7 @@
   <h1><i class="zmdi zmdi-accounts"></i> Anagrafica</h1>
   <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
 </div>
-<div class="card">
+<div class="card bordered">
     <div class="card-content">
         <form method="GET">
         <div style="float:right;">
@@ -31,13 +31,11 @@
         </form>
         <div style="clear:both;"></div>
     </div>
-</div>
-<div class="inner table">{{ phoneusers }}</div>
-
-<div style="float:right;margin-top:30px;">
-    <button class="btn btn-lg btn-primary" onClick="Phoneuser.edit(0)"><i class="zmdi zmdi-plus"></i> Nuova Anagrafica</button>
-</div>
-    
+    <div class="inner table" id="phoneusers">{{ phoneusers }}</div>
+    <div class="card-action">
+        <button class="btn btn-lg btn-primary" onClick="Phoneuser.edit(0)"><i class="zmdi zmdi-plus"></i> Nuova Anagrafica</button>
+    </div>
+</div>    
 {% endblock application %}   
 {% block script %}
 <script src="{% static "js/phoneuser.js" %}" type="text/javascript" charset="utf-8"></script>
