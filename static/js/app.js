@@ -7,7 +7,7 @@ var Modal = {
         if (!dict.hasOwnProperty('content')) dict.content = 'No content';
         if (!dict.hasOwnProperty('onSave')) dict.onSave = null;
         if (!dict.hasOwnProperty('onRemove')) dict.onRemove = null;
-                                           
+
         $('#myModalLabel').text(dict.title);
         $('#myModal .modal-body').html(dict.content);
 
@@ -17,12 +17,15 @@ var Modal = {
     },
     save_function : null,
     save : function(){
-        if (Modal.save_function) {
-            if(!Modal.save_function()){
-              return;
-            }
+        var callback = function(data) {
+          console.log(data);
+          if (data.success) $('#myModal').modal('hide');
         }
-        $('#myModal').modal('hide');
+        if (Modal.save_function) {
+          Modal.save_function(callback);
+        } else {
+          callback({success:true});
+        }
     },
     remove_function : null,
     remove : function(){
@@ -46,7 +49,7 @@ function showMessageBox(title, content, alertClass) {
       $('#messagebox .title').html(title);
       $('#messagebox .content').html(content);
       $('#messagebox > div').addClass(alertClass);
-      
+
       $('#messagebox').removeClass("hide");
       setTimeout(function(){
         $('#messagebox').fadeOut();
@@ -114,25 +117,26 @@ function checkEmptyField(selector){
     return true;
 }
 
-function checkUniquePincode(pincode_sel){
-    // return false on error
+function checkUniquePincode(pincode_sel,callback){
+    // async check
+    // chiama il callback con {success:bool} al termine
     var pincode = $(pincode_sel).val();
     var parent = $(pincode_sel).parent().parent();
     if(!pincode) {
         parent.addClass('has-error');
         $('.pincode-check').show();
-        return false;
+        callback({success:false}); return;
     }
 
     requestDataDjango("POST", "text", '/phoneusers/check/', {pincode : pincode}, function(response){
       if(response == "0"){
         parent.removeClass('has-error');
         $('.pincode-check').hide();
-        return true;
+        callback({success:true}); return;
       }else{
         parent.addClass('has-error');
         $('.pincode-check').show();
-        return false;
+        callback({success:false}); return;
       }
     })
 }
@@ -145,7 +149,7 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip();
   $('[data-toggle="popover"]').popover();
 
-  $('.navbar-toggle').sideNav({ menuWidth: 260, closeOnClick: true });
+  $('.navbar-toggle').sideNav({ menuWidth: 200, closeOnClick: true });
 
   var withRipples = [
     '.btn:not(.withoutripple)',
@@ -206,7 +210,7 @@ $(function () {
     });
   });
 
-  /*  
+  /*
   $(".edit-ana").click(function(e){
     e.preventDefault()
     phoneuser_id = $('#phoneuser-id').val()
@@ -235,5 +239,3 @@ $(function () {
 */
 
 });
-
-

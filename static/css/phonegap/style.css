@@ -70,3 +70,16 @@ select {
 	padding: 2px;
     background-color: transparent;
 }
+
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color:white;
+}
+
+@media (min-width: 993px) {
+  .navbar-fixed-top {
+    margin-left: 200px!important;
+  }
+  main {
+    padding-left: 200px!important;
+  }
+}

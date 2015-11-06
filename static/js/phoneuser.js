@@ -15,20 +15,25 @@ var Phoneuser = {
             });
         },
 
-        check : function(isNew){
+        check : function(isNew,callback){
+            // async check
+            // chiama il callback con {success:bool} al termine
             var ok = true;
 
             ok &= checkEmptyField("#first-name");
             ok &= checkEmptyField("#last-name");
             ok &= checkEmptyField("#serial-no");
-            if(isNew){
-                ok &= checkUniquePincode("#pincode");
+            console.log(ok);
+            if(isNew && ok){
+              checkUniquePincode("#pincode",callback);
+            } else {
+              callback({success:ok}); return;
             }
-
-            return ok
         },
 
-        save : function(){
+        save : function(callback){
+            // async action
+            // chiama il callback con {success:bool} al termine
             var data = {};
             var isNew = false;
             data.phoneuser_id = $('#phoneuser-id-modal').val();
@@ -37,9 +42,12 @@ var Phoneuser = {
                 isNew = true;
             }
 
-            if(!Phoneuser.check(isNew)) return false;
-
             var postCheck = function(data){
+              // async post save
+              // chiama il callback di save con {success:bool} al termine
+              console.log(data);
+                if (!data.success) { callback({success:false}); return; }
+
                 data.enabled = 0
                 if($("input[type=checkbox]#enabled").is(':checked')){
                     data.enabled = 1
@@ -68,15 +76,23 @@ var Phoneuser = {
                 //data.vipaccount = 0
                 //if($("input[type=checkbox]#vipaccount").is(':checked')){
                 //    data.vipaccount = 1
-                //}       
-                
-                requestDataDjango("POST", "html", '/phoneusers/save/', {data : data}, function(response){
-                    if(isNew) alert('update list');
-                    else Phoneuser.updateDOM('#phoneuser', response));
+                //}
+                //
+
+                requestDataDjango("POST", "html", '/phoneusers/save/', {data : data},
+                function(response){
+                  if(isNew) {
+                    alert('update list');
+                  }
+                  else Phoneuser.updateDOM('#phoneuser', response);
+                  callback({success:true}); return;
+                },function(error){
+                  callback({success:false}); return;
                 });
             }
 
-            return true;
+            // chiama postCheck al termine del check (passando {success:bool})
+            Phoneuser.check(isNew,postCheck);
         },
 
         enable : function(id){
@@ -85,13 +101,13 @@ var Phoneuser = {
 
         archive : function(id){
 
-        }, 
+        },
         /*
         checkPincode : function(pincode){
             requestData("POST", "html", '/phoneusers/check/', {pincode : pincode}, function(response){Phoneuser.updateDOM('#ballyhoos-active', response)});
 
         },
-        */ 
+        */
 
         updateDOM : function(selector, content) {
             $(selector).html(content);

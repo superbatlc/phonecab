@@ -49,13 +49,13 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 
 			<div class="container-fluid">
-			            <!-- <div class="navbar-header pull-left">
+			            <div class="navbar-header pull-left">
 			              <button type="button" class="navbar-toggle pull-left m-15" data-activates=".sidebar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-			              <ul class="breadcrumb">
+			              <!-- <ul class="breadcrumb">
 			                <li><a href="#/">Materialism</a></li>
 			                <li class="active">Cards</li>
-			              </ul>
-			            </div> -->
+			              </ul> -->
+			            </div>
 			            <ul class="nav navbar-nav navbar-right navbar-right-no-collapse">
 			              <li class="logout pull-right">
 											<form action="/logout/">
@@ -121,7 +121,7 @@
         <p class="content"></p>
         </div>
     </div>
-    <!-- FINE CODICE MESSAGGIO -->       
+    <!-- FINE CODICE MESSAGGIO -->
  </div><!--#maincontent-->
  </main>
     <!-- <script src="{% static "js/jquery.js" %}" type="text/javascript" charset="utf-8"></script> -->
@@ -139,7 +139,10 @@
 		<script src="{% static "js/vendors/moment.locale.js" %}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static "js/vendors/bootstrap-datetimepicker.min.js" %}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static "js/vendors/sidenav.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/velocity.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/hammer.min.js" %}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static "js/vendors/hammer.jquery.js" %}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static "js/app.js" %}" type="text/javascript" charset="utf-8"></script>
 
     {% block script %}{% endblock script %}
