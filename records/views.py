@@ -132,7 +132,6 @@ def record_items(request):
     variables['end_item'] = end_item
     variables['d'] = d
     variables['query_string'] = urlencode(d)
-    variables['privacy_mode'] = Pref.get('privacy_mode')
 
     if request.is_ajax():
         return render_to_response(

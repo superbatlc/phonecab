@@ -33,10 +33,10 @@
                 <input class="form-control" name="dist_fee_per_second" type="text" value="{{ dist.fee_per_second|per_minute|floatformat:4 }}">
               </div>
             </div>
-            <div class="col-xs-12">
+            <div class="col-xs-5">
               <div class="form-group">
                 <label class="control-label">Prefisso Distrettuale</label>
-                <input class="form-control" class="input-small" name="dist_prefix" size="5" type="text" value="">
+                <input class="form-control" class="input-small" name="dist_prefix" size="5" type="text" value="{{ dist.prefix_list }}">
               </div>
             </div>
           </div>
@@ -62,12 +62,12 @@
                 <input class="form-control" name="naz_fee_per_second" type="text" value="{{ naz.fee_per_second|per_minute|floatformat:4 }}">
               </div>
             </div>
-            <div class="col-xs-12">
+            <!--<div class="col-xs-12">
               <div class="form-group">
                 <label class="control-label">Prefisso Nazionale</label>
-                <input class="form-control" class="input-small" name="naz_prefix" size="5" type="text" value="">
+                <input class="form-control" class="input-small" name="naz_prefix" size="5" type="text" value="{{ naz.prefix_list }}">
               </div>
-            </div>
+            </div>-->
           </div>
         </fieldset>
       </div>
@@ -120,7 +120,8 @@
             <div class="col-xs-12">
               <div class="form-group">
                 <label class="control-label" for="textArea">Prefissi</label>
-                <input class="form-control" name="int1_prefix_list" type="text" value="{{ int1.prefix_list }}"></textarea>
+                <!--<input class="form-control" name="int1_prefix_list" type="text" value="{{ int1.prefix_list }}"></textarea>-->
+                <textarea class="form-control" name="int1_prefix_list" type="text">{{ int1.prefix_list }}</textarea>
             </div>
           </div>
         </div>
@@ -150,7 +151,8 @@
           <div class="col-xs-12">
             <div class="form-group">
               <label class="control-label" for="textArea">Prefissi</label>
-              <input class="form-control" name="int2_prefix_list" type="text" value="{{ int2.prefix_list }}"></textarea>
+              <!--<input class="form-control" name="int2_prefix_list" type="text" value="{{ int2.prefix_list }}">-->
+              <textarea class="form-control" name="int2_prefix_list" type="text">{{ int2.prefix_list }}</textarea>
           </div>
         </div>
       </div>
@@ -180,7 +182,8 @@
         <div class="col-xs-12">
           <div class="form-group">
             <label class="control-label" for="textArea">Prefissi</label>
-            <input class="form-control" name="int3_prefix_list" type="text" value="{{ int3.prefix_list }}"></textarea>
+            <!--<input class="form-control" name="int3_prefix_list" type="text" value="{{ int3.prefix_list }}">-->
+            <textarea class="form-control" name="int3_prefix_list" type="text">{{ int3.prefix_list }}</textarea>
         </div>
       </div>
     </div>
@@ -210,7 +213,8 @@
       <div class="col-xs-12">
         <div class="form-group">
           <label class="control-label" for="textArea">Prefissi</label>
-          <input class="form-control" name="int4_prefix_list" type="text" value="{{ int4.prefix_list }}"></textarea>
+          <!--<input class="form-control" name="int4_prefix_list" type="text" value="{{ int4.prefix_list }}">-->
+          <textarea class="form-control" name="int4_prefix_list" type="text">{{ int4.prefix_list }}</textarea>
       </div>
     </div>
   </div>
@@ -240,7 +244,8 @@
     <div class="col-xs-12">
       <div class="form-group">
         <label class="control-label" for="textArea">Prefissi</label>
-        <input class="form-control" name="int5_prefix_list" type="text" value="{{ int5.prefix_list }}"></textarea>
+        <!--<input class="form-control" name="int5_prefix_list" type="text" value="{{ int5.prefix_list }}">-->
+        <textarea class="form-control" name="int5_prefix_list" type="text">{{ int5.prefix_list }}</textarea>
     </div>
   </div>
 </div>
@@ -269,7 +274,8 @@
         <div class="col-xs-12">
           <div class="form-group">
             <label class="control-label" for="textArea">Prefissi</label>
-            <input class="form-control" name="int6_prefix_list" type="text" value="{{ int6.prefix_list }}"></textarea>
+            <!--<input class="form-control" name="int6_prefix_list" type="text" value="{{ int6.prefix_list }}">-->
+            <textarea class="form-control" name="int6_prefix_list" type="text">{{ int6.prefix_list }}</textarea>
         </div>
       </div>
     </div>
@@ -299,7 +305,8 @@
       <div class="col-xs-12">
         <div class="form-group">
           <label class="control-label" for="textArea">Prefissi</label>
-          <input class="form-control" name="int7_prefix_list" type="text" value="{{ int7.prefix_list }}"></textarea>
+          <!--<input class="form-control" name="int7_prefix_list" type="text" value="{{ int7.prefix_list }}">-->
+          <textarea class="form-control" name="int7_prefix_list" type="text">{{ int7.prefix_list }}</textarea>
       </div>
     </div>
   </div>
@@ -329,7 +336,8 @@
     <div class="col-xs-12">
       <div class="form-group">
         <label class="control-label" for="textArea">Prefissi</label>
-        <input class="form-control" name="int8_prefix_list" type="text" value="{{ int8.prefix_list }}"></textarea>
+        <!--<input class="form-control" name="int8_prefix_list" type="text" value="{{ int8.prefix_list }}">-->
+        <textarea class="form-control" name="int8_prefix_list" type="text">{{ int8.prefix_list }}</textarea>
     </div>
   </div>
 </div>
@@ -359,7 +367,8 @@
   <div class="col-xs-12">
     <div class="form-group">
       <label class="control-label" for="textArea">Prefissi</label>
-      <input class="form-control" name="int9_prefix_list" type="text" value="{{ int9.prefix_list }}"></textarea>
+      <!--<input class="form-control" name="int9_prefix_list" type="text" value="{{ int9.prefix_list }}">-->
+      <textarea class="form-control" name="int9_prefix_list" type="text">{{ int9.prefix_list }}</textarea>
   </div>
 </div>
 </div>
@@ -378,29 +387,50 @@
 <i class="zmdi zmdi-phone-setting"></i>
 Altre preferenze</legend>
 <div class="row">
-<div class="col-md-3">
-  <div class="form-group">
-    <label class="control-label">Durata minima (secondi)</label>
-    <input class="form-control" name="min_duration" type="text" value="{{ min_duration }}">
-  </div>
-</div>
-<div class="col-md-3">
-  <div class="form-group">
-    <label class="control-label">Avviso fine (secondi)</label>
-    <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
-  </div>
-</div>
-<div class="col-md-3">
-  <div class="form-group">
-    <label class="control-label normal filled">Privacy mode</label>
-    <div class="checkbox">
-      <label>
-        <input {% if privacy_mode %}checked="checked"{% endif %} name="privacy_mode" type="checkbox" value="1">
-        ultime 4 cifre coperte
-      </label>
+  <div class="col-md-2">
+    <div class="form-group">
+      <label class="control-label">Durata minima (secondi)</label>
+      <input class="form-control" name="min_duration" type="text" value="{{ min_duration }}">
     </div>
   </div>
-</div>
+  <div class="col-md-2">
+    <div class="form-group">
+      <label class="control-label">Avviso fine (secondi)</label>
+      <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="form-group">
+      <label class="control-label normal">Soglia</label>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="checkbox">
+            <label>
+              <input {% if change_threshold == "1" %}checked="checked"{% endif %} name="privacy_mode" type="checkbox" value="1">
+              consenti modifica
+            </label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Valore preimpostati (in minuti)</label>
+            <input class="form-control disabled" name="alert_before_end" type="text" value="{{ threshold }}">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-group">
+      <label class="control-label normal filled">Primo ingresso</label>
+      <div class="checkbox">
+        <label>
+          <input {% if enable_first_in == "1" %}checked="checked"{% endif %} name="enable_first_in" type="checkbox" value="1">
+          Consenti di impostare questa modalit&agrave;
+        </label>
+      </div>
+    </div>
+  </div>
 </div>
 </fieldset>
 </div>

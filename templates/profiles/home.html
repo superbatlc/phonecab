@@ -8,12 +8,12 @@
   <h1><i class="zmdi zmdi-user"></i> Utenti</h1>
   <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
 </div>
-<div class="card">
+<div class="card bordered">
     <div class="card-content">
         <form method="GET">
         <div style="float:right;">
                 <button class="btn filtra btn-success user-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
-                <a href="/phoneusers" class="btn filtra btn-primary"><i class="zmdi zmdi-close"></i></a>
+                <a href="/profiles" class="btn filtra btn-primary"><i class="zmdi zmdi-close"></i></a>
         </div>
         <span>
             <label>Cognome o username&nbsp;</label>
@@ -22,9 +22,12 @@
         </form>
         <div style="clear:both;"></div>
     </div>
-</div>
-<div class="inner table">{{ users }}</div>
-    
+    <div class="inner table" id="profiles">{{ profiles }}</div>
+    <div class="card-action">
+        <button class="btn btn-lg btn-primary" onClick="Profile.edit(0)"><i class="zmdi zmdi-plus"></i> Nuove Utente</button>
+    </div>
+</div>  
 {% endblock application %}   
 {% block script %}
-{% endblock script %}    
+<script src="{% static "js/profile.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock script %}     

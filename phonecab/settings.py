@@ -26,7 +26,7 @@ DATABASES = {
 
 # APP SETTINGS
 # Numero elementi per pagina
-ITEMS_PER_PAGE = 10
+ITEMS_PER_PAGE = 5
 
 # percorso file audio
 RECORDS_ROOT = '/var/spool/asterisk/monitor/'

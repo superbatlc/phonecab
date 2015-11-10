@@ -33,13 +33,8 @@
             <td class="acentro">{{ item.accountcode }}</td>
             <td class="acentro">{{ item.archived_phoneuser.serial_no }}</td>
             <td>{{ item.archived_phoneuser.get_full_name }}</td>
-            {% if privacy_mode == '1' %}
-                <td>{{ item.custom_src|privacymode:3 }}</td>
-                <td>{{ item.custom_dst|privacymode:3 }}</td>
-            {% else %}
-                <td>{{ item.custom_src }}</td>
-                <td>{{ item.custom_dst }}</td>
-            {% endif %}
+            <td>{{ item.custom_src }}</td>
+            <td>{{ item.custom_dst }}</td>
             <td>{{ item.whitelist.label }}</td>
             <td class="adestra">{{ item.billsec|format_time }}</td>
             <td class="adestra">{{ item.price }}</td>

@@ -23,7 +23,7 @@ var Phoneuser = {
             ok &= checkEmptyField("#first-name");
             ok &= checkEmptyField("#last-name");
             ok &= checkEmptyField("#serial-no");
-            console.log(ok);
+
             if(isNew && ok){
               checkUniquePincode("#pincode", callback);
             } else {
@@ -81,9 +81,9 @@ var Phoneuser = {
                 requestDataDjango("POST", "html", '/phoneusers/save/', {data : data},
                 function(response){
                   if(isNew) {
-                    Phoneuser.updateDOM('#phoneusers', response); 
+                    updateDOM('#phoneusers', response); 
                   }
-                  else Phoneuser.updateDOM('#phoneuser', response);
+                  else updateDOM('#phoneuser', response);
                   callback({success:true}); return;
                 },function(error){
                   callback({success:false}); return;
@@ -102,7 +102,7 @@ var Phoneuser = {
             requestDataDjango("POST", "html", '/phoneusers/changestatus/', {data : data},
                 function(response){
                     if(response != "-1"){
-                        Phoneuser.updateDOM('#phoneuser', response);
+                        updateDOM('#phoneuser', response);
                     }else{
                         alert('error');
                     }
@@ -113,16 +113,232 @@ var Phoneuser = {
         archive : function(id){
 
         },
-        /*
-        checkPincode : function(pincode){
-            requestData("POST", "html", '/phoneusers/check/', {pincode : pincode}, function(response){Phoneuser.updateDOM('#ballyhoos-active', response)});
-
-        },
-        */
-
-        updateDOM : function(selector, content) {
-            $(selector).html(content);
-        },
-
-
 }
+
+
+var Whitelist = {
+
+    edit : function(id, phoneuser_id){
+        data = {
+            id: id,
+            phoneuser_id: phoneuser_id
+        }
+        console.log(data);
+
+        requestData("POST", "html", '/whitelists/edit/', {data : data}, function(response){
+            var title = "Nuova Autorizzazione";
+            if (id) title = "Modifica Autorizzazione";
+            var dict = {
+                title : title,
+                content : response,
+                onSave : Whitelist.save,
+                onRemove : null,
+            }
+            Modal.open(dict);
+
+        });
+    },
+
+    check : function(){
+        // async check
+        // chiama il callback con {success:bool} al termine
+        var ok = true;
+
+        ok &= checkEmptyField("#whitelist-label");
+        ok &= checkEmptyField("#whitelist-phonenumber");
+        ok &= checkEmptyField("#whitelist-duration");
+
+        return ok;
+    },
+
+    save : function(callback){
+
+        // async action
+        // chiama il callback con {success:bool} al termine
+        var data = {};
+
+        data.whitelist_id = $('#whitelist-id').val();
+        if (data.whitelist_id == "None" || data.whitelist_id == ''){
+            data.whitelist_id = "0";
+        }
+
+        console.log(data.whitelist_id);
+        // async post save
+        // chiama il callback di save con {success:bool} al termine
+        if (!Whitelist.check()) { callback({success:false}); return; }
+
+        data.label = $("#whitelist-label").val()
+        data.phonenumber = $("#whitelist-phonenumber").val()
+        data.duration = $("#whitelist-duration").val()
+        data.frequency = $("#whitelist-frequency").val()
+
+        data.real_mobile = 0
+        if($("input[type=checkbox]#whitelist-real-mobile").is(':checked')){
+            data.real_mobile = 1
+        }
+
+        data.phoneuser_id = $("#phoneuser-id").val()
+
+        requestDataDjango("POST", "html", '/whitelists/save/', {data : data},
+            function(response){
+                updateDOM('#whitelists', response);
+                showMessageBox("Conferma", "Salvataggio effettuato con successo.", "green");
+                callback({success:true}); return;
+            },
+            function(error){
+              callback({success:false}); return;
+              showMessageBox("Errore", "Salvataggio non effettuata.", "alert-danger");
+            }
+        );
+    },
+
+    changeStatus : function(id, newstatus){
+        var data = {};
+        data.whitelist_id = id;
+        data.newstatus = newstatus;
+        data.phoneuser_id = $("#phoneuser-id").val()
+
+        requestDataDjango("POST", "html", '/whitelists/changestatus/', {data : data},
+            function(response){
+                if(response != "-1"){
+                    updateDOM('#whitelists', response);
+                    showMessageBox("Conferma", "Modifica stato effettuata con successo.", "green");
+                }else{
+                    showMessageBox("Errore", "Modifica stato non effettuata.", "alert-danger");
+                }
+            });
+
+    },
+
+    changeOrdinary : function(id, newstatus){
+        var data = {};
+        data.whitelist_id = id;
+        data.newstatus = newstatus;
+        data.phoneuser_id = $("#phoneuser-id").val()
+
+        var postAlert = function(callback_return) {
+            if (!callback_return.success) { return; }
+            requestDataDjango("POST", "html", '/whitelists/changeordinary/', {data : data},
+                function(response){
+                    if(response != "-1"){
+                        updateDOM('#whitelists', response);
+                        showMessageBox("Conferma", "Modifica tipologia effettuata con successo", "green");
+                    }else{
+                        showMessageBox("Errore", "Modifica tipologia non effettuata.", "alert-danger");
+                    }
+                },
+                function(error){
+                    showMessageBox("Errore", "Modifica tipologia non effettuata.", "alert-danger");
+                });
+        }
+
+        if(newstatus){
+            Whitelist.showAlert(data, postAlert);
+        }else{
+
+            postAlert({success: true});
+        }
+
+
+    },
+
+    remove : function(id){
+
+        var msg = "Sei sicuro di voler eliminare il Numero Autorizzato?"
+
+        if(confirm(msg)){
+            var data = {};
+            data.whitelist_id = id;
+            data.phoneuser_id = $("#phoneuser-id").val()
+
+        requestDataDjango("POST", "html", '/whitelists/remove/', {data : data},
+            function(response){
+                if(response != "-1"){
+                    updateDOM('#whitelists', response);
+                    showMessageBox("Conferma", "Numero autorizzato rimosso con successo.", "green");
+                }else{
+                    showMessageBox("Errore", "Rimozione numero autorizzato non riuscita.", "alert-danger");
+                }
+            });
+        }
+
+    },
+
+    showAlert : function(data, callback) {
+        // mostra quante straordinarie consentite nella settimana e nel mese
+        // prosegue sulla successiva conferma
+        requestDataDjango("POST", "json", '/whitelists/checkextra/', {data : data},
+        function(response){
+            console.log(typeof(response));
+            if(response != "-1"){
+                var msg = "Chiamate straordinarie gi\xE0 effettuate:\n";
+                msg += '- nella settimana: '+ response.data.weekcalls+'\n';
+                msg += '- nel mese: '+ response.data.monthcalls+'\n';
+                msg += 'Confermare l\'autorizzazione strordinaria?';
+             
+                if(confirm(msg)){
+                    callback({success:true}); return;
+                }else{
+                    callback({success:false}); return;
+                }
+            }else{
+                alert('error');
+                callback({success:false}); return;
+            }
+        });
+    }
+}
+
+
+var Credit = {
+
+    new : function(phoneuser_id){
+
+        requestData("POST", "html", '/credits/new/', {phoneuser_id : phoneuser_id}, function(response){
+            var title = "Nuova Ricarica";
+            var dict = {
+                title : title,
+                content : response,
+                onSave : Credit.save,
+                onRemove : null,
+            }
+            Modal.open(dict);
+
+        });
+    },
+
+    check : function(){
+        // async check
+        // chiama il callback con {success:bool} al termine
+        var ok = true;
+
+        ok &= checkEmptyField("#credit-recharge");
+        ok &= checkEmptyField("#credit-reason");
+
+        return ok;
+    },
+
+    save : function(callback){
+        // async post save
+        // chiama il callback di save con {success:bool} al termine
+        if (!Credit.check()) { callback({success:false}); return; }
+        var data = {};
+        data.phoneuser_id = $('#phoneuser-id').val();
+        data.recharge = $("#credit-recharge").val()
+        data.reason = $("#credit-reason").val()
+
+
+        requestDataDjango("POST", "html", '/credits/save/', {data : data},
+            function(response){
+                updateDOM('#credits', response);
+                showMessageBox("Conferma", "Inserimento ricarica effettuato con successo.", "green");
+                callback({success:true}); return;
+            },
+            function(error){
+              callback({success:false}); return;
+              showMessageBox("Errore", "Inserimento ricarica non effettuato.", "alert-danger");
+            }
+        );
+    },
+}
+

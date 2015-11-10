@@ -26,9 +26,11 @@ def prefs_edit(request):
     int9 = Fare.objects.get(direction='internazionale 9')
     mob = Fare.objects.get(direction='mobile')
 
-    min_duration = Pref.objects.get(key='min_duration').value
-    alert_before_end = Pref.objects.get(key='alert_before_end').value
-    privacy_mode = Pref.objects.get(key='privacy_mode').value
+    min_duration = Pref.get('min_duration')
+    alert_before_end = Pref.get('alert_before_end')
+    enable_first_in = Pref.get('enable_first_in')
+    change_threshold = Pref.get('change_threshold')
+    threshold = int(Pref.get('threshold')) / 60
 
     variables = {
         'tooltip_text': 'Premi per mostrare/nascondere i prefissi di questa area geografica',
@@ -46,7 +48,9 @@ def prefs_edit(request):
         'mob': mob,
         'min_duration': min_duration,
         'alert_before_end': alert_before_end,
-        'privacy_mode': privacy_mode,
+        'enable_first_in': enable_first_in,
+        'change_threshold': change_threshold,
+        'threshold': threshold,
     }
 
     variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))
@@ -259,7 +263,7 @@ def prefs_save(request):
         # ALTRE PREFERENZE CHIAMATA -------------------------------------------
         min_duration = request.POST.get("min_duration", "0")
         alert_before_end = request.POST.get("alert_before_end", "0")
-        privacy_mode = request.POST.get("privacy_mode", "0")
+        enable_first_in = request.POST.get("enable_first_in", "0")
 
         p = Pref.objects.get(key='min_duration')
         p.value = min_duration
@@ -269,8 +273,8 @@ def prefs_save(request):
         p.value = alert_before_end
         p.save(request.user)
 
-        p = Pref.objects.get(key='privacy_mode')
-        p.value = privacy_mode
+        p = Pref.objects.get(key='enable_first_in')
+        p.value = enable_first_in
         p.save(request.user)
 
         # return HttpResponse(ret, mimetype='text/plain')

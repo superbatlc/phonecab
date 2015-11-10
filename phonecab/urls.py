@@ -8,6 +8,7 @@ from prefs.urls import urlpatterns as prefs_urlpatterns
 from cdrs.urls import urlpatterns as cdrs_urlpatterns
 from records.urls import urlpatterns as records_urlpatterns
 from profiles.urls import urlpatterns as profiles_urlpatterns
+from audits.urls import urlpatterns as audits_urlpatterns
 
 urlpatterns = [
     url(r'^$', 'phonecab.views.phonecab_login'),
@@ -32,3 +33,4 @@ urlpatterns += prefs_urlpatterns
 urlpatterns += cdrs_urlpatterns
 urlpatterns += records_urlpatterns
 urlpatterns += profiles_urlpatterns
+urlpatterns += audits_urlpatterns

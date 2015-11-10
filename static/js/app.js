@@ -50,7 +50,9 @@ function showMessageBox(title, content, alertClass) {
       $('#messagebox .content').html(content);
       $('#messagebox > div').addClass(alertClass);
 
+      $('#messagebox').fadeIn();
       $('#messagebox').removeClass("hide");
+
       setTimeout(function(){
         $('#messagebox').fadeOut();
       }, 5000);
@@ -139,6 +141,36 @@ function checkUniquePincode(pincode_sel, callback){
         callback({success:false}); return;
       }
     })
+}
+
+function checkUniqueUsername(username_sel, callback){
+    // async check
+    // chiama il callback con {success:bool} al termine
+    var username = $(username_sel).val();
+    var parent = $(username_sel).parent().parent();
+    if(!username) {
+        parent.addClass('has-error');
+        $('.username-check').show();
+        callback({success:false}); return;
+    }
+
+    requestDataDjango("POST", "text", '/profiles/check/', {username : username}, function(response){
+      if(response == "0"){
+        parent.removeClass('has-error');
+        $('.username-check').hide();
+        callback({success:true}); return;
+      }else{
+        parent.addClass('has-error');
+        $('.username-check').removeClass('hide');
+        callback({success:false}); return;
+      }
+    })
+}
+
+
+
+function updateDOM(selector, content) {
+  $(selector).html(content);
 }
 
 

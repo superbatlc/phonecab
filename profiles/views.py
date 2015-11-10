@@ -2,11 +2,13 @@ from urllib import urlencode
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 from helper.Helper import Helper
 from acls.models import Acl
@@ -17,7 +19,7 @@ def profile_home(request):
     d = request.GET.dict()
     user = request.user
     variables = Acl.get_permissions_for_user(user.id, user.is_staff)
-    variables['users'] = profile_items(request)
+    variables['profiles'] = profile_items(request)
     variables['d'] = d
 
     return render_to_response(
@@ -93,17 +95,18 @@ def profile_items(request):
 
 
 @login_required
-def profile_edit(request, user_id="0"):
+def profile_edit(request):
     variables = {}
+    profile_id = int(request.POST.get("id", "0"))
 
-    if int(user_id):
+    if profile_id:
         # richiesta di modifica di un utente esistente
         try:
-            user = User.objects.get(pk=user_id)
-            variables = Acl.get_permissions_for_user(user.id, user.is_staff)
-            variables['utente'] = user
+            profile = User.objects.get(pk=profile_id)
+            variables = Acl.get_permissions_for_user(profile.id, profile.is_staff)
+            variables['profile'] = profile
         except ObjectDoesNotExist:
-            print "No user associated with id: %s" % user_id
+            print "No user associated with id: %s" % profile_id
             raise Http404
 
     return render_to_response('profiles/profile.html', variables)
@@ -112,70 +115,73 @@ def profile_edit(request, user_id="0"):
 @login_required
 def profile_save(request):
     """Save or update user"""
-    user_id = int(request.POST.get("data[user_id]", "0"))
-    firstname = request.POST.get('data[firstname]', '')
-    lastname = request.POST.get("data[lastname]", "")
-    username = request.POST.get('data[username]', '')
+    user_id = int(request.POST.get("data[profile_id]", "0"))
+    first_name = request.POST.get("data[first_name]", "")
+    last_name = request.POST.get("data[last_name]", "")
+    username = request.POST.get("data[username]", "")
     password = request.POST.get("data[password]", "")
-    is_admin = int(request.POST.get("data[is_admin]", "0"))
+    is_admin = request.POST.get("data[is_admin]", "0") == "1"
 
-    priv_anagrafica = int(request.POST.get("data[priv_anagrafica]", "1    "))
+    priv_anagrafica = int(request.POST.get("data[priv_anagrafica]", "1"))
     priv_whitelist = int(request.POST.get("data[priv_whitelist]", "0"))
     priv_credit = int(request.POST.get("data[priv_credit]", "0"))
     priv_cdr = int(request.POST.get("data[priv_cdr]", "0"))
     priv_record = int(request.POST.get("data[priv_record]", "0"))
 
     if user_id:
-        user = User.objects.get(pk=user_id)
+        try:
+            user = User.objects.get(pk=user_id)
+            print user
+            user.first_name = first_name.title()
+            user.last_name = last_name.title()
+            user.username = username
+            if password:
+                user.set_password(password)
+            user.is_staff = is_admin
+            user.save()
+
+        except Exception as e:
+            print "profile_save: %s" % format(e)
     else:
-        user = User()
+        user = User.objects.create_user(username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password)
 
-    user.first_name = firstname.title()
-    user.last_name = lastname.title()
-    user.username = username
-
-    if password:
-        user.set_password(password)
-
-    user.is_staff = is_admin
-
-    ret = "1"
-    try:
+        user.is_staff=is_admin
         user.save()
 
-        if not user.is_staff:
-            # cancelliamo tutte le acl utente e
-            # (ri)creiamo le acl corrispondenti
-            Acl.objects.filter(user_id=user.id).delete()
-            # userid function permission
+    if not user.is_staff:
+        # cancelliamo tutte le acl utente e
+        # (ri)creiamo le acl corrispondenti
+        Acl.objects.filter(user_id=user.id).delete()
+        # userid function permission
+        Acl.objects.create(
+            user_id=user.id, function=0, permission=priv_anagrafica)
+        if priv_whitelist:
             Acl.objects.create(
-                user_id=user.id, function=0, permission=priv_anagrafica)
-            if priv_whitelist:
-                Acl.objects.create(
-                    user_id=user.id, function=1, permission=priv_whitelist)
-            if priv_credit:
-                Acl.objects.create(
-                    user_id=user.id, function=2, permission=priv_credit)
-            if priv_cdr:
-                Acl.objects.create(
-                    user_id=user.id, function=3, permission=priv_cdr)
-            if priv_record:
-                Acl.objects.create(
-                    user_id=user.id, function=4, permission=priv_record)
-    except:
-        ret = "0"
-
-    return HttpResponse(ret, mimetype='text/plain')
+                user_id=user.id, function=1, permission=priv_whitelist)
+        if priv_credit:
+            Acl.objects.create(
+                user_id=user.id, function=2, permission=priv_credit)
+        if priv_cdr:
+            Acl.objects.create(
+                user_id=user.id, function=3, permission=priv_cdr)
+        if priv_record:
+            Acl.objects.create(
+                user_id=user.id, function=4, permission=priv_record)
 
 
-def profile_check(request):
+    return profile_items(request)
+
+
+@login_required
+def profile_check_username(request):
     """Verifica che lo username sia univoco"""
     username_to_check = request.POST.get("username", "")
     check = User.objects.filter(username=username_to_check).count()
 
-    if(check > 0):
-        return HttpResponse('1')
-    return HttpResponse('0')
+    return HttpResponse(str(check))
 
 
 def profile_remove(request, user_id):

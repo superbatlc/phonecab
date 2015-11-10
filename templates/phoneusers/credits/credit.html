@@ -1,12 +1,17 @@
  <!-- ricariche modal -->
- <div id="ric-modal" style="padding:15px;">
-    <div class="form-inline control-group" style="margin-bottom:10px;" id="credit-recharge-div">
-        <label style="text-align: right; width: 100px;margin-right:2px;">Importo:</label>
-            <input type="text" class="input-mini prependedInput" style="text-align: center;" placeholder="importo" name="recharge" id="credit-recharge"> &nbsp;&euro;
+<form class="form-horizontal placeholder-form" novalidate="true">
+<fieldset>
+  <div class="form-group">
+    <label for="credit-recharge" class="col-xs-4 control-label">Importo (&euro;)</label>
+    <div class="col-xs-2 filled">
+      <input type="text" class="form-control input-small" id="credit-recharge" placeholder="Importo" value="" required>
     </div>
-    <div class="form-inline control-group" style="margin-bottom:10px;" id="credit-reason-div">
-        <label style="text-align: right; width: 100px;margin-right:2px;">Causale:</label>
-            <textarea rows="3" name="reason" id="credit-reason"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="credit-reason" class="col-xs-4 control-label">Causale</label>
+    <div class="col-xs-6 filled">
+    <textarea class="form-control vertical" rows="2"  id="credit-reason" required></textarea>
     </div>
-    <input type="hidden" name="phoneuser_id" id="credit-phoneuser-id" value="{{ phoneuser_id }}">
- </div>
+  </div>
+</fieldset>
+</form>

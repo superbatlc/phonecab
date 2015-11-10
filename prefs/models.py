@@ -97,8 +97,7 @@ class Fare(models.Model):
             audit.user = user
             detail = "Scatto: %s - Tariffa: %s - Lista Prefissi: %s" % (
                 self.connection_charge, self.fee_per_second, self.prefix_list)
-            audit.what = "L'utente %s ha modificato la direttrice %s : %s" \
-                % (user.username, self.direction, detail)
+            audit.what = "Modifica direttrice %s : %s" % (self.direction, detail)
             audit.save()
         except Exception as e:
             print '%s (%s)' % (e.message, type(e))

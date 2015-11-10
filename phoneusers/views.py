@@ -17,6 +17,7 @@ from audits.models import Audit
 from helper.Helper import Helper
 from helper import http
 from acls.models import Acl
+from prefs.models import Pref
 from archives.models import ArchivedPhoneUser
 
 
@@ -107,7 +108,6 @@ def phoneuser_items(request):
     return render_to_string(
         'phoneusers/table.html', RequestContext(request, variables))
 
-
 @login_required
 def phoneuser_view(request, phoneuser_id="0"):
     """Phoneuser page"""
@@ -127,7 +127,6 @@ def phoneuser_view(request, phoneuser_id="0"):
     return render_to_response('phoneusers/page.html',
         RequestContext(request,variables))
 
-
 @login_required
 def phoneuser_data(request, phoneuser_id="0"):
     """Recupera e visualizza le informazioni sul phoneuser"""
@@ -146,7 +145,6 @@ def phoneuser_data(request, phoneuser_id="0"):
 
     return render_to_string(
         'phoneusers/phoneuser.html', RequestContext(request, variables))
-
 
 @login_required
 def phoneuser_edit(request):
@@ -168,7 +166,6 @@ def phoneuser_edit(request):
     return render_to_response('phoneusers/phoneuser_modal.html',
         RequestContext(request,variables))
 
-
 @login_required
 def phoneuser_save(request):
     """Save or update user"""
@@ -186,9 +183,11 @@ def phoneuser_save(request):
 
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
     is_new = False
+    action = "Creazione"
     try:
         if phoneuser_id:
             phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+            action = "Modifica"
         else:
             phoneuser = PhoneUser()
             is_new = True
@@ -205,6 +204,11 @@ def phoneuser_save(request):
         phoneuser.vipaccount = vipaccount
 
         phoneuser.save()
+
+        # log azione
+        audit = Audit()
+        audit.log(user=request.user,
+            what="%s anagrafica: %s" % (action, phoneuser))
         
         if is_new:
             return phoneuser_items(request)
@@ -215,9 +219,6 @@ def phoneuser_save(request):
         print "error: %s" % format(e)
         return HttpResponse("0", content_type='text/plain')
 
-    
-
-
 @login_required
 def phoneuser_check_pincode(request):
     """Verifica che il pincode sia univoco"""
@@ -227,24 +228,31 @@ def phoneuser_check_pincode(request):
 
     return HttpResponse(str(check))
     
-
 @login_required
 def phoneuser_change_status(request):
     phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
     newstatus = request.POST.get("data[newstatus]", "")
     ret = newstatus
 
+    action = "Disattivazione"
+    if int(newstatus):
+        action = "Attivazione"
+
     try:
         phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
         phoneuser.enabled = int(newstatus)
         phoneuser.save()
+
+        # log azione
+        audit = Audit()
+        audit.log(user=request.user,
+            what="%s scheda anagrafica: %s" % (action, phoneuser))
     except Exception as e:
         print "%s" % format(e)
         ret = "-1"
     return phoneuser_data(request, phoneuser_id)
 
-
-@login_required
+@login_required #TODO: da implementare
 def phoneuser_archive(request, phoneuser_id):
     ret = "1"
     try:
@@ -259,8 +267,7 @@ def phoneuser_archive(request, phoneuser_id):
         ret = "0"
     return HttpResponse(ret, content_type='text/plain')
 
-
-@login_required
+@login_required #TODO: da implementare
 def phoneuser_export(request, accountcode="0"):
     """Esportazione contratto telefonico"""
     import time
@@ -329,31 +336,9 @@ def phoneuser_export(request, accountcode="0"):
 
         return response
 
-
-@login_required
-def phoneuser_ajax_view(request, phoneuser_id="0"):
-    phoneuser_id = int(phoneuser_id)
-    if phoneuser_id:
-        user = request.user
-        variables = Acl.get_permissions_for_user(user.id, user.is_staff)
-        try:
-            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-            variables['phoneuser'] = phoneuser
-        except ObjectDoesNotExist:
-            # print "No phoneuser associated with id: %s" % phoneuser_id
-            raise Http404
-
-        return render_to_response(
-            'phoneusers/anagrafica_ajax_view.html',
-            RequestContext(
-                request,
-                variables))
-    else:
-        return HttpResponse("", mimetype='text/plain')
-
-
 @login_required
 def phoneuser_name(request, accountcode):
+    """Get phoneuser name for realtime displaying"""
     values = {
               'data': {},
               'err': 0,
@@ -397,26 +382,34 @@ def whitelist_items(request, phoneuser_id):
 
 
 @login_required
-def whitelist_edit(request, whitelist_id="0"):
+def whitelist_edit(request):
     variables = {}
-    variables['phoneuser_id'] = request.POST.get("phoneuser_id", "0")
+    whitelist_id = int(request.POST.get("data[id]", "0"))
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
 
-    if int(whitelist_id):
+    print "whitelist_id: %s" % whitelist_id
+    print "phoneuser_id: %s" % phoneuser_id
+
+    if whitelist_id:
         # richiesta di modifica di una whitelist esistente
         try:
             whitelist = Whitelist.objects.get(pk=whitelist_id)
             whitelist.duration = int(whitelist.duration / 60)
             whitelist.frequency = int(whitelist.frequency)
         except ObjectDoesNotExist:
-            # print "No whitelesit associated with id: %s" % whitelist_id
-            raise Http404
+            raise Http404 #TODO: gestire errore
     else:
         whitelist = Whitelist()
-        whitelist.phoneuser = PhoneUser.objects.get(pk=variables['phoneuser_id'])
+        if phoneuser_id:
+            try:
+                whitelist.phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+            except ObjectDoesNotExist:
+                raise Http404 #TODO: gestire errore
 
-    variables['wl'] = whitelist
+    variables['whitelist'] = whitelist
+    variables['enable_first_in'] = Pref.get("enable_first_in")
 
-    return render_to_response('phoneusers/whitelist_modal.html', variables)
+    return render_to_response('phoneusers/whitelists/whitelist.html', variables)
 
 
 @login_required
@@ -432,11 +425,11 @@ def whitelist_save(request):
 
     # la maschera consente di inserire i minuti
     duration = duration * 60
-
-    ret = "1"
+    action = "Creazione"
     try:
         if whitelist_id:
             whitelist = Whitelist.objects.get(pk=whitelist_id)
+            action = "Modifica"
         else:
             whitelist = Whitelist()
             if frequency == 0:
@@ -450,67 +443,94 @@ def whitelist_save(request):
         whitelist.real_mobile = real_mobile
 
         whitelist.save()
-    except:
-        ret = "0"
 
-    return HttpResponse(ret, mimetype='text/plain')
+        # log azione
+        audit = Audit()
+        audit.log(user=request.user,
+            what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+    except:
+        raise Http404 # TODO: gestire errore
+
+    return whitelist_items(request, phoneuser_id)
 
 
 @login_required
 def whitelist_remove(request):
-    whitelist_id = int(request.POST.get("whitelist_id", "0"))
-    ret = 0
+    whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
+
     if(whitelist_id):
         try:
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
             Whitelist.objects.get(pk=whitelist_id).delete()
-            ret = 1
-        except:
-            ret = 0
+            # log azione
+            audit = Audit()
+            audit.log(user=request.user,
+                what="Rimozione autorizzazione: %s" % phoneuser)
+            
+        except Exception as e:
+            print "%s" % format(e)
 
-    return HttpResponse(ret, mimetype='text/plain')
+    return whitelist_items(request, phoneuser_id)
 
 
 @login_required
-def whitelist_changestatus(request):
-    whitelist_id = int(request.POST.get("whitelist_id", "0"))
-    value = request.POST.get("value", "false") == 'true'
+def whitelist_change_status(request):
+    whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
+    newstatus = int(request.POST.get("data[newstatus]", "0"))
 
-    ret = 0
+    ret = newstatus
+
+    action = "Disattivazione"
+    if int(newstatus):
+        action = "Attivazione"
+
     if(whitelist_id):
         try:
-            wl = Whitelist.objects.get(pk=whitelist_id)
-            wl.enabled = not value  # we change the actual state
-            wl.save()
-            ret = 1
-        except:
-            ret = 0
+            whitelist = Whitelist.objects.get(pk=whitelist_id)
+            whitelist.enabled = newstatus
+            whitelist.save()
+            audit = Audit()
+            audit.log(user=request.user,
+                what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+        except Exception as e:
+            print "%s" % format(e)
+            ret = "-1"
 
-    return HttpResponse(ret, mimetype='text/plain')
-
+    return whitelist_items(request, phoneuser_id)
 
 @login_required
-def whitelist_changeordinary(request):
-    whitelist_id = int(request.POST.get("whitelist_id", "0"))
-    value = request.POST.get("value", "false") == 'true'
+def whitelist_change_ordinary(request):
+    whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
+    newstatus = int(request.POST.get("data[newstatus]", "0"))
 
-    ret = 0
+    ret = newstatus
+
+    action = "Abilitazione ordinaria"
+    if int(newstatus):
+        action = "Abilitazione straordinaria"
+
     if(whitelist_id):
         try:
-            wl = Whitelist.objects.get(pk=whitelist_id)
-            wl.extraordinary = not value  # we change the straordinary
-            wl.save()
-            ret = 1
-        except:
-            ret = 0
+            whitelist = Whitelist.objects.get(pk=whitelist_id)
+            whitelist.extraordinary = newstatus
+            whitelist.save()
+            audit = Audit()
+            audit.log(user=request.user,
+                what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+        except Exception as e:
+            print "%s" % format(e)
+            ret = "-1"
 
-    return HttpResponse(ret, mimetype='text/plain')
-
+    return whitelist_items(request, phoneuser_id)
 
 @login_required
-def whitelist_checkextra(request):
+def whitelist_check_extra(request):
 
-
-    whitelist_id = int(request.POST.get("whitelist_id", "0"))
+    whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
 
     values = {
               'data': {},
@@ -521,8 +541,9 @@ def whitelist_checkextra(request):
     if(whitelist_id):
         try:
             wl = Whitelist.objects.get(pk=whitelist_id)
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
 
-            weekcalls, monthcalls = get_extra_call(wl.phoneuser.pincode,
+            weekcalls, monthcalls = _get_extra_call(phoneuser.pincode,
                                                      wl.phonenumber)
 
             values['data']['weekcalls'] = weekcalls
@@ -535,8 +556,7 @@ def whitelist_checkextra(request):
     #return http.JSONResponse(request, values)
     return HttpResponse(json.dumps(values), content_type="application/json")
 
-
-def get_extra_call(accountcode, dst):
+def _get_extra_call(accountcode, dst):
     import datetime
     from django.db import connection
 
@@ -666,7 +686,7 @@ def credit_items(request, phoneuser_id):
 @login_required
 def credit_new(request):
     variables = {'phoneuser_id': request.POST.get("phoneuser_id", "0")}
-    return render_to_response('phoneusers/credit_modal.html', variables)
+    return render_to_response('phoneusers/credits/credit.html', variables)
 
 
 @login_required
@@ -685,7 +705,6 @@ def credit_save(request):
     credit.recharge = Decimal(recharge)
     credit.reason = reason
 
-    ret = "1"
     try:
         #credit.save(user_id=request.user.id, phoneuser_id=phoneuser_id)
         credit.save()
@@ -696,7 +715,12 @@ def credit_save(request):
         else:
             phoneuser.balance = Decimal(recharge)
         phoneuser.save()
-    except Exception as e:
-        ret = "0"
+        audit = Audit()
+        audit.log(user=request.user,
+            what="Effettuata ricarica di importo %s a favore di %s" % (credit.recharge, 
+                credit.phoneuser))
 
-    return HttpResponse(ret, mimetype='text/plain')
+    except Exception as e:
+        print "%s" % format(e)
+
+    return credit_items(request, phoneuser_id)

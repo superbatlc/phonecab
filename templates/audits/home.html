@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+    {% block title %}PhoneCab - Audit{% endblock %}
+    {% block stylesheet %}
+    <link rel="stylesheet" href="{% static "css/datepicker.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <!--<link rel="stylesheet" href="{% static "css/cdr.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">-->
+    {% endblock stylesheet %}
+    {% block application %}
+
+    <div class="page-header">
+      <h1><i class="zmdi zmdi-search-in-file"></i> Audit</h1>
+      <!-- <p class="lead">Descrizione</p> -->
+    </div>
+    <div class="card bordered">
+        <div class="card-content">
+            <form method="GET">
+
+            <div style="float:right;">
+                    <button class="btn filtra btn-success"><i class="zmdi zmdi-flash"></i> Filtra</button>
+                    <a href="/audits" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
+            </div>
+            <span>
+                <label>Dal</label>
+                <input type="text" name="start_date" value="{{ d.start_date }}" maxlength="12" size="8" class="input-small datepicker">
+            </span>
+            <span>
+                <label>@</label>
+                <input type="text" name="start_time" value="{{ d.start_time }}" maxlength="5" size="5" class="input-small timepicker">
+            </span>
+            <span>
+                <label>al</label>
+                <input type="text" name="end_date" value="{{ d.end_date }}" maxlength="12" size="8" class="input-small datepicker">
+            </span>
+            <span>
+                <label>@</label>
+                <input type="text" name="end_time" value="{{ d.end_time }}" maxlength="5" size="5" class="input-small timepicker">
+            </span>
+            <span>
+                <label>Cognome utente o username:</label>
+                <input name="keyword" type="text" value="{{ d.keyword }}" maxlength="10" size="20">
+            </span>
+            </form>
+             <div style="clear:both;"></div>
+        </div>
+        <div class="audits">{{ audits }}</div>
+    </div>
+
+{% endblock application %}

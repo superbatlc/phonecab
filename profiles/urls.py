@@ -1,8 +1,11 @@
 from django.conf.urls import url
-from . import views
+from .views import *
 
 urlpatterns = [
-    url(r'^users/$', views.profile_home),
-    url(r'^users/ajax/$', views.profile_items),
-    url(r'^users/(?P<pk>[0-9]+)/$', views.profile_edit),
+    url(r'^profiles/$', profile_home),
+    url(r'^profiles/data/$', profile_items),
+    url(r'^profiles/edit/$', profile_edit),
+    url(r'^profiles/save/$', profile_save),
+    url(r'^profiles/remove/$', profile_remove),
+    url(r'^profiles/check/$', profile_check_username),
 ]

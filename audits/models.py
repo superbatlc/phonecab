@@ -20,3 +20,12 @@ class Audit(models.Model):
 
     def get_action(self, visualized_by_user=False):
         pass
+
+    def log(self, user, what, params=None):
+        """Shortcut to create a new audit entry"""
+        self.user = user
+        self.what = what
+        if params:
+            self.params = params
+
+        self.save()

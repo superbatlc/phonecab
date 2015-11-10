@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from audits.models import Audit
 
 
 class PhoneUser(models.Model):
@@ -62,6 +63,12 @@ class PhoneUser(models.Model):
             return items[0]
         return None
 
+    def __unicode__(self):
+        return "%s %s matricola %s (codice %s)" % (self.last_name,
+            self.first_name,
+            self.serial_no,
+            self.pincode)
+
 
 class Whitelist(models.Model):
 
@@ -99,6 +106,11 @@ class Whitelist(models.Model):
         verbose_name='cellulare',
         default=False)
     enabled = models.BooleanField(verbose_name="stato", default=False)
+
+    def __unicode__(self):
+        return "Numero %s (%s) relativo a %s" % (self.phonenumber,
+            self.label,
+            self.phoneuser,)
 
 
 class Credit(models.Model):

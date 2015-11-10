@@ -149,7 +149,6 @@ def cdr_items(request):
     variables['end_item'] = end_item
     variables['query_string'] = urlencode(d)
     variables['d'] = d
-    variables['privacy_mode'] = Pref.get('privacy_mode')
 
     if request.is_ajax():
         return render_to_response(
