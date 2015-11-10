@@ -31,7 +31,7 @@ def prefs_edit(request):
     enable_first_in = Pref.get('enable_first_in')
     change_threshold = Pref.get('change_threshold')
     threshold = int(Pref.get('threshold')) / 60
-
+    """
     variables = {
         'tooltip_text': 'Premi per mostrare/nascondere i prefissi di questa area geografica',
         'naz': naz,
@@ -46,11 +46,14 @@ def prefs_edit(request):
         'int8': int8,
         'int9': int9,
         'mob': mob,
+    """
+    variables = {
         'min_duration': min_duration,
         'alert_before_end': alert_before_end,
         'enable_first_in': enable_first_in,
         'change_threshold': change_threshold,
         'threshold': threshold,
+        'fares': Fare.objects.filter(visible=True)
     }
 
     variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))

@@ -50,6 +50,8 @@ class Fare(models.Model):
     fee_per_second = models.FloatField(verbose_name="Tariffa al secondo")
     reg_exp = models.TextField(verbose_name="Espressione regolare")
     ordering = models.IntegerField(verbose_name="Ordinamento")
+    icon = models.CharField(max_length=50, default="zmdi zmdi-home")
+    visible = models.BooleanField(default=True)
 
     @staticmethod
     def get_call_cost(phonenumber, duration):
