@@ -14,413 +14,75 @@
 <form action="/prefs/save/" class="form-floating" method="POST">
 
   <div class="row">
-    <div class="col-md-4">
-      <div class="well white">
-        <fieldset>
-          <legend>
-            <i class="zmdi zmdi-home"></i>
-            Distrettuali</legend>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Scatto (&euro;)</label>
-                <input class="form-control" name="dist_connection_charge" type="text" value="{{ dist.connection_charge|floatformat:4 }}">
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Tariffa (&euro;/minuto)</label>
-                <input class="form-control" name="dist_fee_per_second" type="text" value="{{ dist.fee_per_second|per_minute|floatformat:4 }}">
-              </div>
-            </div>
-            <div class="col-xs-5">
-              <div class="form-group">
-                <label class="control-label">Prefisso Distrettuale</label>
-                <input class="form-control" class="input-small" name="dist_prefix" size="5" type="text" value="{{ dist.prefix_list }}">
-              </div>
-            </div>
-          </div>
-        </fieldset>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="well white">
-        <fieldset>
-          <legend>
-            <i class="zmdi zmdi-flag"></i>
-            Interdistrettuali</legend>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Scatto (&euro;)</label>
-                <input class="form-control" name="naz_connection_charge" type="text" value="{{ naz.connection_charge|floatformat:4 }}">
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Tariffa (&euro;/minuto)</label>
-                <input class="form-control" name="naz_fee_per_second" type="text" value="{{ naz.fee_per_second|per_minute|floatformat:4 }}">
-              </div>
-            </div>
-            <!--<div class="col-xs-12">
-              <div class="form-group">
-                <label class="control-label">Prefisso Nazionale</label>
-                <input class="form-control" class="input-small" name="naz_prefix" size="5" type="text" value="{{ naz.prefix_list }}">
-              </div>
-            </div>-->
-          </div>
-        </fieldset>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="well white">
-        <fieldset>
-          <legend>
-            <i class="zmdi zmdi-smartphone"></i>
-            Mobile</legend>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Scatto (&euro;)</label>
-                <input class="form-control" name="mob_connection_charge" type="text" value="{{ mob.connection_charge|floatformat:4 }}">
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Tariffa (&euro;/minuto)</label>
-                <input class="form-control" name="mob_fee_per_second" type="text" value="{{ mob.fee_per_second|per_minute|floatformat:4 }}">
-              </div>
-            </div>
-          </div>
-        </fieldset>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <div class="well white">
-        <fieldset>
-          <legend>
-            <i class="zmdi zmdi-globe"></i>
-            Internazionale Area 1</legend>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Scatto (&euro;)</label>
-                <input class="form-control" name="int1_connection_charge" type="text" value="{{ int1.connection_charge|floatformat:4 }}">
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">
-                <label class="control-label">Tariffa (&euro;/minuto)</label>
-                <input class="form-control" name="int1_fee_per_second" type="text" value="{{ int1.fee_per_second|per_minute|floatformat:4 }}">
-              </div>
-            </div>
-            <div class="col-xs-12">
-              <div class="form-group">
-                <label class="control-label" for="textArea">Prefissi</label>
-                <!--<input class="form-control" name="int1_prefix_list" type="text" value="{{ int1.prefix_list }}"></textarea>-->
-                <textarea class="form-control" name="int1_prefix_list" type="text">{{ int1.prefix_list }}</textarea>
-            </div>
-          </div>
+    {% for fare in fares %}
+      <div class="col-md-4">
+    <div class="card card-flip bordered">
+      <div class="card-header">
+        <div class="pull-right">
+          <a class="btn btn-link btn-flip btn-xs" href="javascript:;">
+            <i class="zmdi zmdi-globe-alt"></i> Prefissi
+          </a>
         </div>
-      </fieldset>
-    </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="well white">
-      <fieldset>
-        <legend>
-          <i class="zmdi zmdi-globe"></i>
-          Internazionale Area 2</legend>
+        <span class="card-title">
+          <i class="{{ fare.icon }}"></i>
+          {{ fare.direction }}</span>
+      </div>
+
+      <div class="card-content">
         <div class="row">
-          <div class="col-xs-6">
+          <div class="col-xs-12">
             <div class="form-group">
               <label class="control-label">Scatto (&euro;)</label>
-              <input class="form-control" name="int2_connection_charge" type="text" value="{{ int2.connection_charge|floatformat:4 }}">
-            </div>
-          </div>
-          <div class="col-xs-6">
-            <div class="form-group">
-              <label class="control-label">Tariffa (&euro;/minuto)</label>
-              <input class="form-control" name="int2_fee_per_second" type="text" value="{{ int2.fee_per_second|per_minute|floatformat:4 }}">
+              <input class="form-control" name="dist_connection_charge" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
             </div>
           </div>
           <div class="col-xs-12">
             <div class="form-group">
-              <label class="control-label" for="textArea">Prefissi</label>
-              <!--<input class="form-control" name="int2_prefix_list" type="text" value="{{ int2.prefix_list }}">-->
-              <textarea class="form-control" name="int2_prefix_list" type="text">{{ int2.prefix_list }}</textarea>
+              <label class="control-label">Tariffa (&euro;/minuto)</label>
+              <input class="form-control" name="dist_fee_per_second" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
+            </div>
           </div>
         </div>
       </div>
-    </fieldset>
-  </div>
-</div>
-
-<div class="col-md-4">
-  <div class="well white">
-    <fieldset>
-      <legend>
-        <i class="zmdi zmdi-globe"></i>
-        Internazionale Area 3</legend>
-      <div class="row">
-        <div class="col-xs-6">
-          <div class="form-group">
-            <label class="control-label">Scatto (&euro;)</label>
-            <input class="form-control" name="int3_connection_charge" type="text" value="{{ int3.connection_charge|floatformat:4 }}">
-          </div>
-        </div>
-        <div class="col-xs-6">
-          <div class="form-group">
-            <label class="control-label">Tariffa (&euro;/minuto)</label>
-            <input class="form-control" name="int3_fee_per_second" type="text" value="{{ int3.fee_per_second|per_minute|floatformat:4 }}">
-          </div>
-        </div>
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label class="control-label" for="textArea">Prefissi</label>
-            <!--<input class="form-control" name="int3_prefix_list" type="text" value="{{ int3.prefix_list }}">-->
-            <textarea class="form-control" name="int3_prefix_list" type="text">{{ int3.prefix_list }}</textarea>
-        </div>
-      </div>
-    </div>
-  </fieldset>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="well white">
-  <fieldset>
-    <legend>
-      <i class="zmdi zmdi-globe"></i>
-      Internazionale Area 4</legend>
-    <div class="row">
-      <div class="col-xs-6">
+      <div class="card-reveal">
+        <span class="card-title grey-text text-darken-4">Prefissi
+          <i class="zmdi zmdi-close pull-right btn-flip"></i>
+        </span>
         <div class="form-group">
-          <label class="control-label">Scatto (&euro;)</label>
-          <input class="form-control" name="int4_connection_charge" type="text" value="{{ int4.connection_charge|floatformat:4 }}">
+          <input data-role="jquerytagsinput" class="form-control" class="input-small" name="dist_prefix" size="5" type="text" value="{{ fare.prefix_list }}">
         </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label class="control-label">Tariffa (&euro;/minuto)</label>
-          <input class="form-control" name="int4_fee_per_second" type="text" value="{{ int4.fee_per_second|per_minute|floatformat:4 }}">
-        </div>
-      </div>
-      <div class="col-xs-12">
-        <div class="form-group">
-          <label class="control-label" for="textArea">Prefissi</label>
-          <!--<input class="form-control" name="int4_prefix_list" type="text" value="{{ int4.prefix_list }}">-->
-          <textarea class="form-control" name="int4_prefix_list" type="text">{{ int4.prefix_list }}</textarea>
       </div>
     </div>
   </div>
-</fieldset>
-</div>
-</div>
+    {% endfor %}
 
-<div class="col-md-4">
-<div class="well white">
-<fieldset>
-  <legend>
-    <i class="zmdi zmdi-globe"></i>
-    Internazionale Area 5</legend>
-  <div class="row">
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label class="control-label">Scatto (&euro;)</label>
-        <input class="form-control" name="int5_connection_charge" type="text" value="{{ int5.connection_charge|floatformat:4 }}">
-      </div>
-    </div>
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label class="control-label">Tariffa (&euro;/minuto)</label>
-        <input class="form-control" name="int5_fee_per_second" type="text" value="{{ int5.fee_per_second|per_minute|floatformat:4 }}">
-      </div>
-    </div>
-    <div class="col-xs-12">
-      <div class="form-group">
-        <label class="control-label" for="textArea">Prefissi</label>
-        <!--<input class="form-control" name="int5_prefix_list" type="text" value="{{ int5.prefix_list }}">-->
-        <textarea class="form-control" name="int5_prefix_list" type="text">{{ int5.prefix_list }}</textarea>
-    </div>
-  </div>
-</div>
-</fieldset>
-</div>
-</div>
-<div class="col-md-4">
-  <div class="well white">
-    <fieldset>
-      <legend>
-        <i class="zmdi zmdi-globe"></i>
-        Internazionale Area 6</legend>
-      <div class="row">
-        <div class="col-xs-6">
-          <div class="form-group">
-            <label class="control-label">Scatto (&euro;)</label>
-            <input class="form-control" name="int6_connection_charge" type="text" value="{{ int6.connection_charge|floatformat:4 }}">
-          </div>
-        </div>
-        <div class="col-xs-6">
-          <div class="form-group">
-            <label class="control-label">Tariffa (&euro;/minuto)</label>
-            <input class="form-control" name="int6_fee_per_second" type="text" value="{{ int6.fee_per_second|per_minute|floatformat:4 }}">
-          </div>
-        </div>
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label class="control-label" for="textArea">Prefissi</label>
-            <!--<input class="form-control" name="int6_prefix_list" type="text" value="{{ int6.prefix_list }}">-->
-            <textarea class="form-control" name="int6_prefix_list" type="text">{{ int6.prefix_list }}</textarea>
-        </div>
-      </div>
-    </div>
-  </fieldset>
-</div>
-</div>
+</div><!-- .row -->
 
-<div class="col-md-4">
-<div class="well white">
-  <fieldset>
-    <legend>
-      <i class="zmdi zmdi-globe"></i>
-      Internazionale Area 7</legend>
-    <div class="row">
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label class="control-label">Scatto (&euro;)</label>
-          <input class="form-control" name="int7_connection_charge" type="text" value="{{ int7.connection_charge|floatformat:4 }}">
-        </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label class="control-label">Tariffa (&euro;/minuto)</label>
-          <input class="form-control" name="int7_fee_per_second" type="text" value="{{ int7.fee_per_second|per_minute|floatformat:4 }}">
-        </div>
-      </div>
-      <div class="col-xs-12">
-        <div class="form-group">
-          <label class="control-label" for="textArea">Prefissi</label>
-          <!--<input class="form-control" name="int7_prefix_list" type="text" value="{{ int7.prefix_list }}">-->
-          <textarea class="form-control" name="int7_prefix_list" type="text">{{ int7.prefix_list }}</textarea>
-      </div>
-    </div>
-  </div>
-</fieldset>
-</div>
-</div>
+<div class="card bordered">
 
-<div class="col-md-4">
-<div class="well white">
-<fieldset>
-  <legend>
-    <i class="zmdi zmdi-globe"></i>
-    Internazionale Area 8</legend>
-  <div class="row">
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label class="control-label">Scatto (&euro;)</label>
-        <input class="form-control" name="int8_connection_charge" type="text" value="{{ int8.connection_charge|floatformat:4 }}">
-      </div>
+    <div class="card-header">
+      <span class="card-title">
+        <i class="zmdi zmdi-phone-setting"></i> Altre preferenze
+      </span>
     </div>
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label class="control-label">Tariffa (&euro;/minuto)</label>
-        <input class="form-control" name="int8_fee_per_second" type="text" value="{{ int8.fee_per_second|per_minute|floatformat:4 }}">
-      </div>
-    </div>
-    <div class="col-xs-12">
-      <div class="form-group">
-        <label class="control-label" for="textArea">Prefissi</label>
-        <!--<input class="form-control" name="int8_prefix_list" type="text" value="{{ int8.prefix_list }}">-->
-        <textarea class="form-control" name="int8_prefix_list" type="text">{{ int8.prefix_list }}</textarea>
-    </div>
-  </div>
-</div>
-</fieldset>
-</div>
-</div>
 
-<div class="col-md-4">
-<div class="well white">
-<fieldset>
-<legend>
-  <i class="zmdi zmdi-globe"></i>
-  Internazionale Area 9</legend>
+    <div class="card-content">
+
 <div class="row">
-  <div class="col-xs-6">
-    <div class="form-group">
-      <label class="control-label">Scatto (&euro;)</label>
-      <input class="form-control" name="int9_connection_charge" type="text" value="{{ int9.connection_charge|floatformat:4 }}">
-    </div>
-  </div>
-  <div class="col-xs-6">
-    <div class="form-group">
-      <label class="control-label">Tariffa (&euro;/minuto)</label>
-      <input class="form-control" name="int9_fee_per_second" type="text" value="{{ int9.fee_per_second|per_minute|floatformat:4 }}">
-    </div>
-  </div>
-  <div class="col-xs-12">
-    <div class="form-group">
-      <label class="control-label" for="textArea">Prefissi</label>
-      <!--<input class="form-control" name="int9_prefix_list" type="text" value="{{ int9.prefix_list }}">-->
-      <textarea class="form-control" name="int9_prefix_list" type="text">{{ int9.prefix_list }}</textarea>
-  </div>
-</div>
-</div>
-</fieldset>
-</div>
-</div>
-</div>
-<div class="row">
-
-
-
-<div class="col-md-12">
-<div class="well white">
-<fieldset>
-<legend>
-<i class="zmdi zmdi-phone-setting"></i>
-Altre preferenze</legend>
-<div class="row">
-  <div class="col-md-2">
+  <div class="col-md-4">
     <div class="form-group">
       <label class="control-label">Durata minima (secondi)</label>
       <input class="form-control" name="min_duration" type="text" value="{{ min_duration }}">
     </div>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-4">
     <div class="form-group">
       <label class="control-label">Avviso fine (secondi)</label>
       <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
     </div>
   </div>
-  <div class="col-md-5">
-    <div class="form-group">
-      <label class="control-label normal">Soglia</label>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="checkbox">
-            <label>
-              <input {% if change_threshold == "1" %}checked="checked"{% endif %} name="privacy_mode" type="checkbox" value="1">
-              consenti modifica
-            </label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="control-label">Valore preimpostati (in minuti)</label>
-            <input class="form-control disabled" name="alert_before_end" type="text" value="{{ threshold }}">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
+  <div class="col-md-4">
     <div class="form-group">
       <label class="control-label normal filled">Primo ingresso</label>
       <div class="checkbox">
@@ -432,15 +94,31 @@ Altre preferenze</legend>
     </div>
   </div>
 </div>
-</fieldset>
+  <div class="row">
+  <div class="col-md-4">
+    <div class="form-group">
+    <label class="control-label normal filled">Soglia</label>
+    <div class="checkbox">
+      <label>
+        <input {% if change_threshold == "1" %}checked="checked"{% endif %} name="privacy_mode" type="checkbox" value="1">
+        consenti modifica
+      </label>
+    </div>
+  </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      <label class="control-label">Soglia: valore preimpostato (in minuti)</label>
+      <input class="form-control disabled" name="alert_before_end" type="text" value="{{ threshold }}">
+    </div>
+  </div>
 </div>
-<div class="col-md-12">
+</div>
+</div>
 <div class="form-group" style="text-align:right;">
 <button class="btn btn-primary btn-lg" type="submit">Salva
 <div class="ripple-wrapper"></div>
 </button>
-</div>
-</div>
 </div>
 
 </form>
