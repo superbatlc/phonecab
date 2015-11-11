@@ -208,6 +208,8 @@ $(function() {
     function(el) {
       $(el.currentTarget).parents(".card").find(".card-reveal").toggleClass("active")
     })
+
+
   $('[data-role="jquerytagsinput"]').tagsinput({
     confirmKeys: [13, 44],
     trimValue: true,
@@ -216,9 +218,12 @@ $(function() {
   $('[data-role="jquerytagsinput"]').on('itemAdded itemRemoved', function(el) {
     $(el.target).attr('value',$(el.target).val());
   });
+  $('.bootstrap-tagsinput input').attr('tabindex','-1'); //avoid TAB on tagsinput inputs
+
 
   $('[data-toggle="tooltip"]').tooltip();
   $('[data-toggle="popover"]').popover();
+
 
   $('.navbar-toggle').sideNav({
     menuWidth: 200,

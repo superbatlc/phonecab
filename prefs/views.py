@@ -64,11 +64,12 @@ def prefs_edit(request):
 
 @login_required
 def prefs_save(request):
+    import time
 
     try:
 
         # TARIFFE E PREFISSI --------------------------------------------------
- 
+
         fare_id_list = request.POST.getlist('fare_id[]')
         fare_connection_charge_list = request.POST.getlist('fare_connection_charge[]')
         fare_fee_per_second_list = request.POST.getlist('fare_fee_per_second[]')
@@ -99,7 +100,7 @@ def prefs_save(request):
         p.save(request.user)
 
         # return HttpResponse(ret, mimetype='text/plain')
-        return redirect('/prefs/edit/')
+        return prefs_edit(request)
 
     except Exception as e:
         print '%s (%s)' % (e.message, type(e))

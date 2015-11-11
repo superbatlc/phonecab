@@ -154,6 +154,11 @@ span.label {
 }
 
 .page-header .action {
-float: right;
-margin-top: -10px;
+  float: right;
+  margin-top: -10px;
+}
+
+.card-header .action {
+  float: right;
+  margin-top: -5px;
 }
