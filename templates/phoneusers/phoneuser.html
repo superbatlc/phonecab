@@ -1,12 +1,24 @@
 <div class="card bordered">
     <div class="card-content">
         <div style="float: right;">
-            <span class="label {{phoneuser.listening_enabled|yesno:"green,red"}}">
-               <i class="zmdi zmdi-headset"></i> Ascolto
+            <span class="label {{phoneuser.listening_enabled|yesno:" green,red"}}">
+              <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-headset zmdi-hc-stack-1x"></i>
+                {% if not phoneuser.listening_enabled %}
+                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
+                {% endif %}
+              </span>
+              Ascolto
             </span>
             &nbsp;&nbsp;
-            <span class="label {{phoneuser.recording_enabled|yesno:"green,red"}}">
-               <i class="zmdi zmdi-mic"></i> Registrazione
+            <span class="label {{phoneuser.recording_enabled|yesno:" green,red"}}">
+              <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-mic zmdi-hc-stack-1x"></i>
+                {% if not phoneuser.recording_enabled %}
+                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
+                {% endif %}
+              </span>
+              Registrazione
             </span>
         </div>
         <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
@@ -17,7 +29,7 @@
             </div>
             <div class="col-md-4" style="text-align:center;">
                 <h4 style="color:#666;">Matricola: {{ phoneuser.serial_no }}</h4>
-                
+
             </div>
             <div class="col-md-4" style="text-align:right;">
                 <h4 style="color:#666;">Lingua: {{ phoneuser.get_language_display }}</h4>
@@ -35,7 +47,7 @@
                 <button class="btn btn-danger" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)">
                 <i class="zmdi zmdi-clear"></i> SCHEDA DISATTIVA
                 </button>
-            {% endif %} 
+            {% endif %}
             </div>
             <div class="col-md-6" style="text-align:right;">
             {% if priv_anagrafica > 1 %}

@@ -19,7 +19,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for item in items %}                                                 
+            {% for item in items %}
             <tr>
                 <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
                 <td class="acentro">{{ item.detail.custom_calltype|calltype|safe }}</td>
@@ -31,7 +31,7 @@
                 <td>{{ item.whitelist.label }}</td>
                 <td class="acentro">
                     {% if item.filename != '' %}
-                    <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset"></i></a>
+                    <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>
                     {% else %}
                     -
                     {% endif %}
@@ -53,7 +53,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="/records/export/?{{ query_string }}" class="btn btn-success records-export" style="float:left;"><i class="zmdi zmdi-download"></i> Esporta registrazioni</a>
-                        <a href="/records/remove/?{{ query_string }}" class="btn btn-danger records-confirm-remove hide" style="float:right;"><i class="zmdi zmdi-close"> Elimina registrazioni</i></a> 
+                        <a href="/records/remove/?{{ query_string }}" class="btn btn-danger records-confirm-remove hide" style="float:right;"><i class="zmdi zmdi-close"> Elimina registrazioni</i></a>
                     </div>
                     <div class="col-md-5" style="text-align:right;">
                         {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
@@ -66,4 +66,3 @@
         </div>
     {% endif %}
     <!-- chiude paginazione record -->
-        

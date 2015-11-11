@@ -26,6 +26,22 @@ img.logo{
 .page-login {
 	background:#ff5722;
 }
+.login-background {
+	font-size: 100em;
+	color: white;
+	/* position: absolute; */
+	line-height: 0;
+	/* left: 18%; */
+	/* top: -120%; */
+	height: 1200px;
+	width: 1200px;
+	/* background: black; */
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -700px;
+	margin-left: -500px;
+}
 
 input:-webkit-autofill {
 	background-color:white !important;

@@ -56,28 +56,68 @@
             </tr>
             <tr>
             <td><i class="icon-file"></i> Anagrafica</td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-ana-read" name="priv-ana-read" value="" checked disabled/></td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-ana-write" name="priv-ana-read" value="" {% if priv_anagrafica > 1 %}checked{% endif %}/></td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-ana-read" name="priv-ana-read" value="" checked disabled/>
+              </div>
+            </td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-ana-write" name="priv-ana-read" value="" {% if priv_anagrafica > 1 %}checked{% endif %}/>
+              </div>
+            </td>
             </tr>
             <tr>
             <td><i class="icon-pencil"></i> Autorizzazioni</td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-white-read" name="priv-white-read" value=""  {% if priv_whitelist > 0 %}checked{% endif %}/></td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-white-write" name="priv-white-read" value=""  {% if priv_whitelist > 1 %}checked{% endif %}/></td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-white-read" name="priv-white-read" value=""  {% if priv_whitelist > 0 %}checked{% endif %}/>
+              </div>
+            </td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-white-write" name="priv-white-read" value=""  {% if priv_whitelist > 1 %}checked{% endif %}/>
+              </div>
+            </td>
             </tr>
             <tr>
             <td><i class="icon-shopping-cart"></i> Ricariche</td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-credit-read" name="priv-credit-read" value="" {% if priv_credit > 0 %}checked{% endif %}/></td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-credit-write" name="priv-credit-read" value="" {% if priv_credit > 1 %}checked{% endif %}/></td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-credit-read" name="priv-credit-read" value="" {% if priv_credit > 0 %}checked{% endif %}/>
+              </div>
+            </td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-credit-write" name="priv-credit-read" value="" {% if priv_credit > 1 %}checked{% endif %}/>
+              </div>
+            </td>
             </tr>
             <tr>
             <td><i class="icon-asterisk"></i> Dettaglio Chiamate</td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-cdr-read" name="priv-cdr-read" value="" {% if priv_cdr > 0 %}checked{% endif %}/></td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-cdr-write" name="priv-cdr-read" value="" disabled/></td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-cdr-read" name="priv-cdr-read" value="" {% if priv_cdr > 0 %}checked{% endif %}/>
+              </div>
+            </td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-cdr-write" name="priv-cdr-read" value="" disabled/>
+              </div>
+            </td>
             </tr>
             <tr>
             <td><i class="icon-headphones"></i> Registrazione</td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-record-read" name="priv-record-read" value="" {% if priv_record > 0 %}checked{% endif %}/></td>
-            <td style="text-align:center;"><input type="checkbox" id="priv-record-write" name="priv-record-read" value="" disabled/></td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-record-read" name="priv-record-read" value="" {% if priv_record > 0 %}checked{% endif %}/>
+              </div>
+            </td>
+            <td style="text-align:center;">
+              <div class="checkbox">
+                <input type="checkbox" id="priv-record-write" name="priv-record-read" value="" disabled/>
+              </div>
+            </td>
             </tr>
         </table>
         </div>

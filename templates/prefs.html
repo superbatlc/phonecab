@@ -4,6 +4,23 @@
 {% block title %}PhoneCab - Anagrafica{% endblock %}
 {% block application %}
 
+<script type="text/javascript">
+  var reallySave = false;
+  var submitPrefs = function() {
+    return reallySave;
+  }
+  var save = function() {
+
+
+
+
+
+
+    reallySave = true;
+    $('#prefs').submit();
+  }
+</script>
+
 <div class="page-header">
   <h1>
     <i class="zmdi zmdi-settings"></i>
@@ -11,7 +28,7 @@
   <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
 </div>
 
-<form action="/prefs/save/" class="form-floating" method="POST">
+<form id="prefs" action="/prefs/save/" class="form-floating" method="POST" onSubmit="submitPrefs">
 
   <div class="row">
     {% for fare in fares %}
@@ -30,17 +47,18 @@
       </div>
 
       <div class="card-content">
+        <input type="hidden" name="fare_id[]" value="{{fare.id}}">
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
               <label class="control-label">Scatto (&euro;)</label>
-              <input class="form-control" name="dist_connection_charge" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
+              <input class="form-control" name="fare_connection_charge[]" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
             </div>
           </div>
           <div class="col-xs-12">
             <div class="form-group">
               <label class="control-label">Tariffa (&euro;/minuto)</label>
-              <input class="form-control" name="dist_fee_per_second" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
+              <input class="form-control" name="fare_fee_per_second[]" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
             </div>
           </div>
         </div>
@@ -50,7 +68,7 @@
           <i class="zmdi zmdi-close pull-right btn-flip"></i>
         </span>
         <div class="form-group">
-          <input data-role="jquerytagsinput" class="form-control" class="input-small" name="dist_prefix" size="5" type="text" value="{{ fare.prefix_list }}">
+          <input data-role="jquerytagsinput" class="form-control" class="input-small" name="fare_prefix_list[]" tabindex="-1" size="5" type="text" value="{{ fare.prefix_list }}">
         </div>
       </div>
     </div>
@@ -116,7 +134,7 @@
 </div>
 </div>
 <div class="form-group" style="text-align:right;">
-<button class="btn btn-primary btn-lg" type="submit">Salva
+<button class="btn btn-primary btn-lg" type="button" onClick="save()">Salva
 <div class="ripple-wrapper"></div>
 </button>
 </div>

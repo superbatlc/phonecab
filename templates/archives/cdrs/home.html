@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-    {% block title %}PhoneCab - Dettaglio Chiamate Archiviate{% endblock %} 
+    {% block title %}PhoneCab - Dettaglio Chiamate Archiviate{% endblock %}
     {% block stylesheet %}
     <link rel="stylesheet" href="{% static "css/datepicker.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
     <link rel="stylesheet" href="{% static "css/cdr.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -15,7 +15,7 @@
                     <input type="text" value="{{d.start_date}}" name="data_inizio" placeholder="gg-mm-aaaa" maxlength="12" size="8" class="input-small" style="width:85px;text-align:center;">
                     <span class="add-on"><i class="icon-calendar"></i></span>
                 </div>
-                <div data-date-format="dd-mm-yyyy" data-date="{{today}}" class="input date cdr-date-filter" style="float:left;">  
+                <div data-date-format="dd-mm-yyyy" data-date="{{today}}" class="input date cdr-date-filter" style="float:left;">
                     <label for="ora_inizio" style="margin: 5px 1px 0 10px;vertical-align: top;">dalle:&nbsp;</label>
                     <input name="ora_inizio" type="text" value="{{d.start_time}}" placeholder="hh:mm" maxlength="5" size="5" style="width:45px;text-align:center;">
                 </div>
@@ -43,8 +43,6 @@
                 <div class="archive-cdr-items">{{ cdr }}</div>
         </div>
     </div>
-    {% endblock application %}   
+    {% endblock application %}
     {% block script %}
-    <script src="{% static "js/bootstrap-datepicker.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "js/cdr.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endblock script %}    

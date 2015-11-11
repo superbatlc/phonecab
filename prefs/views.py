@@ -64,204 +64,22 @@ def prefs_edit(request):
 
 @login_required
 def prefs_save(request):
+
     try:
-        ret = "1"
-        # DISTRETTUALI -----------------------------------------------------------
-        dist_connection_charge = get_fee(
-            request.POST.get(
-                "dist_connection_charge",
-                "0.00"))
-        dist_fee_per_second = get_fee(
-            request.POST.get(
-                "dist_fee_per_second",
-                "0.00")) / 60
 
-        f = Fare.objects.get(direction='distrettuale')
-        f.connection_charge = dist_connection_charge
-        f.fee_per_second = dist_fee_per_second
-        f.save(request.user)
-        # NAZIONALI -----------------------------------------------------------
-        naz_connection_charge = get_fee(
-            request.POST.get(
-                "naz_connection_charge",
-                "0.00"))
-        naz_fee_per_second = get_fee(
-            request.POST.get(
-                "naz_fee_per_second",
-                "0.00")) / 60
+        # TARIFFE E PREFISSI --------------------------------------------------
+ 
+        fare_id_list = request.POST.getlist('fare_id[]')
+        fare_connection_charge_list = request.POST.getlist('fare_connection_charge[]')
+        fare_fee_per_second_list = request.POST.getlist('fare_fee_per_second[]')
+        fare_prefix_list_list = request.POST.getlist('fare_prefix_list[]')
 
-        f = Fare.objects.get(direction='nazionale')
-        f.connection_charge = naz_connection_charge
-        f.fee_per_second = naz_fee_per_second
-        f.save(request.user)
-
-        # INTERNAZIONALI 1 ----------------------------------------------------
-        int1_connection_charge = get_fee(
-            request.POST.get(
-                "int1_connection_charge",
-                "0.00"))
-        int1_fee_per_second = get_fee(
-            request.POST.get(
-                "int1_fee_per_second",
-                "0.00")) / 60
-        int1_prefix_list = request.POST.get("int1_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 1')
-        f.connection_charge = int1_connection_charge
-        f.fee_per_second = int1_fee_per_second
-        f.prefix_list = int1_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 2 ----------------------------------------------------
-        int2_connection_charge = get_fee(
-            request.POST.get(
-                "int2_connection_charge",
-                "0.00"))
-        int2_fee_per_second = get_fee(
-            request.POST.get(
-                "int2_fee_per_second",
-                "0.00")) / 60
-        int2_prefix_list = request.POST.get("int2_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 2')
-        f.connection_charge = int2_connection_charge
-        f.fee_per_second = int2_fee_per_second
-        f.prefix_list = int2_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 3 ----------------------------------------------------
-        int3_connection_charge = get_fee(
-            request.POST.get(
-                "int3_connection_charge",
-                "0.00"))
-        int3_fee_per_second = get_fee(
-            request.POST.get(
-                "int3_fee_per_second",
-                "0.00")) / 60
-        int3_prefix_list = request.POST.get("int3_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 3')
-        f.connection_charge = int3_connection_charge
-        f.fee_per_second = int3_fee_per_second
-        f.prefix_list = int3_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 4 ----------------------------------------------------
-        int4_connection_charge = get_fee(
-            request.POST.get(
-                "int4_connection_charge",
-                "0.00"))
-        int4_fee_per_second = get_fee(
-            request.POST.get(
-                "int4_fee_per_second",
-                "0.00")) / 60
-        int4_prefix_list = request.POST.get("int4_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 4')
-        f.connection_charge = int4_connection_charge
-        f.fee_per_second = int4_fee_per_second
-        f.prefix_list = int4_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 5 ----------------------------------------------------
-        int5_connection_charge = get_fee(
-            request.POST.get(
-                "int5_connection_charge",
-                "0.00"))
-        int5_fee_per_second = get_fee(
-            request.POST.get(
-                "int5_fee_per_second",
-                "0.00")) / 60
-        int5_prefix_list = request.POST.get("int5_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 5')
-        f.connection_charge = int5_connection_charge
-        f.fee_per_second = int5_fee_per_second
-        f.prefix_list = int5_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 6 ----------------------------------------------------
-        int6_connection_charge = get_fee(
-            request.POST.get(
-                "int6_connection_charge",
-                "0.00"))
-        int6_fee_per_second = get_fee(
-            request.POST.get(
-                "int6_fee_per_second",
-                "0.00")) / 60
-        int6_prefix_list = request.POST.get("int6_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 6')
-        f.connection_charge = int6_connection_charge
-        f.fee_per_second = int6_fee_per_second
-        f.prefix_list = int6_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 7 ----------------------------------------------------
-        int7_connection_charge = get_fee(
-            request.POST.get(
-                "int7_connection_charge",
-                "0.00"))
-        int7_fee_per_second = get_fee(
-            request.POST.get(
-                "int7_fee_per_second",
-                "0.00")) / 60
-        int7_prefix_list = request.POST.get("int7_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 7')
-        f.connection_charge = int7_connection_charge
-        f.fee_per_second = int7_fee_per_second
-        f.prefix_list = int7_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 8 ----------------------------------------------------
-        int8_connection_charge = get_fee(
-            request.POST.get(
-                "int8_connection_charge",
-                "0.00"))
-        int8_fee_per_second = get_fee(
-            request.POST.get(
-                "int8_fee_per_second",
-                "0.00")) / 60
-        int8_prefix_list = request.POST.get("int8_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 8')
-        f.connection_charge = int8_connection_charge
-        f.fee_per_second = int8_fee_per_second
-        f.prefix_list = int8_prefix_list
-        f.save(request.user)
-
-        # INTERNAZIONALI 9 ----------------------------------------------------
-        int9_connection_charge = get_fee(
-            request.POST.get(
-                "int9_connection_charge",
-                "0.00"))
-        int9_fee_per_second = get_fee(
-            request.POST.get(
-                "int9_fee_per_second",
-                "0.00")) / 60
-        int9_prefix_list = request.POST.get("int9_prefix_list", "")
-
-        f = Fare.objects.get(direction='internazionale 9')
-        f.connection_charge = int9_connection_charge
-        f.fee_per_second = int9_fee_per_second
-        f.prefix_list = int9_prefix_list
-        f.save(request.user)
-
-        # MOBILE --------------------------------------------------------------
-        mob_connection_charge = get_fee(
-            request.POST.get(
-                "mob_connection_charge",
-                "0.00"))
-        mob_fee_per_second = get_fee(
-            request.POST.get(
-                "mob_fee_per_second",
-                "0.00")) / 60
-
-        f = Fare.objects.get(direction='mobile')
-        f.connection_charge = mob_connection_charge
-        f.fee_per_second = mob_fee_per_second
-        f.save(request.user)
+        for index, id in enumerate(fare_id_list):
+            f = Fare.objects.get(pk=id)
+            f.connection_charge = get_fee(fare_connection_charge_list[index])
+            f.fee_per_second = get_fee(fare_fee_per_second_list[index]) / 60
+            f.prefix_list = fare_prefix_list_list[index]
+            f.save(request.user)
 
         # ALTRE PREFERENZE CHIAMATA -------------------------------------------
         min_duration = request.POST.get("min_duration", "0")
@@ -289,5 +107,3 @@ def prefs_save(request):
 
 def get_fee(value):
     return float(value.replace(",", "."))
-
-    

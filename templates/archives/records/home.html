@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-    {% block title %}PhoneCab - Dettaglio Chiamate{% endblock %} 
+    {% block title %}PhoneCab - Dettaglio Chiamate{% endblock %}
     {% block stylesheet %}
     <link rel="stylesheet" href="{% static "css/datepicker.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
     <link rel="stylesheet" href="{% static "css/records.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -16,7 +16,7 @@
                     <input type="text" value="{{d.start_date}}" name="data_inizio" placeholder="gg-mm-aaaa" maxlength="12" size="6" class="input-small">
                     <span class="add-on"><i class="icon-calendar"></i></span>
                 </div>
-                <div data-date-format="dd-mm-yyyy" data-date="{{today}}" class="input date records-date-filter" style="float:left;">  
+                <div data-date-format="dd-mm-yyyy" data-date="{{today}}" class="input date records-date-filter" style="float:left;">
                     <label for="ora_inizio" style="margin: 5px 0px 0 10px;vertical-align: top;">dalle ore:&nbsp;</label>
                     <input name="ora_inizio" type="text" value="{{d.start_time}}" placeholder="hh:mm" maxlength="5" size="5" style="width:45px;text-align:center;">
                 </div>
@@ -32,7 +32,7 @@
                 <div style="float:left;">
                     <label for="ora_fine" style="margin: 5px 0px 0 10px;vertical-align: top;">Codice:&nbsp;</label>
                     <input type="text" name="pincode" value="{{d.accountcode}}" placeholder="codice" maxlength="8" size="10" style="width:65px;text-align:center;margin: 0px 15px 0 0px;">
-        
+
                     <button class="btn btn-success records-do-filter">Filtra</button>
                     <a href="/records" class="btn btn-info">X</a>
                 </div>
@@ -40,8 +40,6 @@
                 <div class="log-records">{{ records }}</div>
         </div>
     </div>
-    {% endblock application %}   
+    {% endblock application %}
     {% block script %}
-    <script src="{% static "js/bootstrap-datepicker.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "js/records.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endblock script %}    

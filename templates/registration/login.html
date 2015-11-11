@@ -12,19 +12,20 @@
 		<link rel="stylesheet" href="{% static "css/materialism/styles.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="{% static "css/vendors/ripples.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="{% static "css/vendors/material-design-iconic-font.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="{% static "css/phonegap/style.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
-		<link rel="stylesheet" href="{% static "css/phonegap/login.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/phonecab/style.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/phonecab/login.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
   </head>
 
   <body class="theme-template-dark theme-deep-orange page-login" init-ripples="">
+    <!-- <div class="login-background"><i class="zmdi zmdi-phone"></i></div> -->
     <div class="center">
       <div class="card bordered z-depth-2" style="margin:0% auto; max-width:400px;">
       <form class="form-floating" action="/login/" method="POST">
         <div class="card-header" style="padding:0;">
           <div class="brand-logo">
-            <div class="phonegap-logo"
-            style="width: 100%;border-radius: 0;"
-            ><div class="phonegap-wave"><span>PHONEGAP</span></div></div>
+            <div class="phonecab-logo" style="width: 100%;border-radius: 0;">
+              <div class="phonecab-wave"><span>phonecab</span>
+              </div></div>
           </div>
         </div>
           {% if error %}
@@ -39,7 +40,7 @@
           <div class="m-b-30">
             <div class="card-title strong pink-text">Login</div>
             <p class="card-title-desc">
-              Phonegap
+              phonecab
             </p>
           </div>
             {% csrf_token %}
