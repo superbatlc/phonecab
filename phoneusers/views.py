@@ -252,7 +252,7 @@ def phoneuser_change_status(request):
         ret = "-1"
     return phoneuser_data(request, phoneuser_id)
 
-@login_required #TODO: da implementare
+@login_required
 def phoneuser_archive(request, phoneuser_id):
     ret = "1"
     try:
@@ -267,74 +267,7 @@ def phoneuser_archive(request, phoneuser_id):
         ret = "0"
     return HttpResponse(ret, content_type='text/plain')
 
-@login_required #TODO: da implementare
-def phoneuser_export(request, accountcode="0"):
-    """Esportazione contratto telefonico"""
-    import time
-    import xlwt
 
-    #phoneuser_id = int(phoneuser_id)
-    print "accountcode: %s" % accountcode
-    if accountcode:
-        book = xlwt.Workbook(encoding='utf8')
-        sheet = book.add_sheet('Estratto Conto Telefonico')
-
-        default_style = xlwt.Style.default_style
-        datetime_style = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
-
-        details = Detail.objects.filter(
-            accountcode=accountcode, disposition="ANSWERED").order_by('calldate')
-
-        phoneuser = PhoneUser.objects.get(pincode=accountcode)
-
-        sheet.write(0, 0, "Data e ora", style=default_style)
-        sheet.write(0, 1, "Codice", style=default_style)
-        sheet.write(0, 2, "Cognome e Nome", style=default_style)
-        sheet.write(0, 3, "Sorgente", style=default_style)
-        sheet.write(0, 4, "Destinazione", style=default_style)
-        sheet.write(0, 5, "Durata", style=default_style)
-        sheet.write(0, 6, "Costo", style=default_style)
-
-        row = 0
-        for row, rowdata in enumerate(details):
-            #calldate = BeeFunction.convert_datetime_format(str(rowdata.calldate),"%Y-%m-%d %H:%i:%s", "%d-%m-%Y %H:%i:%s")
-            calldate = time.strftime("%d-%m-%Y %H:%M:%S",
-                                     time.strptime(str(rowdata.calldate),
-                                                   "%Y-%m-%d %H:%M:%S"))
-            billsec = "%sm %ss" % (int(rowdata.billsec / 60), rowdata.billsec % 60)
-            rowdata.price = rowdata.price > 0 and rowdata.price or 0
-            sheet.write(row + 1, 0, calldate, style=datetime_style)
-            sheet.write(row + 1, 1, rowdata.accountcode, style=default_style)
-            sheet.write(row + 1, 2, phoneuser.get_full_name(), style=default_style)
-            sheet.write(row + 1, 3, rowdata.custom_src, style=default_style)
-            sheet.write(row + 1, 4, rowdata.custom_dst, style=default_style)
-            sheet.write(row + 1, 5, billsec, style=default_style)
-            sheet.write(row + 1, 6, rowdata.price, style=default_style)
-
-        try:
-            phoneuser = PhoneUser.objects.get(pincode=accountcode)
-            residuo = "%s" % phoneuser.balance
-        except:
-            residuo = "0.00"
-
-        sheet.write(row + 2, 4, "Valore residuo:", style=default_style)
-        sheet.write(row + 2, 5, residuo, style=default_style)
-
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        filename = 'Estratto_conto_telefonico_%s.xls' % phoneuser.get_full_name().replace(" ","_")
-        response[
-            'Content-Disposition'] = 'attachment; filename=%s' % filename
-        book.save(response)
-
-        # logghiamo azione
-        audit = Audit()
-        audit.user = request.user
-        detail = "Codice: %s" % accountcode
-        audit.what = "L'utente %s ha esportato in formato excel una lista chiamate corrispondenti ai seguenti criteri: %s" \
-            % (request.user.username, detail)
-        audit.save()
-
-        return response
 
 @login_required
 def phoneuser_name(request, accountcode):
@@ -387,9 +320,6 @@ def whitelist_edit(request):
     whitelist_id = int(request.POST.get("data[id]", "0"))
     phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
 
-    print "whitelist_id: %s" % whitelist_id
-    print "phoneuser_id: %s" % phoneuser_id
-
     if whitelist_id:
         # richiesta di modifica di una whitelist esistente
         try:
@@ -400,6 +330,7 @@ def whitelist_edit(request):
             raise Http404 #TODO: gestire errore
     else:
         whitelist = Whitelist()
+        whitelist.duration = int(Pref.get("threshold")) / 60
         if phoneuser_id:
             try:
                 whitelist.phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
@@ -408,6 +339,7 @@ def whitelist_edit(request):
 
     variables['whitelist'] = whitelist
     variables['enable_first_in'] = Pref.get("enable_first_in")
+    variables['change_threshold'] = Pref.get("change_threshold")
 
     return render_to_response('phoneusers/whitelists/whitelist.html', variables)
 
@@ -675,6 +607,7 @@ def credit_items(request, phoneuser_id):
     variables['end_item'] = end_item
     variables['d'] = d
     variables['balance'] = phoneuser.balance
+    variables['phoneuser_id'] = phoneuser_id
 
     if request.is_ajax():
         return render_to_response(
@@ -724,3 +657,107 @@ def credit_save(request):
         print "%s" % format(e)
 
     return credit_items(request, phoneuser_id)
+
+def credit_export(request, phoneuser_id=0):
+    """Stampa bilancio"""
+    phoneuser_id = int(phoneuser_id)
+    if phoneuser_id:
+        try:
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+        except:
+            raise Http404 #TODO gestire errore
+
+        tot_recharge = "37,80"
+        tot_cost = "22,30"
+        balance = "15,50"
+
+        variables = {
+            'header': Pref.header(),
+            'tot_recharge': tot_recharge,
+            'tot_cost': tot_cost,
+            'balance': balance,
+        }
+
+        return render_to_response('print.html', variables)
+    else:
+        raise Http404 #TODO gestire errore
+
+
+
+@login_required #TODO remove
+def __credit_export(request, phoneuser_id=0):
+    """Esportazione contratto telefonico"""
+    import time
+    import xlwt
+
+    #phoneuser_id = int(phoneuser_id)
+    phoneuser_id = int(phoneuser_id)
+
+    if phoneuser_id:
+        try:
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+        except Exception as e:
+            print "Errore archiviazione %s" % format(e)
+            raise Http404 #TODO gestire errore
+
+        accountcode = phoneuser.pincode
+
+        if accountcode:
+            book = xlwt.Workbook(encoding='utf8')
+            sheet = book.add_sheet('Estratto Conto Telefonico')
+
+            default_style = xlwt.Style.default_style
+            datetime_style = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
+
+            details = Detail.objects.filter(
+                accountcode=accountcode, disposition="ANSWERED").order_by('calldate')
+
+            #phoneuser = PhoneUser.objects.get(pincode=accountcode)
+
+            sheet.write(0, 0, "Data e ora", style=default_style)
+            sheet.write(0, 1, "Codice", style=default_style)
+            sheet.write(0, 2, "Cognome e Nome", style=default_style)
+            sheet.write(0, 3, "Sorgente", style=default_style)
+            sheet.write(0, 4, "Destinazione", style=default_style)
+            sheet.write(0, 5, "Durata", style=default_style)
+            sheet.write(0, 6, "Costo", style=default_style)
+
+            row = 0
+            for row, rowdata in enumerate(details):
+                #calldate = BeeFunction.convert_datetime_format(str(rowdata.calldate),"%Y-%m-%d %H:%i:%s", "%d-%m-%Y %H:%i:%s")
+                calldate = time.strftime("%d-%m-%Y %H:%M:%S",
+                                         time.strptime(str(rowdata.calldate),
+                                                       "%Y-%m-%d %H:%M:%S"))
+                billsec = "%sm %ss" % (int(rowdata.billsec / 60), rowdata.billsec % 60)
+                rowdata.price = rowdata.price > 0 and rowdata.price or 0
+                sheet.write(row + 1, 0, calldate, style=datetime_style)
+                sheet.write(row + 1, 1, rowdata.accountcode, style=default_style)
+                sheet.write(row + 1, 2, phoneuser.get_full_name(), style=default_style)
+                sheet.write(row + 1, 3, rowdata.custom_src, style=default_style)
+                sheet.write(row + 1, 4, rowdata.custom_dst, style=default_style)
+                sheet.write(row + 1, 5, billsec, style=default_style)
+                sheet.write(row + 1, 6, rowdata.price, style=default_style)
+
+            try:
+                phoneuser = PhoneUser.objects.get(pincode=accountcode)
+                residuo = "%s" % phoneuser.balance
+            except:
+                residuo = "0.00"
+
+            sheet.write(row + 2, 4, "Valore residuo:", style=default_style)
+            sheet.write(row + 2, 5, residuo, style=default_style)
+
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            filename = 'Estratto_conto_telefonico_%s.xls' % phoneuser.get_full_name().replace(" ","_")
+            response[
+                'Content-Disposition'] = 'attachment; filename=%s' % filename
+            book.save(response)
+
+            # logghiamo azione
+            audit = Audit()
+            audit.user = request.user
+            audit.what = "Esportazione Estratto conto: %s" % phoneuser
+            audit.save()
+
+            return response
+        raise Http404 #TODO gestire errore

@@ -51,6 +51,7 @@ def audit_items(request):
     start_time = request.GET.get("start_time", None)
     end_time = request.GET.get("end_time", None)
     keyword = request.GET.get("keyword", "")
+    what = request.GET.get("what", "")
 
     page = int(request.GET.get("page", "1"))
 
@@ -62,7 +63,11 @@ def audit_items(request):
         # elimino la pagina dal dizionario
         del d['page']
 
-    q_obj = Q(user__username__icontains=keyword) | Q(user__last_name__icontains=keyword)
+    q_obj = Q(user__username__icontains=keyword) | Q(user__last_name__icontains=keyword) 
+
+    if what != '':
+       q_obj.add(Q(what__icontains=what), Q.AND) 
+
 
     if start_date != '':
         start_date = Helper.convert_datestring_format(

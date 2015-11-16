@@ -36,6 +36,11 @@ class Pref(models.Model):
         except MultipleObjectsReturned:
             return None
 
+    @staticmethod
+    def header():
+        """Return the value of the header pref for printing"""
+        return Pref.get("header")
+
 
 class Fare(models.Model):
 
@@ -51,7 +56,7 @@ class Fare(models.Model):
     reg_exp = models.TextField(verbose_name="Espressione regolare")
     ordering = models.IntegerField(verbose_name="Ordinamento")
     icon = models.CharField(max_length=50, default="zmdi zmdi-home")
-    visible = models.BooleanField(default=True)
+    position = models.IntegerField(default=0)
 
     @staticmethod
     def get_call_cost(phonenumber, duration):

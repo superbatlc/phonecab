@@ -16,7 +16,7 @@
   <div class="form-group">
     <label for="first-name" class="col-xs-4 control-label">Soglia</label>
     <div class="col-xs-2 filled">
-      <input type="text" class="form-control input-small" id="whitelist-duration" placeholder="Soglia" value="{{ whitelist.duration }}" required>
+      <input type="text" class="form-control input-small" id="whitelist-duration" placeholder="Soglia" value="{{ whitelist.duration }}" required{% if not change_threshold  == "1" %} disabled{% endif %}>
       <label class="muted">minuti</label>
     </div>
   </div>

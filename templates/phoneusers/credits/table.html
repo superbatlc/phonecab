@@ -11,6 +11,7 @@
             <th style="width:120px;">Data</th>
             <th style="width:auto;">Causale</th>
             <th style="width:100px;text-align:right;">Importo</th>
+            <th style="width:100px;text-align:center;">Azione</th>
             </tr>
             </thead>
             <tbody>
@@ -20,6 +21,10 @@
                 <td>{{ c.recharge_date|utc|date:"d-m-Y" }}</td>
                 <td>{{ c.reason }}</td>
                 <td style="text-align:right;">{{ c.recharge }}</td>
+                <td style="text-align:center;">
+                <a href="/credits/print/{{ c.id }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Stampa la ricevuta relativa a questa ricarica" data-toggle="tooltip" data-original-title="" title="">
+                    <i class="zmdi zmdi-print mdc-text-grey"></i>
+                </a>
                 </tr>
                 {% endfor %}
             {% endif %}
@@ -32,7 +37,7 @@
             <h4>Credito residuo: {{ balance }} &euro;</h4>
         </div>
         <div class="col-md-2" style="text-align:right;">
-            <button class="btn btn-success phoneuser-export-cdr"><i class="zmdi zmdi-file-text"></i> Estratto Conto Telefonico</button>
+            <a href="/credits/export/{{ phoneuser_id }}" target="_blank" class="btn btn-success"><i class="zmdi zmdi-file-text"></i> Estratto Conto Telefonico</a>
         </div>
         <div class="col-md-5" style="text-align:right;">
                 {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;

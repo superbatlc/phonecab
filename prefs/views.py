@@ -12,49 +12,26 @@ from prefs.models import Fare, Pref
 
 @login_required
 def prefs_edit(request):
-    # recuperiamo le preferenze
-    dist = Fare.objects.get(direction='distrettuale')
-    naz = Fare.objects.get(direction='nazionale')
-    int1 = Fare.objects.get(direction='internazionale 1')
-    int2 = Fare.objects.get(direction='internazionale 2')
-    int3 = Fare.objects.get(direction='internazionale 3')
-    int4 = Fare.objects.get(direction='internazionale 4')
-    int5 = Fare.objects.get(direction='internazionale 5')
-    int6 = Fare.objects.get(direction='internazionale 6')
-    int7 = Fare.objects.get(direction='internazionale 7')
-    int8 = Fare.objects.get(direction='internazionale 8')
-    int9 = Fare.objects.get(direction='internazionale 9')
-    mob = Fare.objects.get(direction='mobile')
-
+    # recuperiamo le preferenze e le tariffe
     min_duration = Pref.get('min_duration')
     alert_before_end = Pref.get('alert_before_end')
     enable_first_in = Pref.get('enable_first_in')
     change_threshold = Pref.get('change_threshold')
     threshold = int(Pref.get('threshold')) / 60
-    """
-    variables = {
-        'tooltip_text': 'Premi per mostrare/nascondere i prefissi di questa area geografica',
-        'naz': naz,
-        'dist': dist,
-        'int1': int1,
-        'int2': int2,
-        'int3': int3,
-        'int4': int4,
-        'int5': int5,
-        'int6': int6,
-        'int7': int7,
-        'int8': int8,
-        'int9': int9,
-        'mob': mob,
-    """
+    header = Pref.get('header')
+    fares = Fare.objects.filter(position__gt=0).order_by('position')
+
     variables = {
         'min_duration': min_duration,
         'alert_before_end': alert_before_end,
         'enable_first_in': enable_first_in,
         'change_threshold': change_threshold,
         'threshold': threshold,
-        'fares': Fare.objects.filter(visible=True)
+        'fares': fares,
+        'header': header,
     }
+
+    print variables
 
     variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))
 
@@ -86,6 +63,9 @@ def prefs_save(request):
         min_duration = request.POST.get("min_duration", "0")
         alert_before_end = request.POST.get("alert_before_end", "0")
         enable_first_in = request.POST.get("enable_first_in", "0")
+        change_threshold = request.POST.get("change_threshold", "0")
+        threshold = int(request.POST.get("threshold", "0")) * 60
+        header = request.POST.get("header", "0")
 
         p = Pref.objects.get(key='min_duration')
         p.value = min_duration
@@ -99,8 +79,20 @@ def prefs_save(request):
         p.value = enable_first_in
         p.save(request.user)
 
+        p = Pref.objects.get(key='change_threshold')
+        p.value = change_threshold
+        p.save(request.user)
+
+        p = Pref.objects.get(key='threshold')
+        p.value = threshold
+        p.save(request.user)
+
+        p = Pref.objects.get(key='header')
+        p.value = header
+        p.save(request.user)
+
         # return HttpResponse(ret, mimetype='text/plain')
-        return prefs_edit(request)
+        return redirect('/prefs/edit/')
 
     except Exception as e:
         print '%s (%s)' % (e.message, type(e))

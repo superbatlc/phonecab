@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^phoneusers/view/(?P<phoneuser_id>[0-9]*)$', phoneuser_view),
     url(r'^phoneusers/edit/$', phoneuser_edit),
     url(r'^phoneusers/save/$', phoneuser_save),
-    url(r'^phoneusers/export/(?P<accountcode>[0-9]*)$', phoneuser_export),
+    #url(r'^phoneusers/export/(?P<accountcode>[0-9]*)$', phoneuser_export),
     url(r'^phoneusers/name/(?P<accountcode>[0-9]*)$', phoneuser_name),
     url(r'^phoneusers/data/(?P<phoneuser_id>[0-9]*)$', phoneuser_data),
     #url(r'^phoneusers/enable/(?P<phoneuser_id>[0-9]*)$', phoneuser_enable),
@@ -30,5 +30,6 @@ urlpatterns = [
     url(r'^credits/$', credit_items),
     url(r'^credits/new/$', credit_new),
     url(r'^credits/save/$', credit_save),
+    url(r'^credits/export/(?P<phoneuser_id>[0-9]*)$', credit_export),
     
 ]
