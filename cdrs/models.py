@@ -1,4 +1,5 @@
 from django.db import models
+from phoneusers.models import PhoneUser
 
 
 class DetailManager(models.Manager):
@@ -45,6 +46,17 @@ class Detail(models.Model):
 
     objects = DetailManager()
     all_objects = models.Manager()
+
+    @staticmethod
+    def get_cost(phoneuser_id):
+        """Calcola il totale dei costi sostenuti"""
+        try:
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+            total = Detail.objects.filter(accountcode=phoneuser.pincode).aggregate(total=models.Sum('price'))
+            return total['total']
+        except Exception as e:
+            print format(e)
+            pass #TODO gestire errore
 
 
 class RealTimeCall(models.Model):

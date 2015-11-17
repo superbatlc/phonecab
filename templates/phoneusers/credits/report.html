@@ -26,10 +26,13 @@
     </div>
     <div class="row">
         <div class="col-xd-4">
+        {% for recharge in recharges %}
+        <div>{{ recharge.recharge_date|date:"d-m-Y" }} alle ore {{ recharge.recharge_date|date:"H:i" }} {{ recharge.recharge }} - {{ recharge.reason }}</div>
+        {% endfor %}
         Torale ricariche: {{ tot_recharge }} &euro;
         </div>
         <div class="col-xd-4">
-        Torale spese: {{ tot_cost }} &euro;
+        Torale spese telefoniche: {{ tot_cost }} &euro;
         </div>
         <div class="col-xd-4">
         Credito residuo: {{ phoneuser.balance }} &euro;

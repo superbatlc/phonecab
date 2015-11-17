@@ -22,17 +22,17 @@
         <hr>
     </div>
     <div style="text-align:center;">
-        <h4>Resoconto Economico {{ phoneuser.get_full_name }} al {{ today }}</h4>
+        <h4>Ricevuta ricarica</h4>
     </div>
     <div class="row">
         <div class="col-xd-4">
-        Torale ricariche: {{ tot_recharge }} &euro;
+        Importo ricarica: {{ credit.recharge }} &euro;
         </div>
         <div class="col-xd-4">
-        Torale spese: {{ tot_cost }} &euro;
+        Effettuata il: {{ credit.recharge_date|date:"d-m-Y" }} alle ore {{ credit.recharge_date|date:"H:i" }}
         </div>
         <div class="col-xd-4">
-        Credito residuo: {{ phoneuser.balance }} &euro;
+        A favore di: {{ credit.phoneuser }}
         </div>
     </div>
     </div>

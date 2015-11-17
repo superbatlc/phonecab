@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^credits/$', credit_items),
     url(r'^credits/new/$', credit_new),
     url(r'^credits/save/$', credit_save),
+    url(r'^credits/print_recharge/(?P<credit_id>[0-9]*)$', credit_print_recharge),
     url(r'^credits/export/(?P<phoneuser_id>[0-9]*)$', credit_export),
     
 ]

@@ -125,3 +125,9 @@ class Credit(models.Model):
         verbose_name="ricarica", default=0, max_digits=5, decimal_places=2)
     recharge_date = models.DateTimeField(default=datetime.datetime.now)
     reason = models.CharField(max_length=255)
+
+    @staticmethod
+    def get_total(phoneuser_id):
+        """Restituisce il totale delle ricariche effettuate"""
+        total = Credit.objects.filter(phoneuser_id=phoneuser_id).aggregate(total=models.Sum('recharge'))
+        return total['total']

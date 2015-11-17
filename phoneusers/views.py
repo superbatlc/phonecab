@@ -660,6 +660,7 @@ def credit_save(request):
 
 def credit_export(request, phoneuser_id=0):
     """Stampa bilancio"""
+    import datetime
     phoneuser_id = int(phoneuser_id)
     if phoneuser_id:
         try:
@@ -667,22 +668,44 @@ def credit_export(request, phoneuser_id=0):
         except:
             raise Http404 #TODO gestire errore
 
-        tot_recharge = "37,80"
-        tot_cost = "22,30"
-        balance = "15,50"
+        recharges = Credit.objects.filter(phoneuser_id=phoneuser_id)
+        tot_recharges = Credit.get_total(phoneuser_id)
+        tot_cost = Detail.get_cost(phoneuser_id)
 
         variables = {
             'header': Pref.header(),
-            'tot_recharge': tot_recharge,
+            'phoneuser': phoneuser,
+            'today': datetime.date.today().strftime("%d-%m-%Y"),
+            'recharges': recharges,
+            'tot_recharges': tot_recharges,
             'tot_cost': tot_cost,
-            'balance': balance,
         }
 
-        return render_to_response('print.html', variables)
+        return render_to_response('phoneusers/credits/report.html', variables)
     else:
         raise Http404 #TODO gestire errore
 
+def credit_print_recharge(request, credit_id):
+    """Stampa Singola Ricarica"""
+    import datetime
+    credit_id = int(credit_id)
+    if credit_id:
+        try:
+            credit = Credit.objects.get(pk=credit_id)
+            phoneuser = PhoneUser.objects.get(pk=credit.phoneuser_id)
+        except:
+            raise Http404 #TODO gestire errore
 
+        variables = {
+            'header': Pref.header(),
+            'phoneuser': phoneuser,
+            'today': datetime.date.today().strftime("%d-%m-%Y"),
+            'credit': credit,
+        }
+
+        return render_to_response('phoneusers/credits/print_receipt.html', variables)
+    else:
+        raise Http404 #TODO gestire errore
 
 @login_required #TODO remove
 def __credit_export(request, phoneuser_id=0):

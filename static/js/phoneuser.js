@@ -286,6 +286,16 @@ var Whitelist = {
                 callback({success:false}); return;
             }
         });
+    },
+
+    switchCell : function() {
+        var value = $('#whitelist-frequency').val();
+        console.log(value);
+        if(value == '0' || value == '1'){
+            $('#whitelist-real-mobile-element').hide();
+        }else{
+            $('#whitelist-real-mobile-element').removeClass('hide');
+        }
     }
 }
 

@@ -22,8 +22,8 @@
   </div>
   <div class="form-group">
     <label class="col-xs-4 control-label">Tipologia</label>
-    <div class="col-xs-4">
-      <select class="select2 form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true" id="whitelist-frequency">
+    <div class="col-xs-5">
+      <select class="select2 form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true" id="whitelist-frequency" onChange="Whitelist.switchCell()">
         {% if enable_first_in == "1" %}
         <option value="0" {% if whitelist.frequency == 0 %}selected{% endif %}>Primo ingresso</option>
         {% endif %}
@@ -36,7 +36,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group hide" id="whitelist-real-mobile-element">
     <label for="enabled" class="col-xs-4 control-label">Cellulare</label>
     <div class="col-xs-4">
       <div class="checkbox">
