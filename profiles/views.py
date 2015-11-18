@@ -1,3 +1,5 @@
+import json
+from django.http import Http404
 from urllib import urlencode
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -91,26 +93,20 @@ def profile_items(request):
     return render_to_string(
         'profiles/table.html', RequestContext(request, variables))
 
-
-
-
 @login_required
 def profile_edit(request):
     variables = {}
     profile_id = int(request.POST.get("id", "0"))
 
     if profile_id:
-        # richiesta di modifica di un utente esistente
         try:
             profile = User.objects.get(pk=profile_id)
             variables = Acl.get_permissions_for_user(profile.id, profile.is_staff)
             variables['profile'] = profile
         except ObjectDoesNotExist:
-            print "No user associated with id: %s" % profile_id
             raise Http404
 
     return render_to_response('profiles/profile.html', variables)
-
 
 @login_required
 def profile_save(request):
@@ -128,8 +124,9 @@ def profile_save(request):
     priv_cdr = int(request.POST.get("data[priv_cdr]", "0"))
     priv_record = int(request.POST.get("data[priv_record]", "0"))
 
-    if user_id:
-        try:
+    action = "Creazione"
+    try:
+        if user_id:
             user = User.objects.get(pk=user_id)
             print user
             user.first_name = first_name.title()
@@ -137,42 +134,43 @@ def profile_save(request):
             user.username = username
             if password:
                 user.set_password(password)
-            user.is_staff = is_admin
-            user.save()
+            action = "Modifica"
+        else:
+            user = User.objects.create_user(username=username,
+                first_name=first_name,
+                last_name=last_name,
+                password=password)
 
-        except Exception as e:
-            print "profile_save: %s" % format(e)
-    else:
-        user = User.objects.create_user(username=username,
-            first_name=first_name,
-            last_name=last_name,
-            password=password)
-
-        user.is_staff=is_admin
+        user.is_staff = is_admin
         user.save()
+        # log azione
+        audit = Audit()
+        audit.log(user=request.user,
+            what="%s utente: %s" % (action, user.get_full_name()))
 
-    if not user.is_staff:
-        # cancelliamo tutte le acl utente e
-        # (ri)creiamo le acl corrispondenti
-        Acl.objects.filter(user_id=user.id).delete()
-        # userid function permission
-        Acl.objects.create(
-            user_id=user.id, function=0, permission=priv_anagrafica)
-        if priv_whitelist:
+        if not user.is_staff:
+            # cancelliamo tutte le acl utente e
+            # (ri)creiamo le acl corrispondenti
+            Acl.objects.filter(user_id=user.id).delete()
+            # userid function permission
             Acl.objects.create(
-                user_id=user.id, function=1, permission=priv_whitelist)
-        if priv_credit:
-            Acl.objects.create(
-                user_id=user.id, function=2, permission=priv_credit)
-        if priv_cdr:
-            Acl.objects.create(
-                user_id=user.id, function=3, permission=priv_cdr)
-        if priv_record:
-            Acl.objects.create(
-                user_id=user.id, function=4, permission=priv_record)
+                user_id=user.id, function=0, permission=priv_anagrafica)
+            if priv_whitelist:
+                Acl.objects.create(
+                    user_id=user.id, function=1, permission=priv_whitelist)
+            if priv_credit:
+                Acl.objects.create(
+                    user_id=user.id, function=2, permission=priv_credit)
+            if priv_cdr:
+                Acl.objects.create(
+                    user_id=user.id, function=3, permission=priv_cdr)
+            if priv_record:
+                Acl.objects.create(
+                    user_id=user.id, function=4, permission=priv_record)
 
-
-    return profile_items(request)
+        return profile_items(request)
+    except Exception as e:
+        return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
 
 @login_required
@@ -184,16 +182,26 @@ def profile_check_username(request):
     return HttpResponse(str(check))
 
 
-def profile_remove(request, user_id):
-    """Disattiva utente"""
-    pass
-    """
+def profile_change_status(request):
+    """Disabilita utente"""
+    user_id = int(request.POST.get("data[id]", "0"))
+    is_active = int(request.POST.get("data[is_active]", "0"))
+
+    action = "Disabilitazione"
+    if is_active:
+        action = "Abilitazione"
     try:
-        #BeeUser.objects.get(pk=user_id).delete()
-        request.user.delete(beeuser_id=user_id)
-        ret = "1"
+        if user_id:        
+            user = User.objects.get(pk=user_id)
+            user.is_active = is_active
+            user.save()
+            print user
+            # log azione
+            #audit = Audit()
+            #audit.log(user=request.user,
+            #    what="%s utente: %s" % (action, user))
+            return profile_items(request)
+        else:
+            raise Http404
     except Exception as e:
-        print '%s (%s)' % (e.message, type(e))
-        ret = "0"
-    """
-    return HttpResponse(ret)
+        return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')

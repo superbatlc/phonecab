@@ -53,7 +53,7 @@ var Profile = {
 
             
             data.is_admin = 0
-            if($("input[type=checkbox]#profile-type-ad").is(':checked')){
+            if($("input[type=radio]#profile-type-ad").is(':checked')){
                 data.is_admin = 1
             }
 
@@ -120,18 +120,18 @@ var Profile = {
 
     changeStatus : function(id, newstatus){
         var data = {};
-        data.phoneuser_id = id;
-        data.newstatus = newstatus;
+        data.id = id;
+        data.is_active = newstatus;
 
-        requestDataDjango("POST", "html", '/phoneusers/changestatus/', {data : data},
+        requestDataDjango("POST", "html", '/profiles/changestatus/', {data : data},
             function(response){
-                if(response != "-1"){
-                    updateDOM('#phoneuser', response);
-                }else{
-                    alert('error');
-                }
+                updateDOM('#profiles', response);
+                showMessageBox("Conferma", "Utente aggiornato con successo.", "green");
+            }, 
+            function(error){
+                showMessageBox("Errore", "Errore aggiornamento utente.", "alert-danger");
+            
             });
-
     },
 
     changeType : function(show){

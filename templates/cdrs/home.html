@@ -17,7 +17,7 @@
 
 			<div style="float:right;">
 					<button class="btn filtra btn-success cdr-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
-					<a href="/cdr" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
+					<a href="/cdrs" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
 			</div>
             <span>
                 <label>Dal</label>
@@ -37,18 +37,19 @@
             </span>
             <span>
                 <label>Codice:</label>
-                <input name="accountcode" type="text" value="{{ d.accountcode }}" maxlength="10" size="10">
+                <input name="accountcode" type="text" value="{{ d.accountcode }}" maxlength="10" size="12" style="text-align:center;">
             </span>
             <span>
                 <label>Destinazione:</label>
-                <input name="dst" type="text" value="{{ d.dst }}" maxlength="10" size="10">
+                <input name="dst" type="text" value="{{ d.dst }}" maxlength="10" size="12" style="text-align:center;">
             </span>
 			<span>
-            <label>Stato&nbsp;</label>
+            <label>Tipo&nbsp;</label>
             <select name="custom_calltype" style="width: 160px;">
-                <option value=""{% if d.enabled == ""%} selected{% endif %}>Tutte</option>
-                <option value="0"{% if d.enabled == "0"%} selected{% endif %}>Ordinaria</option>
-                <option value="1"{% if d.enabled == "1"%} selected{% endif %}>Straordinaria</option>
+                <option value=""{% if d.custom_calltype == ""%} selected{% endif %}>Tutte</option>
+                <option value="0"{% if d.custom_calltype == "0"%} selected{% endif %}>Ordinaria</option>
+                <option value="1"{% if d.custom_calltype == "1"%} selected{% endif %}>Straordinaria</option>
+                <option value="2"{% if d.custom_calltype == "2"%} selected{% endif %}>Speciale</option>
             </select>
             </span>
             </form>

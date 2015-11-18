@@ -177,3 +177,27 @@ span.label {
   float: right;
   margin-top: -5px;
 }
+
+.switchable {
+  transition: all 0.5s ease;
+}
+
+.switchable .action {
+  display: none;
+}
+
+.switchable:hover {
+  background-color: green;
+}
+
+.switchable.btn-success:hover {
+  background-color: red;
+}
+
+.switchable:hover .action {
+  display: inherit;
+}
+
+.switchable:hover .status {
+  display: none;
+}

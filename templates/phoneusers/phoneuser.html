@@ -40,12 +40,14 @@
         <div class="row">
             <div class="col-md-6">
             {% if phoneuser.enabled %}
-                <button class="btn btn-success light-green accent-4" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)">
-                <i class="zmdi zmdi-check"></i> SCHEDA ATTIVA{% if phoneuser.vipaccount %} (SENZA RESTRIZIONI){% endif %}
+                <button class="btn btn-success green switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)">
+                <span class="status"><i class="zmdi zmdi-check"></i> SCHEDA ATTIVA</span>
+                <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LA SCHEDA</span>
                 </button>
             {% else %}
-                <button class="btn btn-danger" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)">
-                <i class="zmdi zmdi-clear"></i> SCHEDA DISATTIVA
+                <button class="btn btn-danger switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)">
+                <span class="status"><i class="zmdi zmdi-close"></i> SCHEDA DISATTIVA</span>
+                <span class="action"><i class="zmdi zmdi-check"></i> ATTIVA LA SCHEDA</span>
                 </button>
             {% endif %}
             </div>
@@ -53,7 +55,7 @@
             {% if priv_anagrafica > 1 %}
                 <button data-target="#myModal" class="btn btn-primary" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1">
                 <i class="zmdi zmdi-edit"></i> Modifica
-                </button>
+                </button>&nbsp;&nbsp;
                 <a href="#" class="btn btn-info archive-ana" onClick="Phoneuser.archive({{ phoneuser.id }})" tabindex="-1">
                 <i class="zmdi zmdi-archive"></i> Archivia</a>
             {% endif %}

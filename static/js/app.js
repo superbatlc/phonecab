@@ -87,7 +87,6 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
 
 }
 
-
 function requestDataDjango(method, dataType, relativeUrl, data, onSuccess, onError) {
   var request = $.ajax({
     type: method,
@@ -110,7 +109,6 @@ function requestDataDjango(method, dataType, relativeUrl, data, onSuccess, onErr
   });
 
 }
-
 
 function checkEmptyField(selector) {
   // restituisce false on error
@@ -192,8 +190,6 @@ function checkUniqueUsername(username_sel, callback) {
     }
   })
 }
-
-
 
 function updateDOM(selector, content) {
   $(selector).html(content);

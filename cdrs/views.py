@@ -52,6 +52,7 @@ def cdr_items(request):
     end_time = request.GET.get("end_time", None)
     accountcode = request.GET.get("accountcode", "")
     dst = request.GET.get("dst", "")
+    custom_calltype = request.GET.get("custom_calltype", None)
     page = int(request.GET.get("page", "1"))
 
     d = request.GET.dict()
@@ -85,6 +86,9 @@ def cdr_items(request):
             end_time = "23:59:59"
         end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
+        
+    if custom_calltype:
+        q_obj.add(Q(custom_calltype=custom_calltype), Q.AND)
 
     items_list = Detail.objects.filter(q_obj).order_by('-calldate')
     total_items = items_list.count()

@@ -5,7 +5,7 @@
     <link charset="utf-8" href="{% static "css/phonecab/print.css" %}"  media="all" rel="stylesheet" title="no title" type="text/css">
     <title>Phonecab -
       {{ header }}</title>
-    <script href="{% static "js/print.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/print.js" %}" type="text/javascript"></script>
   </head>
   <body>
 
@@ -39,7 +39,7 @@
         </tbody>
       </table>
 
-      <div class="total"><h3>Totale ricariche:</h3> {{ tot_recharge }} &euro;</div>
+      <div class="total"><h3>Totale ricariche:</h3> {{ tot_recharges }} &euro;</div>
       <div class="total"><h3>Totale spese telefoniche:</h3> {{ tot_cost }} &euro; </div>
       <div class="total"><h3>Credito residuo:</h3> {{ phoneuser.balance }} &euro; </div>
 
