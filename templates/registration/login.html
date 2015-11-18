@@ -19,7 +19,7 @@
   <body class="theme-template-dark theme-deep-orange page-login" init-ripples="">
     <!-- <div class="login-background"><i class="zmdi zmdi-phone"></i></div> -->
     <div class="center">
-      <div class="card bordered z-depth-2" style="margin:0% auto; max-width:400px;">
+      <div class="card  z-depth-2" style="margin:0% auto; max-width:400px;">
       <form class="form-floating" action="/login/" method="POST">
         <div class="card-header" style="padding:0;">
           <div class="brand-logo">
@@ -37,12 +37,12 @@
         </div>
         {% endif %}
         <div class="card-content">
-          <div class="m-b-30">
+          <!--<div class="m-b-30">
             <div class="card-title strong pink-text">Login</div>
             <p class="card-title-desc">
               phonecab
             </p>
-          </div>
+          </div>-->
             {% csrf_token %}
             <div class="form-group filled">
               <label class="control-label" for="inputEmail">Nome utente</label>
@@ -61,7 +61,13 @@
         </div>
       </form>
       </div>
+      <div class="superba">
+        <!--<img src="{% static "img/superba.jpg" %}">-->
+        <span>superba</span>telecomunicazioni
+      </div>
     </div>
+
+    
 
 
 		<script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>

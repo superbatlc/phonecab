@@ -11,7 +11,8 @@ var Phoneuser = {
                     onRemove : null,
                 }
                 Modal.open(dict);
-
+            }, function(error){
+                showMessageBox("Errore", "Errore apertura maschera di modifica.", "alert-danger");
             });
         },
 
@@ -81,11 +82,13 @@ var Phoneuser = {
                 requestDataDjango("POST", "html", '/phoneusers/save/', {data : data},
                 function(response){
                   if(isNew) {
-                    updateDOM('#phoneusers', response); 
+                    updateDOM('#phoneusers', response); // ricarichiamo la lista
                   }
-                  else updateDOM('#phoneuser', response);
+                  else updateDOM('#phoneuser', response); // ricarichiamo il dettaglio
+                  showMessageBox("Conferma", "Salvataggio anagrafica effettuato con successo.", "green");
                   callback({success:true}); return;
                 },function(error){
+                  showMessageBox("Errore", "Errore salvataggio.", "alert-danger");
                   callback({success:false}); return;
                 });
             }

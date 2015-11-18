@@ -24,7 +24,7 @@ img.logo{
 }*/
 
 .page-login {
-	background:#ff5722;
+	background: #eee;
 }
 .login-background {
 	font-size: 100em;
@@ -55,4 +55,19 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
+}
+
+
+.superba {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+.superba img {
+    width: 250px;
+}
+
+.superba span {
+    color: red;
 }

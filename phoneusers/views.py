@@ -113,7 +113,8 @@ def phoneuser_view(request, phoneuser_id="0"):
     """Phoneuser page"""
     phoneuser_id = int(phoneuser_id)
     if not phoneuser_id:
-        raise Http404 #TODO redirect con messaggio
+        #return HttpResponse(status=400, content=json.dumps({ "msg":"errore" }), content_type="application/json")
+        raise Http404
 
 
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
@@ -155,8 +156,8 @@ def phoneuser_edit(request):
         # richiesta di modifica di un'anagrafica esistente
         try:
             phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-        except ObjectDoesNotExist:
-            print "No phoneuser associated with id: %s" % phoneuser_id #TODO Gestire errori in interfaccia
+        except:
+            #print "No phoneuser associated with id: %s" % phoneuser_id #TODO Gestire errori in interfaccia
             raise Http404
     else:
         phoneuser = PhoneUser
@@ -217,7 +218,7 @@ def phoneuser_save(request):
             'phoneusers/phoneuser.html', RequestContext(request, variables))
     except Exception as e:
         print "error: %s" % format(e)
-        return HttpResponse("0", content_type='text/plain')
+        return HttpResponse(status=400, content=json.dumps({'msg':'errore'}), content_type='application/json')
 
 @login_required
 def phoneuser_check_pincode(request):

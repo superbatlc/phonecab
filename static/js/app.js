@@ -18,7 +18,7 @@ var Modal = {
   save_function: null,
   save: function() {
     var callback = function(data) {
-      console.log(data);
+      //console.log(data);
       if (data.success) $('#myModal').modal('hide');
     }
     if (Modal.save_function) {
@@ -82,7 +82,7 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
     console.log('request data: ', data);
     console.log('error: ' + jqXHR.statusText);
     console.log([jqXHR.responseText.split('\n')]);
-    if (onError) onError(jqXHR.statusText);
+    if (onError) onError(jqXHR);
   });
 
 }
@@ -287,6 +287,9 @@ $(function() {
       input.parent().addClass('active');
     });
   });
+
+
+  $('.sidebar li a[data-menu=' + window.location.pathname.split("/")[1] + ']').addClass("active")
 
   /*
   $(".edit-ana").click(function(e){

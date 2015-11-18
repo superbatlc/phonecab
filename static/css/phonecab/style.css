@@ -15,7 +15,7 @@
   position: relative;
   height: 50%;
   width: 100%;
-  background: #e43227;
+  /*background: #e43227;*/
 }
 
 .phonecab-wave span {
@@ -38,7 +38,7 @@
     height: 60%;
     top:70%;
     left:-10%;
-    background-color: #e43227;
+    /*background-color: #e43227;*/
 }
 
 .phonecab-wave:after {
@@ -64,12 +64,26 @@
   font-size: 3em;
 }
 
+.sidebar li.active{
+  background-color: red !important;
+}
+
+
 /*==============================*/
 
 
+aside.sidebar {
+  border: none !important;
+}
+
+
 aside.sidebar i {
-top: 3px;
-position: relative;
+  top: 3px;
+  position: relative;
+}
+
+nav {
+  background-color: #444 !important;
 }
 
 .navbar-inverse {
@@ -128,9 +142,10 @@ input.datepicker {
 
 #messagebox {
 	position: fixed;
-    top: 70px;
-    right: 10px;
-    max-width: 40%;
+  top: 70px;
+  right: 10px;
+  max-width: 40%;
+  z-index: 2000;
 
 }
 

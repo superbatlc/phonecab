@@ -28,21 +28,21 @@
 				</div>
 			</div> -->
 			<ul class="menu-links">
-				<li> <a href="/"><i class="zmdi zmdi-time"></i>&nbsp;<span>Tempo reale</span></a></li>
+				<li> <a href="/phonecab" data-menu="phonecab"><i class="zmdi zmdi-time"></i>&nbsp;<span>Tempo reale</span></a></li>
 				{% if priv_anagrafica > 1 %}
-				<li> <a href="/phoneusers/"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafica</span></a></li>
+				<li> <a href="/phoneusers/" data-menu="phoneusers"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafica</span></a></li>
 				{% endif %}
 				{% if priv_cdr > 0 %}
-				<li> <a href="/cdrs/"><i class="zmdi zmdi-phone"></i>&nbsp;<span>Chiamate</span></a></li>
+				<li> <a href="/cdrs/" data-menu="cdrs"><i class="zmdi zmdi-phone"></i>&nbsp;<span>Chiamate</span></a></li>
 				{% endif %}
 				{% if priv_record > 0 %}
-				<li> <a href="/records/"><i class="zmdi zmdi-mic"></i>&nbsp;<span>Registrazioni</span></a></li>
+				<li> <a href="/records/" data-menu="records"><i class="zmdi zmdi-mic"></i>&nbsp;<span>Registrazioni</span></a></li>
 				{% endif %}
-				<li> <a href="/profiles/"><i class="zmdi zmdi-account-circle"></i>&nbsp;<span>Utenti</span></a></li>
+				<li> <a href="/profiles/" data-menu="profiles"><i class="zmdi zmdi-account-circle"></i>&nbsp;<span>Utenti</span></a></li>
 				{% if user.is_staff %}
-				<li> <a href="/prefs/edit/"><i class="zmdi zmdi-settings"></i>&nbsp;<span>Preferenze</span></a></li>
+				<li> <a href="/prefs/edit/" data-menu="prefs"><i class="zmdi zmdi-settings"></i>&nbsp;<span>Preferenze</span></a></li>
 				{% endif %}
-				<li> <a href="/audits"><i class="zmdi zmdi-search-in-file"></i>&nbsp;<span>Audit</span></a></li>
+				<li> <a href="/audits" data-menu="audits"><i class="zmdi zmdi-search-in-file"></i>&nbsp;<span>Audit</span></a></li>
 			</ul>
 		</aside>
 		<div class="main-container">
@@ -117,7 +117,7 @@
    <!-- CODICE MESSAGGIO -->
    <div class="bs-component hide" id="messagebox">
         <div class="alert alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert">×</button>
+        <!--<button type="button" class="close" data-dismiss="alert">×</button>-->
         <h4 class="title"></h4>
         <p class="content"></p>
         </div>
