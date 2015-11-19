@@ -64,7 +64,7 @@ class PhoneUser(models.Model):
         return None
 
     def __unicode__(self):
-        return "%s %s matricola %s (codice %s)" % (self.last_name,
+        return "%s %s (matricola %s codice %s)" % (self.last_name,
             self.first_name,
             self.serial_no,
             self.pincode)

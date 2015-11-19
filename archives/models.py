@@ -53,11 +53,14 @@ class ArchivedPhoneUser(models.Model):
         verbose_name="4bis limitato", default=False)
     archived_date = models.DateTimeField(default=datetime.datetime.now)
 
-    """
-    def __init__(self, *args, **kwargs):
-        self.phoneuser = kwargs.pop('phoneuser')
-        super(ArchivedPhoneUser, self).__init__(*args, **kwargs)
-    """
+    def __unicode__(self):
+        return "%s %s (matricola %s codice %s)" % (self.last_name,
+            self.first_name,
+            self.serial_no,
+            self.pincode)
+
+    def get_full_name(self):
+        return "%s %s" % (self.last_name, self.first_name)
     
     def copy(self):
         """Copys values between phoneuser and archivephoneuser"""
@@ -209,10 +212,12 @@ class ArchivedCredit(models.Model):
     recharge = models.DecimalField(
         verbose_name="ricarica", default=0, max_digits=5, decimal_places=2)
     recharge_date = models.DateTimeField()
+    reason = models.CharField(max_length=255, default='')
 
     def copy(self, credit):
         self.recharge = credit.recharge
         self.recharge_date = credit.recharge_date
+        self.reason = credit.reason
 
 
 class ArchivedDetail(models.Model):

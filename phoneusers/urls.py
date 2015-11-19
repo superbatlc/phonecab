@@ -14,6 +14,7 @@ urlpatterns = [
     #url(r'^phoneusers/disable/(?P<phoneuser_id>[0-9]*)$', phoneuser_disable),
     url(r'^phoneusers/changestatus/$', phoneuser_change_status),
     url(r'^phoneusers/check/$', phoneuser_check_pincode),
+    url(r'^phoneusers/archive/$', phoneuser_archive),
 
     url(r'^whitelists/$', whitelist_items),
     url(r'^whitelists/edit/$', whitelist_edit),

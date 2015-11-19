@@ -1,7 +1,10 @@
-from django.conf.urls import patterns
+from django.conf.urls import url
+from .views import *
 
 urlpatterns = [
-    (r'^archives/phoneusers/$',
-     phoneuser_archive),
-    (r'^archives/phoneusers/(?P<archive_id>[0-9]*)$',
+    url(r'^archives/phoneusers/$', archive_phoneuser_home),
+    url(r'^archives/phoneusers/view/(?P<archived_phoneuser_id>[0-9]*)$', archive_phoneuser_view),
+    url(r'^archives/whitelists/$', archive_whitelist_items),
+    url(r'^archives/cdrs/$', archive_cdrs_home),
+    url(r'^archives/records/$', archive_records_home),
 ]

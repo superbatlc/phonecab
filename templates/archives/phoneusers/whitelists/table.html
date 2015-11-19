@@ -1,0 +1,38 @@
+{% load phonecabtags %}
+{% load tz %}
+<div class="card bordered">
+  <div class="card-header">
+    <span class="card-title">
+      <i class="zmdi zmdi-format-list-numbered"></i>
+      Numeri Autorizzati</span>
+  </div>
+  <div class="table-responsive white">
+    <table class="table table-striped table-full table-full-small">
+      <thead>
+        <tr>
+          <th style="width:auto;">Etichetta</th>
+          <th style="width:50px;text-align:center;">Numero</th>
+          <th style="width:30px; text-align:center;">Cellulare</th>
+          <!--<th style="width:100px; text-align:center;">Soglia</th>-->
+          <th style="width:160px; text-align:center;">Tipologia</th>
+          <th style="width:30px; text-align:center;">Straordinaria</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for wl in whitelists %}
+        <tr>
+          <td>{{ wl.label }}</td>
+          <td style="text-align:center;">{{ wl.phonenumber }}</td>
+          <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No"  }}</td>
+          <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
+          <td style="text-align:center;">
+            {% if wl.extraordinary %}<i class="zmdi zmdi-check"></i>
+            {% else %}<i class="zmdi zmdi-close"></i>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

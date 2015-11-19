@@ -196,6 +196,18 @@ function updateDOM(selector, content) {
 }
 
 
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    return '';
+}
+
 
 
 $(function() {
@@ -284,35 +296,25 @@ $(function() {
     });
   });
 
+  // evidenziazione menu attivo
+  var path_elements = window.location.pathname.split("/");
+  var element = 1;
+  if(path_elements[1] == 'archives'){
+    element = 2;
+  }
+  $('.sidebar li a[data-menu=' + window.location.pathname.split("/")[element] + ']').addClass("active");
+  
 
-  $('.sidebar li a[data-menu=' + window.location.pathname.split("/")[1] + ']').addClass("active")
-
-  /*
-  $(".edit-ana").click(function(e){
-    e.preventDefault()
-    phoneuser_id = $('#phoneuser-id').val()
-    //$('.modal-body').html('<div style="text-align:center;"><img id=\"loading\" src=\"' + loading_path + '\"></div>')
-    // imposto il titolo
-    $('#myModalLabel').html('Modifica Anagrafica')
-    $('#modal-action').html('Salva').removeClass().addClass('btn btn-primary save-ana')
-
-    $.ajax({
-       type: 'POST',
-       url: '/phoneusers/edit/'+phoneuser_id,
-       async: true,
-       success: function(e){
-            $('.modal-body').html(e)
-       },
-       error: function(jqXHR, textStatus, errorThrown){
-            $('#myModal').modal('hide')
-            msg = '<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert">x</button>'
-            msg += '<h4>Attenzione</h4>Maschera Modifica Anagrafica non caricata correttamente.<br>'
-            msg += 'Si prega di contattare il responsabile del software PhoneCab.</div>'
-            $('.message').append(msg)
-       }
-    })
-
-  })
-*/
+  // gestione errori e notifiche da url
+  var err = getQueryVariable('err') != '';
+  if(err){
+    var err_msg = getQueryVariable('err_msg');
+    showMessageBox("Errore", err_msg, "alert-danger");
+  } 
+  var ok = getQueryVariable('ok') != '';
+  if(ok) {
+    var msg = getQueryVariable('msg');
+    showMessageBox("Conferma", msg, "green");
+  }
 
 });

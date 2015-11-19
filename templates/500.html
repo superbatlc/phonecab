@@ -1,10 +1,45 @@
-{% extends "base.html" %}
-    {% block title %}PhoneCab - Errore Server{% endblock %} 
-    {% block application %}
-    <div class="colmain">
-        <div id="anagrafica">
-            <h2>Errore Server</h2>
-            <p>Siamo spiacenti. Si &egrave; verificato un errore nel caricamento di questa pagina.</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <title>PhoneCab</title>
+    <link rel="stylesheet" href="{% static "css/vendors/bootstrap.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/materialism/styles.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/vendors/ripples.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/vendors/material-design-iconic-font.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/phonecab/style.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/phonecab/login.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+  </head>
+
+  <body class="theme-template-dark theme-deep-orange page-login" init-ripples="">
+    <!-- <div class="login-background"><i class="zmdi zmdi-phone"></i></div> -->
+    <div class="center">
+      <div class="card bordered z-depth-2" style="margin:0% auto; max-width:400px;">
+        <div class="card-content">
+          <div class="m-b-30 text-center"> <i class="md md-cancel error-icon"></i>
+            <h1 class="pink-text uppercase">500</h1>
+            <p class="card-title-desc">We're sorry, but the page you are looking for seems to be astral traveling in the fifth dimension.</p>
+          </div>
         </div>
+        <div class="card-action clearfix">
+          <div class="text-center"> <a href="/" class="btn btn-primary btn-block">Back to the homepage</a> </div>
+        </div>
+      </div>
+      <div class="superba">
+        <!--<img src="{% static "img/superba.jpg" %}">-->
+        <span>superba</span>telecomunicazioni
+      </div>
     </div>
-    {% endblock application %}   
+
+    <script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/login.js" %}" type="text/javascript" charset="utf-8"></script>
+
+  </body>
+</html>

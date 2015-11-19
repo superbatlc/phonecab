@@ -1,24 +1,34 @@
 {% extends "base.html" %}
 {% load static %}
-    {% block title %}PhoneCab - Anagrafiche Archiviate{% endblock %} 
-    {% block stylesheet %}
-    {% endblock stylesheet %}
-    {% block application %}
-    <div class="colmain">
-        <div id="anagrafica">
-            <h2>Anagrafiche Archiviate</h2>
-            <div class="accordion-inner">
-                <div style="float:left;">
-                    <label for="ora_fine" style="margin: 5px 0px 0 10px;vertical-align: top;">Cognome o Matricola:&nbsp;</label>
-                    <input type="text" name="pincode" value="{{d.accountcode}}" placeholder="codice" maxlength="8" size="10" style="width:65px;text-align:center;margin: 0px 15px 0 0px;">
-        
-                    <button class="btn btn-success records-do-filter">Filtra</button>
-                    <a href="/records" class="btn btn-info">X</a>
-                </div>
-                </div>
-                <div class="log-records">{{ archived_phoneusers }}</div>
+{% block title %}PhoneCab - Anagrafiche Archiviate{% endblock %}
+{% block stylesheet %}
+{% endblock stylesheet %}
+{% block application %}
+<div class="page-header">
+  <a href="/phoneusers/" class="action btn btn-info">
+    <span class="zmdi zmdi-chevron-right"></span> In corso
+    <div class="ripple-wrapper"></div>
+  </a>
+  <h1><i class="zmdi zmdi-accounts"></i> Anagrafiche archiviate</h1>
+  <!--<p class="lead">Lista delle anagrafiche archiviate. NB i codici potrebbero essere stati riutilizzati e il credito residuo si intende al momento dell'archiviazione.</p>-->
+</div>
+<div class="card bordered">
+    <div class="card-content">
+        <form method="GET">
+        <div style="float:right;">
+                <button class="btn filtra btn-success phoneuser-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
+                <a href="/archived/phoneusers/" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
         </div>
+        <span>
+            <label>Cognome, Matricola o Codice&nbsp;</label>
+            <input type="text" name="keyword" value="{{ d.keyword }}" maxlength="20" size="20" class="input-small">
+        </span>
+        </form>
+        <div style="clear:both;"></div>
     </div>
-    {% endblock application %}   
-    {% block script %}
-    {% endblock script %}    
+    <div class="inner table" id="archived-phoneusers">{{ phoneusers }}</div>
+</div>
+{% endblock application %}
+{% block script %}
+<script src="{% static "js/phoneuser.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock script %}

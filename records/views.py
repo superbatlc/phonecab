@@ -1,5 +1,6 @@
+from urllib import urlencode
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.template import RequestContext
@@ -39,7 +40,6 @@ def record_home(request):
 
     return render_to_response(
         'records/home.html', RequestContext(request, variables))
-
 
 @login_required
 def record_items(request):
@@ -159,9 +159,7 @@ def record_action(request, action, item, record_id=0):
             else:
                 return _multi_record_export_as_zip_file(request)
         else:
-            print "Azione passata non corretta"
-            pass
-            #raise Http404
+            raise Http404
     else:
         raise Http403
 
@@ -200,7 +198,7 @@ def _multi_record_export_as_zip_file(request):
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", "00:00")
     end_time = request.GET.get("end_time", "23:59")
-    pincode = request.GET.get("accountcode", "")
+    pincode = request.GET.get("pincode", "")
 
     q_obj = Q(pincode__icontains=pincode)
 
@@ -220,20 +218,22 @@ def _multi_record_export_as_zip_file(request):
     
     filename = 'registrazioni'
     if pincode != '':
-        filename = pincode
+        phoneuser = PhoneUser.get_from_pincode(pincode)
+        filename = 'registrazioni %s' % phoneuser
     zipname = "%s.zip" % filename
-    tmpzippath = os.path.join('/root/tmp_record', zipname)
-
+    tmpzippath = os.path.join(settings.TMP_ZIP_ROOT, zipname)
+    file_counter = 0
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
-            try:
-                detail = Detail.objects.get(uniqueid=item.uniqueid)
-
-                if detail.custom_valid and (detail.dcontext == 'cabs-dial-number' or detail.dcontext == 'outgoing-operator-dial-number' or detail.dcontext == 'incoming-operator-dial-number'):
-                    path = os.path.join(settings.RECORDS_ROOT, item.filename)
-                    myzip.write(path, arcname = item.filename) #TODO: verificare effettiva esportazione
-            except:
-                pass
+            
+            detail = Detail.objects.get(uniqueid=item.uniqueid) 
+            if detail.custom_valid and (detail.dcontext == 'cabs-dial-number' or detail.dcontext == 'outgoing-operator-dial-number' or detail.dcontext == 'incoming-operator-dial-number'):
+                file_counter += 1
+                path = os.path.join(settings.RECORDS_ROOT, item.filename)
+                myzip.write(path, arcname = item.filename) #TODO: verificare effettiva esportazione
+        
+    if not file_counter:
+        return redirect("/records/?err=1&err_msg=Nessuno dei file soddisfa i criteri per l'esportazione&%s" % urlencode(d))
 
     response = Helper.file_export(tmpzippath)
 
@@ -241,8 +241,8 @@ def _multi_record_export_as_zip_file(request):
     audit = Audit()
     audit.user_id = request.user.id
     detail = Helper.get_filter_detail(d)
-    audit.what = "L'utente %s ha esportato una lista di registrazioni corrispondenti ai seguenti criteri: %s" \
-                            % (request.user.username, detail)
+    audit.what = "Esportazione registrazioni corrispondenti ai seguenti criteri: %s" \
+                            % (detail)
     audit.save()
 
     return response

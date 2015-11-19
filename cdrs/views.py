@@ -1,6 +1,6 @@
 import json
 from urllib import urlencode
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -163,33 +163,21 @@ def cdr_items(request):
 
 
 @login_required
-def cdr_valid(request):
+def cdr_change_valid(request):
 
-    detail_id = int(request.POST.get("detail_id", "0"))
-    valid = request.POST.get("valid", "False") == "True"
-
-    values = {
-              'data': {},
-              'err': 0,
-              'err_msg': '',
-              }
-
-    if detail_id:
-        try:
-            detail = Detail.objects.get(pk=detail_id)
-            detail.custom_valid = not valid  # cambiamo il valore
+    id = int(request.POST.get("data[id]", "0"))
+    custom_valid = int(request.POST.get("data[custom_valid]", None))
+    try:
+        if id:
+            detail = Detail.objects.get(pk=id)
+            detail.custom_valid = custom_valid
             detail.save()
 
-            values['data'] = not valid
-
-        except:
-            values['err'] = 1
-            values['err_msg'] = 'Id chiamata sconosciuto'
-    else:
-        values['err'] = 1
-        values['err_msg'] = 'Id chiamata non passato'
-
-    return HttpResponse(json.dumps(values), content_type="application/json")
+            return cdr_items(request)
+        else:
+            raise Http404
+    except Exception as e:
+        return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
 
 def cdr_export_excel(request):

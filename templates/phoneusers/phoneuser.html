@@ -1,66 +1,78 @@
-<div class="card bordered">
-    <div class="card-content">
-        <div style="float: right;">
-            <span class="label {{phoneuser.listening_enabled|yesno:" green,red"}}">
-              <span class="zmdi-hc-stack zmdi-hc-lg">
-                <i class="zmdi zmdi-headset zmdi-hc-stack-1x"></i>
-                {% if not phoneuser.listening_enabled %}
-                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
-                {% endif %}
-              </span>
-              Ascolto
-            </span>
-            &nbsp;&nbsp;
-            <span class="label {{phoneuser.recording_enabled|yesno:" green,red"}}">
-              <span class="zmdi-hc-stack zmdi-hc-lg">
-                <i class="zmdi zmdi-mic zmdi-hc-stack-1x"></i>
-                {% if not phoneuser.recording_enabled %}
-                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
-                {% endif %}
-              </span>
-              Registrazione
-            </span>
-        </div>
-        <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
-       {% if not phoneuser.four_bis_limited %}<small>(4bis limitato)</small>{% endif %}</h3>
-        <div class="row">
-            <div class="col-md-4">
-                <h4 style="color:#666;">Codice: {{ phoneuser.pincode }}</h4>
-            </div>
-            <div class="col-md-4" style="text-align:center;">
-                <h4 style="color:#666;">Matricola: {{ phoneuser.serial_no }}</h4>
+<form class="form-horizontal placeholder-form" novalidate="true">
+<fieldset>
+  <!--<legend>{{ form_title }} TEST</legend> <span class="help-block m-b-20">Please fill out the following form below.</span>-->
+  <div class="form-group">
+    <label for="enabled" class="col-xs-4 control-label">Scheda Attiva</label>
+    <div class="col-xs-4">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if phoneuser.enabled %}checked="checked"{% endif %} id="enabled"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="first-name" class="col-xs-4 control-label">Nome</label>
+    <div class="col-xs-6 filled">
+      <input type="text" class="form-control input-small" id="first-name" placeholder="Nome" value="{{ phoneuser.first_name }}" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="last-name" class="col-xs-4 control-label">Cognome</label>
+    <div class="col-xs-6 filled">
+      <input type="text" class="form-control" id="last-name" placeholder="Cognome" value="{{ phoneuser.last_name }}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="serial-no" class="col-xs-4 control-label">Matricola</label>
+    <div class="col-xs-3 filled">
+      <input type="text" class="form-control" id="serial-no" placeholder="Matricola" value="{{ phoneuser.serial_no }}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="pincode" class="col-xs-4 control-label">Codice Tessera</label>
+    <div class="col-xs-3 filled">
+      <input type="text" class="form-control" id="pincode" placeholder="Codice" value="{{ phoneuser.pincode }}" max_size="10" {% if phoneuser.pincode %} readonly{% endif %}>
+      <span class="pincode-check hide" style="color: red;">Gi&agrave; in uso</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-4 control-label">Lingua</label>
+    <div class="col-xs-4">
+      <select class="select2 form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true" id="language">
+        <option value="it"{% if phoneuser.language == 'it' %} selected{% endif %}>Italiano</option>
+        <option value="en"{% if phoneuser.language == 'en' %} selected{% endif %}>Inglese</option>
+        <option value="fr"{% if phoneuser.language == 'fr' %} selected{% endif %}>Francese</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="four-bis-limited" class="col-xs-4 control-label">4 bis limitato</label>
+    <div class="col-xs-8">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if phoneuser.four_bis_limited %}checked="checked"{% endif %} id="four-bis-limited"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="listening_enabled" class="col-xs-4 control-label">Ascolto</label>
+    <div class="col-xs-8">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if phoneuser.listening_enabled %}checked="checked"{% endif %} id="listening-enabled"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="recording_enabled" class="col-xs-4 control-label">Registrazione</label>
+    <div class="col-xs-8">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if phoneuser.recording_enabled %}checked="checked"{% endif %} id="recording-enabled"></label>
+      </div>
+    </div>
+  </div>
 
-            </div>
-            <div class="col-md-4" style="text-align:right;">
-                <h4 style="color:#666;">Lingua: {{ phoneuser.get_language_display }}</h4>
-            </div>
-        </div>
-    </div>
-    <div class="card-action">
-        <div class="row">
-            <div class="col-md-6">
-            {% if phoneuser.enabled %}
-                <button class="btn btn-success green switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)">
-                <span class="status"><i class="zmdi zmdi-check"></i> SCHEDA ATTIVA</span>
-                <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LA SCHEDA</span>
-                </button>
-            {% else %}
-                <button class="btn btn-danger switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)">
-                <span class="status"><i class="zmdi zmdi-close"></i> SCHEDA DISATTIVA</span>
-                <span class="action"><i class="zmdi zmdi-check"></i> ATTIVA LA SCHEDA</span>
-                </button>
-            {% endif %}
-            </div>
-            <div class="col-md-6" style="text-align:right;">
-            {% if priv_anagrafica > 1 %}
-                <button data-target="#myModal" class="btn btn-primary" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1">
-                <i class="zmdi zmdi-edit"></i> Modifica
-                </button>&nbsp;&nbsp;
-                <a href="#" class="btn btn-info archive-ana" onClick="Phoneuser.archive({{ phoneuser.id }})" tabindex="-1">
-                <i class="zmdi zmdi-archive"></i> Archivia</a>
-            {% endif %}
-            </div>
-        </div>
-    </div>
-    <input type="hidden" id="phoneuser-id" value="{{ phoneuser.id }}">
-</div>
+  <input type="hidden" id="phoneuser-id-modal" value="{{ phoneuser.id }}">
+  </fieldset>
+  </form>

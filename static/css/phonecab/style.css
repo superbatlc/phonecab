@@ -1,5 +1,12 @@
 /*==============================*/
 
+.theme-deep-orange a,
+.theme-deep-orange a:hover,
+.theme-deep-orange a:active,
+.theme-deep-orange a:focus {
+  color: inherit;
+}
+
 .phonecab-logo {
     overflow:hidden;
     border-radius:10px;
@@ -116,11 +123,17 @@ nav {
   margin: 5px 5px 0 5px;
 }
 
-a.btn  {
+a.btn,
+a:hover.btn,
+a:active.btn,
+a:focus.btn  {
 	color:white;
 }
 
-a.btn.btn-default {
+a.btn.btn-default,
+a:hover.btn.btn-default,
+a:active.btn.btn-default,
+a:focus.btn.btn-default {
 	color:#666;
 }
 
@@ -171,11 +184,13 @@ span.label {
 .page-header .action {
   float: right;
   margin-top: -10px;
+  margin-left: 6px;
 }
 
 .card-header .action {
   float: right;
   margin-top: -5px;
+  margin-left: 6px;
 }
 
 .switchable {

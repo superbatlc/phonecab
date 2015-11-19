@@ -138,9 +138,9 @@ def phoneuser_data(request, phoneuser_id="0"):
     variables['phoneuser'] = phoneuser
     if request.is_ajax():
         return render_to_response(
-            'phoneusers/phoneuser.html', RequestContext(request, variables))
+            'phoneusers/phoneuser_data.html', RequestContext(request, variables))
     return render_to_string(
-        'phoneusers/phoneuser.html', RequestContext(request, variables))
+        'phoneusers/phoneuser_data.html', RequestContext(request, variables))
 
 @login_required
 def phoneuser_edit(request):
@@ -157,7 +157,7 @@ def phoneuser_edit(request):
         phoneuser.id = 0
 
     variables['phoneuser'] = phoneuser
-    return render_to_response('phoneusers/phoneuser_modal.html',
+    return render_to_response('phoneusers/phoneuser.html',
         RequestContext(request,variables))
 
 @login_required
@@ -208,7 +208,7 @@ def phoneuser_save(request):
             return phoneuser_items(request)
         variables['phoneuser'] = phoneuser
         return render_to_response(
-            'phoneusers/phoneuser.html', RequestContext(request, variables))
+            'phoneusers/phoneuser_data.html', RequestContext(request, variables))
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
@@ -245,16 +245,20 @@ def phoneuser_change_status(request):
     
 
 @login_required
-def phoneuser_archive(request, phoneuser_id):
-    ret = "1"
+def phoneuser_archive(request):
+    """Archiviazione anagrafica"""
+    phoneuser_id = int(request.POST.get("phoneuser_id", "0"))
     try:
-        phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
-        archived_phoneuser = ArchivedPhoneUser()
-        archived_phoneuser.phoneuser = phoneuser
-        archived_phoneuser.archive()
-        #phoneuser.enabled = 0
-        #phoneuser.save()
-        return HttpResponse(ret, content_type='text/plain')
+        if phoneuser_id:
+            phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
+            archived_phoneuser = ArchivedPhoneUser()
+            archived_phoneuser.phoneuser = phoneuser
+            archived_phoneuser.archive()
+            #phoneuser.enabled = 0
+            #phoneuser.save()
+            return HttpResponse(status=200)
+        else:
+            raise Http404
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     

@@ -8,7 +8,11 @@
 {% block application %}
 
 <div class="page-header">
-  <h1><i class="zmdi zmdi-mic"></i> Registrazioni</h1>
+    <a href="/archives/records/" class="action btn btn-info">
+    <span class="zmdi zmdi-chevron-right"></span> Archivio
+    <div class="ripple-wrapper"></div>
+  </a>
+  <h1><i class="zmdi zmdi-mic"></i> Registrazioni in corso</h1>
   <!-- <p class="lead">Descrizione</p> -->
 </div>
 
@@ -19,7 +23,7 @@
 
             <div style="float:right;">
                     <button class="btn filtra btn-success records-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
-                    <a href="/cdr" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
+                    <a href="/records" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
             </div>
             <span>
                 <label>Dal</label>
@@ -39,7 +43,7 @@
             </span>
             <span>
                 <label>Codice:</label>
-                <input name="pincode" type="text" value="{{ d.pincode }}" maxlength="10" size="10">
+                <input name="pincode" type="text" value="{{ d.pincode }}" maxlength="10" size="12" style="text-align:center;">
             </span>
             <span>
                 <label>Destinazione:</label>

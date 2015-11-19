@@ -1,7 +1,6 @@
 {% load tz %}
 <div class="card bordered">
     <div class="card-header">
-      <button class="action btn btn-primary btn-sm" onClick="Credit.new()"><i class="zmdi zmdi-plus"></i> Nuova Ricarica</button>
       <span class="card-title"><i class="zmdi zmdi-money"></i> Ricariche</span>
     </div>
     <div class="table-responsive white">
@@ -21,11 +20,10 @@
                 <td>{{ c.recharge_date|utc|date:"d-m-Y" }}</td>
                 <td>{{ c.reason }}</td>
                 <td style="text-align:right;">{{ c.recharge }}</td>
-                <td style="text-align:center;">
+                <!--<td style="text-align:center;">
                 <a href="/credits/print_recharge/{{ c.id }}" target="_blank" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Stampa la ricevuta relativa a questa ricarica" data-toggle="tooltip" data-original-title="" title="">
                     <i class="zmdi zmdi-print mdc-text-grey"></i>
-                </a>
-                </td>
+                </a></td>-->
                 </tr>
                 {% endfor %}
             {% endif %}
@@ -38,7 +36,7 @@
                 <div class="col-md-5">
                     <h4>Credito residuo: {{ balance }} &euro;</h4>
                 </div>
-                <div class="col-md-2" style="text-align:right;">
+                <!--<div class="col-md-2" style="text-align:right;">
                     <a href="/credits/export/{{ phoneuser_id }}" target="_blank" class="btn btn-success"><i class="zmdi zmdi-file-text"></i> Estratto Conto</a>
                 </div>
                 <div class="col-md-5" style="text-align:right;">
@@ -46,7 +44,7 @@
                     <a href="?page={{ prev_page }}" class="btn btn-primary {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
                     <a href="?page={{ next_page }}" class="btn btn-primary {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>
                     <input type="hidden" id="items-current-page" value="{{ current_page }}">
-                </div>
+                </div>-->
             </div>
         </div>
     {% endif %}

@@ -23,6 +23,8 @@ DATABASES = {
     }
 }
 
+ALLOWED_HOSTS = ['*', '127.0.0.1']
+
 
 # APP SETTINGS
 # Numero elementi per pagina
@@ -30,6 +32,7 @@ ITEMS_PER_PAGE = 5
 
 # percorso file audio
 RECORDS_ROOT = '/var/spool/asterisk/monitor/'
+TMP_ZIP_ROOT = '/root/tmp_record'
 
 # Chiusura sessione alla chiusura del browser
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

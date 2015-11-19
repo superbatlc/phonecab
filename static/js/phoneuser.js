@@ -102,19 +102,39 @@ var Phoneuser = {
             data.phoneuser_id = id;
             data.newstatus = newstatus;
 
+            var action = "Disabilitazione";
+            if(newstatus == "1"){
+                action = "Abilitazione";
+            }
+
             requestDataDjango("POST", "html", '/phoneusers/changestatus/', {data : data},
                 function(response){
-                    if(response != "-1"){
-                        updateDOM('#phoneuser', response);
-                    }else{
-                        alert('error');
-                    }
+                    updateDOM('#phoneuser', response);
+                    showMessageBox("Conferma", action + " anagrafica effettuata con successo.", "green");
+                },
+                function(error){
+                    showMessageBox("Errore", "Errore " + action + " anagrafica.", "alert-danger");
                 });
 
         },
 
         archive : function(id){
+            var msg = "Attenzione! L\'archiviazione sposterà tutti i dati relativi a questa anagrafica in Archivio.\nÈ un processo irreversibile.\nSei sicuro di voler continuare?";
 
+            if(confirm(msg)){
+                phoneuser_id = $('#phoneuser-id').val();
+
+                requestDataDjango("POST", "html", '/phoneusers/archive/', {phoneuser_id : phoneuser_id},
+                function(response){
+                    window.location.href = "/phoneusers/?ok=1&msg=Anagrafica archiviata con successo.";
+                },
+                function(error){
+                    console.log(error);
+                    showMessageBox("Errore", "Errore archiviazione anagrafica.", "alert-danger");
+                });
+            }
+                
+            return;
         },
 }
 

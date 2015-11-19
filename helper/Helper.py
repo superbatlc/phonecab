@@ -52,7 +52,7 @@ class Helper(object):
         if not mimetype:
             mimetype = "application/octet-stream"
 
-        response = HttpResponse(export_file.read(), mimetype=mimetype)
+        response = HttpResponse(export_file.read(), content_type=mimetype)
         response[
             "Content-Disposition"] = "attachment; filename=%s" % os.path.split(path_to_file)[1]
 
