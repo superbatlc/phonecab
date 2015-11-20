@@ -254,3 +254,7 @@ span.label {
   margin: -18px 0 0 7px;
 }
 
+tbody>tr>td {
+  cursor: default !important;
+}
+
