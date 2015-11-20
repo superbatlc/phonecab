@@ -15,12 +15,9 @@ urlpatterns = [
     url(r'^$', 'phonecab.views.phonecab_login'),
     url(r'^login/$', 'phonecab.views.phonecab_login'),
     url(r'^logout/$', 'phonecab.views.phonecab_logout'),
-    url(r'^phonecab/$', 'phonecab.views.phonecab_home'),
+    url(r'^phonecab/$', 'phonecab.views.phonecab_realtime'),
     url(r'^daynight/(?P<mode>.*)$', 'phonecab.views.phonecab_daynight'),
-    url(r'^phonecab/search/$',
-    'phonecab.views.phonecab_search'),
-    url(r'^phonecab/realtime/$',
-    'phonecab.views.phonecab_realtime'),
+
     url(r'^recordings/(?P<path>.*)$', 'django.views.static.serve',
         { 'document_root': settings.RECORDS_ROOT }),
 

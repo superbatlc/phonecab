@@ -1,8 +1,8 @@
-{% load tz %}
+{% extends "base.html" %}
 {% load static %}
 {% load phonecabtags %}
-    <link rel="stylesheet" href="{% static "css/realtime.css" %}" type="text/css" >
-
+{% block title %}PhoneCab - Tempo reale{% endblock %}
+{% block application %}
 <div class="page-header">
   <h1><i class="zmdi zmdi-time"></i> Tempo reale</h1>
   <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
@@ -10,7 +10,18 @@
 
 <div class="colmain">
     <div id="daynight-div" style="float:right;">
-        <button class="btn btn-large btn-{{ daynight_class }} daynight" data-next-mode="{{ daynight_text }}">{{ daynight_user_text }}</button>
+
+        <button class="btn btn-large switchable" onClick="Realtime.toggleMode();">
+        <span id="rt-modo-giorno">
+            <span class="status"><i class="zmdi zmdi-check"></i> LINEE ATTIVE</span>
+            <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LE LINEE</span>
+        </span>
+        <span id="rt-modo-notte">
+            <span class="status"><i class="zmdi zmdi-close"></i> LINEE DISATTIVE</span>
+            <span class="action"><i class="zmdi zmdi-check"></i> ATTIVA LE LINEE</span>
+        </span>
+        <span data-help="Tramite questo pulsante &egrave; possibile abilitare/disabilitare il sistema di chiamata">&nbsp;</span>
+        </button>
     </div>
     <br /><br /><br />
 
@@ -36,5 +47,12 @@
     </div>
     </div>
 </div>
+{% endblock application %}
 {% block script %}
+<script src="{% static "js/realtime.js" %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function(){
+        Realtime.init({{ daynight_actual_mode }});
+    });
+</script>
 {% endblock script %}

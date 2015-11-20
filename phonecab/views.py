@@ -57,19 +57,8 @@ def phonecab_logout(request):
 
 
 @login_required
-def phonecab_home(request):
+def __phonecab_home(request):
     """Show main page"""
-    archive = request.GET.get("archive", "")
-
-    custom_msg = ""
-    if archive == 'ok':
-        custom_msg = """<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">x</button>
-                    <h4>Ok!</h4>Anagrafica archiviata con successo.<br>"""
-    if archive == 'error':
-        custom_msg = """<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert">x</button>
-                    <h4>Attenzione</h4>Archiviazione Anagrafica non riuscita.<br>
-                    Si prega di contattare il responsabile del software PhoneCab.</div>"""
-
     user = request.user
     variables = Acl.get_permissions_for_user(user.id, user.is_staff)
     variables['user'] = user
@@ -79,84 +68,17 @@ def phonecab_home(request):
     return render_to_response('base.html', RequestContext(request, variables))
 
 
-@login_required
-def phonecab_search(request):
-    from django.db.models import Q
-    # recuperiamo i privilegi utente
-    user = request.user
-    variables = Acl.get_permissions_for_user(user.id, user.is_staff)
-    variables['user'] = user
-    query = request.POST.get("search_query", "")
-    if query != "":
-        variables['search_query'] = query
-        if query == "*":
-            anagrafiche = PhoneUser.objects.all().order_by('last_name')
-        else:
-            q_obj = Q(last_name__icontains=query)
-            q_obj.add(Q(serial_no__icontains=query), Q.OR)
-            q_obj.add(Q(pincode__contains=query), Q.OR)
-            anagrafiche = PhoneUser.objects.filter(q_obj).order_by('last_name')
-
-        variables['anagrafiche'] = anagrafiche
-
-        if user.is_staff:
-            # Archives
-            if query == "*":
-                archives = ArchivedPhoneUser.objects.all().order_by('last_name')
-            else:
-                q_obj = Q(last_name__icontains=query)
-                q_obj.add(Q(serial_no__icontains=query), Q.OR)
-                q_obj.add(Q(pincode__contains=query), Q.OR)
-                archives = ArchivedPhoneUser.objects.filter(q_obj).order_by('last_name')
-
-            variables['archives'] = archives
-            # Users
-            q_obj = Q(last_name__icontains=query)
-            q_obj.add(Q(username__icontains=query), Q.OR)
-            utenti = User.objects.filter(q_obj)
-            variables['utenti'] = utenti
-
-    return render_to_response(
-        'search_result.html', RequestContext(request, variables))
-
-
 def phonecab_realtime(request):
     """Show current calls"""
     import time
     import datetime
 
-    rt_calls = RealTimeCall.objects.all().order_by('src')
+    daynight_actual_mode = Helper.get_daynight()
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
+    variables['daynight_actual_mode'] = daynight_actual_mode
 
-    calldate = datetime.datetime.today().strftime("%Y%m%d")
-    calltime = datetime.datetime.today().strftime("%H%M%S")
-
-    daynight_text, daynight_class = Helper.get_daynight()
-    daynight_user_text = daynight_text == 'GIORNO' and 'Abilita le linee' or 'Disabilita le linee'
-
-    for rt in rt_calls:
-        rt.phoneuser = PhoneUser.get_from_pincode(rt.pincode)
-        duration = int(time.time()) - rt.calldate
-        rt.elapsed_time = duration
-        cost = Fare.get_call_cost(rt.dst, duration)
-        rt.balance = round(rt.balance - cost, 2)
-        rt.file = "%s_%s_%s_%s" % (rt.pincode,
-                                   calldate,
-                                   calltime,
-                                   rt.dst)
-
-    variables = {
-        'rt_calls': rt_calls,
-        'daynight_text': daynight_text,
-        'daynight_user_text': daynight_user_text,
-        'daynight_class': daynight_class,
-    }
-
-    if request.is_ajax():
-        return render_to_response(
-            'realtime_table.html', RequestContext(request, variables))
-    return render_to_string(
-        'realtime_table.html', RequestContext(request, variables))
-
+    return render_to_response('realtime.html', RequestContext(request, variables))
+    
 
 def phonecab_daynight(request, mode):
     """Modifica manualmente la modalita giorno notte"""

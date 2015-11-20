@@ -195,18 +195,11 @@ span.label {
 
 .switchable {
   transition: all 0.5s ease;
+  color: white !important;
 }
 
 .switchable .action {
   display: none;
-}
-
-.switchable:hover {
-  background-color: green;
-}
-
-.switchable.btn-success:hover {
-  background-color: red;
 }
 
 .switchable:hover .action {
@@ -216,3 +209,48 @@ span.label {
 .switchable:hover .status {
   display: none;
 }
+
+
+.switchable.green, .switchable.green:active, .switchable.green:focus {
+  background-color: rgb(76, 175, 80);
+} 
+
+.switchable.green:hover {
+  background-color: rgb(244, 67, 54);
+} 
+
+.switchable.red, .switchable.red:active, .switchable.red:focus {
+  background-color: rgb(244, 67, 54);
+} 
+
+.switchable.red:hover {
+  background-color: rgb(76, 175, 80);
+} 
+
+
+
+.help {
+  position: absolute;
+  z-index: 3000;
+  /*background-color: #333;*/
+  color: #ff5722;
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+  border-radius: 50%;
+  padding-top: 3px;
+  /*box-shadow: 1px 1px 2px rgba(0,0,0,.3);*/
+  text-align: center;
+  margin-top: -15px;
+}
+
+
+.help::after {    
+  background-color: white;
+  width: 10px;
+  height: 14px;
+  display: block;
+  content: "";
+  margin: -18px 0 0 7px;
+}
+

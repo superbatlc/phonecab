@@ -208,9 +208,31 @@ function getQueryVariable(variable) {
     return '';
 }
 
+var help_active = false;
 
 
 $(function() {
+
+  // visualizza data help
+  $('[data-help]').each(function(index){
+    $('#help-holder').append($(document.createElement('i'))
+      .addClass("help zmdi zmdi-pin-help")
+      .attr("data-placement","bottom")
+      .attr("data-title",$(this).attr("data-help"))
+      .attr("data-toggle","tooltip")
+      .offset( $(this).offset() )
+      .hide()
+    );
+  });
+
+  $('#help-toggle').on('click',function(){
+    if (help_active) {
+      $('.help').fadeOut();
+    } else {
+      $('.help').fadeIn();
+    }
+    help_active = !help_active;
+  })
 
   $("body").find(".btn-flip, .card-image").on("click",
     function(el) {
@@ -316,5 +338,6 @@ $(function() {
     var msg = getQueryVariable('msg');
     showMessageBox("Conferma", msg, "green");
   }
+
 
 });

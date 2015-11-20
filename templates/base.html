@@ -19,6 +19,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body class="theme-template-dark theme-deep-orange alert-open alert-with-mat-grow-top-right">
+    <div id="help-holder"></div>
 	<main>
 		<aside class="sidebar fixed" style="left: 0px; ">
 			<div class="brand-logo"><div class="phonecab-logo"><div class="phonecab-wave"><span>PHONECAB</span></div></div></div>
@@ -50,49 +51,28 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 
 			<div class="container-fluid">
-			            <div class="navbar-header pull-left">
-			              <button type="button" class="navbar-toggle pull-left m-15" data-activates=".sidebar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-			              <!-- <ul class="breadcrumb">
-			                <li><a href="#/">Materialism</a></li>
-			                <li class="active">Cards</li>
-			              </ul> -->
-			            </div>
-			            <ul class="nav navbar-nav navbar-right navbar-right-no-collapse">
-			              <li class="logout pull-right">
-											<form action="/logout/">
-			                	 <button type="submit" class="pointer btn btn-round-sm btn-link withoutripple"><i class="zmdi zmdi-sign-in"></i> </button>
-											</form>
-			              </li>
-			              <li class="username pull-right">
-											{{ user.get_full_name }}
-			              </li>
-			              <!-- <li navbar-search="" class="search pull-right">
-			                <div>
-			                  <div class="mat-slide-right pull-right">
-			                    <form class="search-form form-inline pull-left" action="/phonecab/search/" method="post">
-			                      <div class="form-group">
-															{% csrf_token %}
-			                        <label class="sr-only" for="search-input">Search</label>
-			                        <input name="search_query" type="text" class="form-control" id="search-input" placeholder="cerca" autofocus="" value="{{ search_query }}">
-														</div>
-			                    </form>
-			                  </div>
-			                  <div class="pull-right">
-			                    <i class="zmdi zmdi-search zmdi-hc-2x"></i>
-			                  </div>
-			                </div>
-			              </li> -->
-			            </ul>
-			          </div>
-
-
+	            <div class="navbar-header pull-left">
+	              <button type="button" class="navbar-toggle pull-left m-15" data-activates=".sidebar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+	            </div>
+	            <ul class="nav navbar-nav navbar-right navbar-right-no-collapse">
+	              <li class="logout pull-right">
+									<form action="/logout/">
+	                	 <button type="submit" class="pointer btn btn-round-sm btn-link withoutripple"><i class="zmdi zmdi-sign-in"></i> </button>
+									</form>
+	              </li>
+	              <li class="username pull-right">
+									{{ user.get_full_name }}
+	              </li>
+                  <li class="logout pull-right">
+                         <button id="help-toggle" class="pointer btn btn-round-sm btn-link withoutripple"><i class="zmdi zmdi-pin-help"></i> </button>
+                  </li>
+	            </ul>
+	          </div>
 		</nav>
 		<div class="main-content" autoscroll="true" bs-affix-target="" init-ripples="">
     <section>
         <div class="row-fluid application">
-            {% block application %}
-            <div id="realtime">{{ realtime_table }}</div>
-            {% endblock application %}
+            {% block application %}{% endblock application %}
         </div>
     </section>
 
@@ -125,18 +105,18 @@
     <!-- FINE CODICE MESSAGGIO -->
  </div><!--#maincontent-->
  </main>
-		<script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/moment.min.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/moment.locale.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/bootstrap-datetimepicker.min.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/sidenav.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/moment.min.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/moment.locale.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/bootstrap-datetimepicker.min.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/sidenav.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "js/vendors/velocity.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "js/vendors/hammer.min.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/hammer.jquery.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/vendors/bootstrap-tagsinput.min.js" %}" type="text/javascript" charset="utf-8"></script>
-		<script src="{% static "js/app.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/hammer.jquery.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/vendors/bootstrap-tagsinput.min.js" %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static "js/app.js" %}" type="text/javascript" charset="utf-8"></script>
     {% block script %}{% endblock script %}
 </body>
 </html>
