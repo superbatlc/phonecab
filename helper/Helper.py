@@ -93,7 +93,7 @@ class Helper(object):
         value = 1
 
         if not settings.DEBUG:
-            output = os.popen('/usr/sbin/asterisk -rx "database get night dbnightman"').read()
+            output = os.popen('sudo /usr/sbin/asterisk -rx "database get night dbnightman"').read()
             value = int(output[7:8])
 
         daynight_text = 'NOTTE'
