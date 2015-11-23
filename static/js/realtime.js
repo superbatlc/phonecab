@@ -128,7 +128,7 @@ var Ami = {
 
     _checkAuthenticated: function() {
         if (!Ami.authenticated) {
-            showMessageBox("Errore", "Autenticazione AMI fallita. Ricaricare la pagina per riprovare.", "alert-danger");
+            showMessageBox("Errore", "Autenticazione AMI fallita.<br><br><strong>Ricaricare la pagina per riprovare.</strong>", "alert-danger");
             return false;
         }
         return true;
@@ -157,12 +157,8 @@ var Ami = {
             },
             function(error) {
                 // console.log('ERRORE', error);
-                showMessageBox("Errore", "Impossibile effettuare login al sitema AMI.", "alert-danger");
+                showMessageBox("Errore", "Impossibile effettuare login al sitema AMI.<br><br><strong>Ricaricare la pagina per riprovare.</strong>", "alert-danger");
                 Ami.authenticated = false;
-
-                // fake it was ok
-                Ami.authenticated = true;
-                Ami.manageLoops(Ami.active); // start the loops
             }
         );
     },
@@ -178,6 +174,7 @@ var Ami = {
 
     _updateCallsLoop: function() {
         // console.log('LOOP CALLS');
+        if (!Ami._checkAuthenticated) return;
 
         requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=coreshowchannels', {}, function(response) {
 
@@ -320,11 +317,11 @@ var Ami = {
 
         var actions = '';
         if (recording) {
-            actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>&nbsp;';
+            actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
         } else {
-            actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>&nbsp;';
+            actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>';
         }
-        actions += '<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
+        actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
         $('#realtime-table tbody').append(
             $(document.createElement('tr'))
