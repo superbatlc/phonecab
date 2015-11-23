@@ -94,4 +94,4 @@ def phonecab_set_nightmode(request, mode):
 
     os.system(cmd)
 
-    return HttpResponse(status=200,content=("{}", content_type="application/json")
+    return HttpResponse(status=200,content="{}", content_type="application/json")

@@ -283,7 +283,7 @@ var Ami = {
                         data.pincode = acall.accountcode;
                         data.dst = acall.dst;
 
-                        requestData("POST", "json", '/phoneusers/realtime/info/' + , {data: data}, function(response) {
+                        requestData("POST", "json", '/phoneusers/realtime/info/', {data: data}, function(response) {
                                 acall.name = response.data.name;
                                 acall.dst = response.data.dst;
                                 Ami._addCall(acall, response.data.recording);
@@ -331,7 +331,7 @@ var Ami = {
         filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 
         var actions = '';
-        swicth(recording) {
+        switch(recording) {
             case 'progress':
                 actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
                 break;
