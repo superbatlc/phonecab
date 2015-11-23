@@ -84,10 +84,10 @@ def phonecab_daynight(request, mode):
     """Modifica manualmente la modalita giorno notte"""
     import os
 
-    cmd = "/etc/asterisk/notte.sh"
+    cmd = "sudo /etc/asterisk/notte.sh"
 
     if mode == 'GIORNO':
-        cmd = "/etc/asterisk/giorno.sh"
+        cmd = "sudo /etc/asterisk/giorno.sh"
 
     os.system(cmd)
 
