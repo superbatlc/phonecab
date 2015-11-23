@@ -268,8 +268,13 @@ var Ami = {
                     // costruiamo la tabella se abbiamo tutti i dati
                     if (acall.src != '' && acall.dst != '' && acall.accountcode != '') {
 
-                        requestData("GET", "json", '/phoneusers/name/' + acall.accountcode, {}, function(response) {
+                        var data = {};
+                        data.pincode = acall.accountcode;
+                        data.dst = acall.dst;
+
+                        requestData("POST", "json", '/phoneusers/realtime/info/' + , {data: data}, function(response) {
                                 acall.name = response.data.name;
+                                acall.dst = response.data.dst;
                                 Ami._addCall(acall, response.data.recording);
                             },
                             function(error) {
@@ -315,11 +320,16 @@ var Ami = {
         filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 
         var actions = '';
-        if (recording) {
-            actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
-        } else {
-            actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>';
-        }
+        swicth(recording) {
+            case 'progress':
+                actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
+                break;
+            case 'show':
+                actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>'
+                break;
+            case 'hidden':
+                break;
+        } 
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
         $('#realtime-table tbody').append(
