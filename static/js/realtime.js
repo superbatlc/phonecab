@@ -246,12 +246,12 @@ var Ami = {
                         if (response.generic.context == 'incoming-operator-dial-number') {
                             incoming = 1;
                             acall.src = response.generic.calleridnum;
-                            acall.dst = response.generic.extension;
+                            acall.dst = response.generic.exten;
                         }
                         if (response.generic.context == 'cabs-dial-number') {
                             acall.accountcode = response.generic.accountcode;
                             acall.src = response.generic.calleridnum;
-                            acall.dst = response.generic.extension;
+                            acall.dst = response.generic.exten;
                             acall.duration = response.generic.duration;
                         }
                         if (response.generic.context == 'from-trunk') {
