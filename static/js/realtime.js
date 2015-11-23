@@ -32,17 +32,55 @@ var Realtime = {
 
 var Ami = {
 
+    var channels = {};
 
-    test : function(){
+    login : function() {
+        requestData("GET", "xml", '/asterisk/mxml?action=login&username=youramiuser&secret=youramipw', {},
+            function(response){
+                console.log('Login efettuato');
+            },
+            function(error){
+                showMessageBox("Errore", "Impossibile effettuare login al sitema AMI.", "alert-danger");
+            }
+        );
+    }
 
-        acall = {};
-        acall.name = "Gino";
-        acall.accountcode = "1425712457";
-        acall.src = "201";
-        acall.dst = "010283574";
-        acall.startcall = "15:37";
-        acall.duration = "37";
-        var recording = true;
+    hangUpCall : function(channel) {
+        requestData("GET", "xml", '/asterisk/mxml?action=hangup&channel=' + channel, {},
+            function(response){
+                console.log('Chiamata sul canale ' + channel + ' interrotta con successo.');
+            },
+            function(error){
+                showMessageBox("Errore", "Impossibile riagganciare la chiamata.", "alert-danger");
+            }
+        );
+    },
+
+    recordCall : function() {
+        // TODO
+    },
+
+    linkCall : function() {
+        // TODO
+    },
+
+    updateCalls : function() {
+        // TODO recupero chiamate
+    },
+
+
+    _getCallInfo : function(channel) {
+
+        if(Ami.channel.channel) {
+            return Ami.channel.channel;
+        } else {
+            // richiesta al server da implementare
+        }
+
+
+    },
+
+    _addRow : function(acall, recording) {
         var row = '<tr class="realtime-table-row"><td style="text-align:left">' + acall.name + '</td>';
         row += '<td style="text-align:center">' + acall.accountcode + '</td>';
         row += '<td style="text-align:center">' + acall.src + '</td>';
@@ -64,7 +102,9 @@ var Ami = {
         row += '</td></tr>';
         //console.log(row);
         $('#realtime-table').append(row);
-    } 
+    }
+
+
 }
 
 
