@@ -53,7 +53,6 @@ var Ami = {
     },
 
     manageLoops: function(active) {
-        console.log(Ami.authenticated);
         Ami.active = active;
 
         clearInterval(Ami.durationLoop);
@@ -69,7 +68,7 @@ var Ami = {
 
     hangUpCall: function(channel) {
         if (!Ami._checkAuthenticated) return;
-        requestData("GET", "xml", Config.ami.url + '/asterisk/mxml?action=hangup&channel=' + channel, {},
+        requestData("GET", "xml", Config.ami.url + '?action=hangup&channel=' + channel, {},
             function(response) {
                 showMessageBox("Conferma", 'Chiamata interrotta con successo.', "green");
             },
@@ -88,9 +87,9 @@ var Ami = {
             showMessageBox("Errore", "Impossibile registrare la chiamata.", "alert-danger");
         }
 
-        requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=monitor&channel=' + channel + '&file=' + file + '&mix=1', {}, function(response) {
-            requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=setvar&channel=' + channel + '&variable=CALLFILENAME&value=' + file, {}, function(response) {
-                requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=setvar&channel=' + channel + '&variable=RECORDING_ENABLED&value=1', {}, function(response) {
+        requestData("GET", "xml", Config.ami.url + '?action=monitor&channel=' + channel + '&file=' + file + '&mix=1', {}, function(response) {
+            requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=CALLFILENAME&value=' + file, {}, function(response) {
+                requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=RECORDING_ENABLED&value=1', {}, function(response) {
 
                     showMessageBox("Conferma", 'Registrazione avviata con successo', "green");
 
@@ -112,7 +111,7 @@ var Ami = {
 
         // poi inviamo ad asterisk la variabile di canale per l'accountcode
 
-        requestData("GET", "xml", Config.ami.url + '/asterisk/mxml?action=hangup&channel=' + channel, {},
+        requestData("GET", "xml", Config.ami.url + '?action=hangup&channel=' + channel, {},
             function(response) {
                 showMessageBox("Conferma", 'Chiamata interrotta con successo.', "green");
             },
@@ -150,7 +149,7 @@ var Ami = {
 
 
     _login: function() {
-        requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=login&username=' + Config.ami.username + '&secret=' + Config.ami.secret, {},
+        requestData("GET", "xml", Config.ami.url + '?action=login&username=' + Config.ami.username + '&secret=' + Config.ami.secret, {},
             function(response) {
                 Ami.authenticated = true;
                 Ami.manageLoops(Ami.active); // start the loops
@@ -176,7 +175,7 @@ var Ami = {
         // console.log('LOOP CALLS');
         if (!Ami._checkAuthenticated) return;
 
-        requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=coreshowchannels', {}, function(response) {
+        requestData("GET", "xml", Config.ami.url + '?action=coreshowchannels', {}, function(response) {
 
             var channels = [];
             var uniqueid_relation = [];

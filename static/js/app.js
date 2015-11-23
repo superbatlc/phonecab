@@ -1,13 +1,3 @@
-var Config = {
-  timeout : 5000,
-  ami : {
-      loopInterval : 3000,
-      url : '/', // ends with '/'
-      username : 'youramiuser',
-      secret : 'youramisecret',
-  },
-}
-
 var Modal = {
   open: function(dict) {
     console.log(dict);
