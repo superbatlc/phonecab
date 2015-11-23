@@ -243,7 +243,6 @@ def phoneuser_change_status(request):
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     
-
 @login_required
 def phoneuser_archive(request):
     """Archiviazione anagrafica"""
@@ -262,7 +261,6 @@ def phoneuser_archive(request):
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     
-
 @login_required
 def phoneuser_name(request, accountcode):
     """Get phoneuser name for realtime displaying"""
@@ -284,6 +282,44 @@ def phoneuser_name(request, accountcode):
         values['err_msg'] = 'Errore phoneuser_name'
 
     return HttpResponse(json.dumps(values), content_type="application/json")
+
+@login_required
+def phoneuser_realtime_info(request):
+    """Get call info for realtime displaying"""
+    pincode = request.POST.get("data[pincode]", "")
+    dst = request.POST.get("data[dst]", "")
+
+    values = {
+              'data': {},
+              'err': 0,
+              'err_msg': '',
+              }
+
+    values['data']['name'] = 'Non disponibile'
+    values['data']['dst'] = 'Non disponibile'
+    values['data']['recording'] = 'show'
+    try:
+        if accountcode:
+                phoneuser = PhoneUser.get_from_pincode(pincode)
+                if phoneuser:
+                    values['data']['name'] = phoneuser.get_full_name()
+                    if phoneuser.recording_enabled:
+                        values['data']['recording'] = 'progress'
+                    if dst:
+                        whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
+                        values['data']['dst'] = "%s %s" % (dst, whitelist.label)
+                        if whitelist.frequency == 1:
+                            values['data']['recording'] = 'hidden'
+
+
+        return HttpResponse(json.dumps(values), content_type="application/json")
+
+    except Exception as e:
+        return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
+
+    
+
+
 
 
 @login_required

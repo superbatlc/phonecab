@@ -10,6 +10,7 @@ urlpatterns = [
     #url(r'^phoneusers/export/(?P<accountcode>[0-9]*)$', phoneuser_export),
     url(r'^phoneusers/name/(?P<accountcode>[0-9]*)$', phoneuser_name),
     url(r'^phoneusers/data/(?P<phoneuser_id>[0-9]*)$', phoneuser_data),
+    url(r'^phoneusers/realtime/info$', phoneuser_realtime_info),
     #url(r'^phoneusers/enable/(?P<phoneuser_id>[0-9]*)$', phoneuser_enable),
     #url(r'^phoneusers/disable/(?P<phoneuser_id>[0-9]*)$', phoneuser_disable),
     url(r'^phoneusers/changestatus/$', phoneuser_change_status),
