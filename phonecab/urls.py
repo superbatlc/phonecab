@@ -16,8 +16,8 @@ urlpatterns = [
     url(r'^login/$', 'phonecab.views.phonecab_login'),
     url(r'^logout/$', 'phonecab.views.phonecab_logout'),
     url(r'^phonecab/$', 'phonecab.views.phonecab_realtime'),
-    url(r'^daynight/$', 'phonecab.views.phonecab_getdaynight'),
-    url(r'^daynight/(?P<mode>.*)$', 'phonecab.views.phonecab_daynight'),
+    url(r'^nightmode/$', 'phonecab.views.phonecab_get_nightmode'),
+    url(r'^nightmode/(?P<mode>.*)$', 'phonecab.views.phonecab_set_nightmode'),
 
     url(r'^recordings/(?P<path>.*)$', 'django.views.static.serve',
         { 'document_root': settings.RECORDS_ROOT }),

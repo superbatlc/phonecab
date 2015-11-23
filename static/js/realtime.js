@@ -2,9 +2,9 @@ var Realtime = {
 
     active: null,
 
-    init: function(actualMode) {
+    init: function(nightMode) {
         // Set active as the server said
-        Realtime._setActive(!!actualMode);
+        Realtime._setActive(!nightMode);
 
         // Login to AMI
         Ami.init();
@@ -13,8 +13,8 @@ var Realtime = {
 
     _updateActiveLoop() {
         console.log('LOOP ACTIVE');
-        requestData("GET", "json", '/daynight', {}, function(response) {
-            Realtime._setActive(!!response.daynight);
+        requestData("GET", "json", '/nightmode', {}, function(response) {
+            Realtime._setActive(!response.nightmode);
         });
     },
 
@@ -29,9 +29,7 @@ var Realtime = {
 
     toggleActive: function() {
         var newActive = !Realtime.active;
-        requestData("POST", "html", '/daynight/', {
-                active: newActive
-            },
+        requestData("POST", "html", '/nightmode/' + (newActive ? 0 : 1), {},
             function(response) {
                 Realtime._setActive(newActive);
             },

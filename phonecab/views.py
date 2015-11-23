@@ -73,26 +73,25 @@ def phonecab_realtime(request):
     import time
     import datetime
 
-    daynight_actual_mode = Helper.get_daynight()
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
-    variables['daynight_actual_mode'] = daynight_actual_mode
+    variables['actual_nightmode'] = Helper.get_nightmode()
 
     return render_to_response('realtime.html', RequestContext(request, variables))
 
 
-def phonecab_getdaynight(request):
+def phonecab_get_nightmode(request):
     """Recupera la modalita giorno notte"""
-    return HttpResponse(status=200,content=("{ \"daynight\" : %d }" % Helper.get_daynight()), content_type="application/json")
+    return HttpResponse(status=200,content=("{ \"nightmode\" : %d }" % Helper.get_nightmode()), content_type="application/json")
 
-def phonecab_daynight(request, mode):
+def phonecab_set_nightmode(request, mode):
     """Modifica manualmente la modalita giorno notte"""
     import os
 
     cmd = "sudo /etc/asterisk/notte.sh"
 
-    if mode == 'GIORNO':
+    if mode == '1':
         cmd = "sudo /etc/asterisk/giorno.sh"
 
     os.system(cmd)
 
-    return HttpResponse("ok", mimetype="text/plain")
+    return HttpResponse(status=200,content=("{}", content_type="application/json")

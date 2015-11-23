@@ -86,7 +86,7 @@ class Helper(object):
         return detail
 
     @staticmethod
-    def get_daynight():
+    def get_nightmode():
         """Restituisce lo stato GIORNO/NOTTE del sistema"""
         import os
         from django.conf import settings
@@ -95,6 +95,4 @@ class Helper(object):
         if not settings.DEBUG:
             output = os.popen('sudo /usr/sbin/asterisk -rx "database get night dbnightman"').read()
             value = int(output[7:8])
-
-
         return value
