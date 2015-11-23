@@ -1,6 +1,6 @@
 var Realtime = {
 
-    active: false,
+    active: null,
 
     init: function(actualMode) {
         // Set active as the server said
@@ -8,14 +8,22 @@ var Realtime = {
 
         // Login to AMI
         Ami.init();
+        window.setInterval(Realtime._updateActiveLoop, Config.ami.loopInterval);
+    },
+
+    _updateActiveLoop() {
+        console.log('LOOP ACTIVE');
+        requestData("GET", "json", '/daynight', {}, function(response) {
+            Realtime._setActive(!!response.daynight);
+        });
     },
 
     _setActive: function(active) {
+        if (Realtime.active === active) return;
         Realtime.active = active;
         $('#rt-modo-giorno').parent().removeClass('green red').addClass((active ? 'green' : 'red'));
         $('#rt-modo-' + (active ? 'notte' : 'giorno')).hide();
         $('#rt-modo-' + (active ? 'giorno' : 'notte')).show();
-        console.log('3');
         Ami.manageLoops(Realtime.active);
     },
 
@@ -165,14 +173,19 @@ var Ami = {
     /****************************** LOOPS *************************************/
 
     _updateDurationLoop: function() {
-        // console.log('LOOP DURATION');
+        console.log('LOOP DURATION');
         $('#realtime-table .duration').each(function(i) {
-            $(this).html(parseInt($(this).html()) + 1);
+            var time = $(this).html().split(':');
+            if (time.length!=3) { return; }
+            time[2] = parseInt(time[2])+1;
+            if (time[2]==60) { time[2] = 0; time[1] = parseInt(time[1])+1; }
+            if (time[1]==60) { time[1] = 0; time[0] = parseInt(time[0])+1; }
+            $(this).html(time[0]+':'+("0"+time[1]).slice(-2)+':'+("0"+time[2]).slice(-2));
         })
     },
 
     _updateCallsLoop: function() {
-        // console.log('LOOP CALLS');
+        console.log('LOOP CALLS');
         if (!Ami._checkAuthenticated) return;
 
         requestData("GET", "xml", Config.ami.url + '?action=coreshowchannels', {}, function(response) {

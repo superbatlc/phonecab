@@ -1,77 +1,75 @@
-$.ajaxSetup({
-     beforeSend: function(xhr, settings) {
-         function getCookie(name) {
-             var cookieValue = null;
-             if (document.cookie && document.cookie != '') {
-                 var cookies = document.cookie.split(';');
-                 for (var i = 0; i < cookies.length; i++) {
-                     var cookie = jQuery.trim(cookies[i]);
-                     // Does this cookie string begin with the name we want?
-                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                     break;
-                 }
-             }
-         }
-         return cookieValue;
-         }
-         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-             // Only send the token to relative URLs i.e. locally.
-             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-         }
-     }
-});
-
-
-function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
-  jQuery.ajax({
-           type: method,
-           url: relativeUrl,
-           async: true,
-           dataType: dataType,
-           data: data,
-           timeout: Config.timeout,
-           success:  onSuccess,
-           error: function(jqXHR, textStatus, errorThrown){
-                if (onError) onError(jqXHR);
-           },
-       })
-}
-
+// $.ajaxSetup({
+//      beforeSend: function(xhr, settings) {
+//          function getCookie(name) {
+//              var cookieValue = null;
+//              if (document.cookie && document.cookie != '') {
+//                  var cookies = document.cookie.split(';');
+//                  for (var i = 0; i < cookies.length; i++) {
+//                      var cookie = jQuery.trim(cookies[i]);
+//                      // Does this cookie string begin with the name we want?
+//                  if (cookie.substring(0, name.length + 1) == (name + '=')) {
+//                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//                      break;
+//                  }
+//              }
+//          }
+//          return cookieValue;
+//          }
+//          if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+//              // Only send the token to relative URLs i.e. locally.
+//              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+//          }
+//      }
+// });
+//
+//
 // function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
-//   var request = $.ajax({
-//     type: method,
-//     url: relativeUrl,
-//     dataType: dataType,
-//     data: data,
-//     timeout: Config.timeout,
-//     //xhrFields: {
-//     //   withCredentials: true
-//     //},
-//     //crossDomain: true,
-//   })
-
-//   .done(function(response, textStatus, jqXHR) {
-//     if (response.hasOwnProperty("err") && response.err > 0) {
-//       console.error("REQUEST ERROR '" + relativeUrl + "' (follows data object, and status)");
-//       console.log('request data: ', data);
-//       console.log('status: ' + response.errMsg);
-//       if (onError) onError(response.errMsg);
-//     } else onSuccess(response);
-//   })
-
-//   .fail(function(jqXHR, textStatus, errorThrown) {
-//     console.error("REQUEST FAILED '" + relativeUrl + "' (follows data object, and status)");
-//     console.log('request data: ', data);
-//     console.log('error: ' + jqXHR.statusText);
-//     //console.log([jqXHR.responseText.split('\n')]);
-//     if (onError) onError(jqXHR);
-//     // if (onError) onError(jqXHR.statusText);
-//   });
-
+//   jQuery.ajax({
+//            type: method,
+//            url: relativeUrl,
+//            async: true,
+//            dataType: dataType,
+//            data: data,
+//            timeout: Config.timeout,
+//            success:  onSuccess,
+//            error: function(jqXHR, textStatus, errorThrown){
+//                 if (onError) onError(jqXHR);
+//            },
+//        })
 // }
 
+function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
+  var request = $.ajax({
+    type: method,
+    url: relativeUrl,
+    dataType: dataType,
+    data: data,
+    timeout: Config.timeout,
+    //xhrFields: {
+    //   withCredentials: true
+    //},
+    //crossDomain: true,
+  })
 
+  .done(function(response, textStatus, jqXHR) {
+    if (response.hasOwnProperty("err") && response.err > 0) {
+      console.error("REQUEST ERROR '" + relativeUrl + "' (follows data object, and status)");
+      console.log('request data: ', data);
+      console.log('status: ' + response.errMsg);
+      if (onError) onError(response.errMsg);
+    } else onSuccess(response);
+  })
+
+  .fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("REQUEST FAILED '" + relativeUrl + "' (follows data object, and status)");
+    console.log('request data: ', data);
+    console.log('error: ' + jqXHR.statusText);
+    //console.log([jqXHR.responseText.split('\n')]);
+    if (onError) onError(jqXHR);
+    // if (onError) onError(jqXHR.statusText);
+  });
+
+}
 
 var Modal = {
   open: function(dict) {

@@ -78,7 +78,11 @@ def phonecab_realtime(request):
     variables['daynight_actual_mode'] = daynight_actual_mode
 
     return render_to_response('realtime.html', RequestContext(request, variables))
-    
+
+
+def phonecab_getdaynight(request):
+    """Recupera la modalita giorno notte"""
+    return HttpResponse(status=200,content=("{ \"daynight\" : %d }" % Helper.get_daynight()), content_type="application/json")
 
 def phonecab_daynight(request, mode):
     """Modifica manualmente la modalita giorno notte"""
@@ -92,4 +96,3 @@ def phonecab_daynight(request, mode):
     os.system(cmd)
 
     return HttpResponse("ok", mimetype="text/plain")
-
