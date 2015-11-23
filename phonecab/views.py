@@ -1,3 +1,4 @@
+import json
 from django.http import Http404
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
@@ -89,9 +90,9 @@ def phonecab_set_nightmode(request, mode):
 
     cmd = "sudo /etc/asterisk/notte.sh"
 
-    if mode == '1':
+    if mode == '0':
         cmd = "sudo /etc/asterisk/giorno.sh"
 
-    os.system(cmd)
+    ret = os.system(cmd)
 
-    return HttpResponse(status=200,content="{}", content_type="application/json")
+    return HttpResponse(status=200,content=json.dumps({'ret': ret}), content_type="application/json")
