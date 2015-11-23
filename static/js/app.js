@@ -1,4 +1,12 @@
-var TIMEOUT = 5000;
+var Config = {
+  timeout : 5000,
+  ami : {
+      loopInterval : 3000,
+      url : '/', // ends with '/'
+      username : 'youramiuser',
+      secret : 'youramisecret',
+  },
+}
 
 var Modal = {
   open: function(dict) {
@@ -65,7 +73,7 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
     url: relativeUrl,
     dataType: dataType,
     data: data,
-    timeout: TIMEOUT
+    timeout: Config.timeout,
   })
 
   .done(function(response, textStatus, jqXHR) {
@@ -83,29 +91,7 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
     console.log('error: ' + jqXHR.statusText);
     console.log([jqXHR.responseText.split('\n')]);
     if (onError) onError(jqXHR);
-  });
-
-}
-
-function requestDataDjango(method, dataType, relativeUrl, data, onSuccess, onError) {
-  var request = $.ajax({
-    type: method,
-    url: relativeUrl,
-    dataType: dataType,
-    data: data,
-    timeout: TIMEOUT
-  })
-
-  .done(function(response, textStatus, jqXHR) {
-    onSuccess(response);
-  })
-
-  .fail(function(jqXHR, textStatus, errorThrown) {
-    console.error("REQUEST FAILED '" + relativeUrl + "' (follows data object, and status)");
-    console.log('request data: ', data);
-    console.log('error: ' + jqXHR.statusText);
-    console.log([jqXHR.responseText.split('\n')]);
-    if (onError) onError(jqXHR.statusText);
+    // if (onError) onError(jqXHR.statusText);
   });
 
 }
@@ -135,7 +121,7 @@ function checkUniquePincode(pincode_sel, callback) {
     return;
   }
 
-  requestDataDjango("POST", "text", '/phoneusers/check/', {
+  requestData("POST", "text", '/phoneusers/check/', {
     pincode: pincode
   }, function(response) {
     if (response == "0") {
@@ -170,7 +156,7 @@ function checkUniqueUsername(username_sel, callback) {
     return;
   }
 
-  requestDataDjango("POST", "text", '/profiles/check/', {
+  requestData("POST", "text", '/profiles/check/', {
     username: username
   }, function(response) {
     if (response == "0") {
@@ -325,14 +311,14 @@ $(function() {
     element = 2;
   }
   $('.sidebar li a[data-menu=' + window.location.pathname.split("/")[element] + ']').addClass("active");
-  
+
 
   // gestione errori e notifiche da url
   var err = getQueryVariable('err') != '';
   if(err){
     var err_msg = getQueryVariable('err_msg');
     showMessageBox("Errore", err_msg, "alert-danger");
-  } 
+  }
   var ok = getQueryVariable('ok') != '';
   if(ok) {
     var msg = getQueryVariable('msg');

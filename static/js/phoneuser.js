@@ -79,7 +79,7 @@ var Phoneuser = {
                 //}
                 //
 
-                requestDataDjango("POST", "html", '/phoneusers/save/', {data : data},
+                requestData("POST", "html", '/phoneusers/save/', {data : data},
                 function(response){
                   if(isNew) {
                     updateDOM('#phoneusers', response); // ricarichiamo la lista
@@ -107,7 +107,7 @@ var Phoneuser = {
                 action = "Abilitazione";
             }
 
-            requestDataDjango("POST", "html", '/phoneusers/changestatus/', {data : data},
+            requestData("POST", "html", '/phoneusers/changestatus/', {data : data},
                 function(response){
                     updateDOM('#phoneuser', response);
                     showMessageBox("Conferma", action + " anagrafica effettuata con successo.", "green");
@@ -124,7 +124,7 @@ var Phoneuser = {
             if(confirm(msg)){
                 phoneuser_id = $('#phoneuser-id').val();
 
-                requestDataDjango("POST", "html", '/phoneusers/archive/', {phoneuser_id : phoneuser_id},
+                requestData("POST", "html", '/phoneusers/archive/', {phoneuser_id : phoneuser_id},
                 function(response){
                     window.location.href = "/phoneusers/?ok=1&msg=Anagrafica archiviata con successo.";
                 },
@@ -202,7 +202,7 @@ var Whitelist = {
 
         data.phoneuser_id = $("#phoneuser-id").val()
 
-        requestDataDjango("POST", "html", '/whitelists/save/', {data : data},
+        requestData("POST", "html", '/whitelists/save/', {data : data},
             function(response){
                 updateDOM('#whitelists', response);
                 showMessageBox("Conferma", "Salvataggio effettuato con successo.", "green");
@@ -221,7 +221,7 @@ var Whitelist = {
         data.newstatus = newstatus;
         data.phoneuser_id = $("#phoneuser-id").val()
 
-        requestDataDjango("POST", "html", '/whitelists/changestatus/', {data : data},
+        requestData("POST", "html", '/whitelists/changestatus/', {data : data},
             function(response){
                 if(response != "-1"){
                     updateDOM('#whitelists', response);
@@ -241,7 +241,7 @@ var Whitelist = {
 
         var postAlert = function(callback_return) {
             if (!callback_return.success) { return; }
-            requestDataDjango("POST", "html", '/whitelists/changeordinary/', {data : data},
+            requestData("POST", "html", '/whitelists/changeordinary/', {data : data},
                 function(response){
                     if(response != "-1"){
                         updateDOM('#whitelists', response);
@@ -274,7 +274,7 @@ var Whitelist = {
             data.whitelist_id = id;
             data.phoneuser_id = $("#phoneuser-id").val()
 
-        requestDataDjango("POST", "html", '/whitelists/remove/', {data : data},
+        requestData("POST", "html", '/whitelists/remove/', {data : data},
             function(response){
                 if(response != "-1"){
                     updateDOM('#whitelists', response);
@@ -290,7 +290,7 @@ var Whitelist = {
     showAlert : function(data, callback) {
         // mostra quante straordinarie consentite nella settimana e nel mese
         // prosegue sulla successiva conferma
-        requestDataDjango("POST", "json", '/whitelists/checkextra/', {data : data},
+        requestData("POST", "json", '/whitelists/checkextra/', {data : data},
         function(response){
             console.log(typeof(response));
             if(response != "-1"){
@@ -361,7 +361,7 @@ var Credit = {
         data.reason = $("#credit-reason").val()
 
 
-        requestDataDjango("POST", "html", '/credits/save/', {data : data},
+        requestData("POST", "html", '/credits/save/', {data : data},
             function(response){
                 updateDOM('#credits', response);
                 showMessageBox("Conferma", "Inserimento ricarica effettuato con successo.", "green");

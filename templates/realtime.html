@@ -11,7 +11,7 @@
 <div class="colmain">
     <div id="daynight-div" style="float:right;">
 
-        <button class="btn btn-large switchable" onClick="Realtime.toggleMode();">
+        <button class="btn btn-large switchable" onClick="Realtime.toggleActive();">
         <span id="rt-modo-giorno">
             <span class="status"><i class="zmdi zmdi-check"></i> LINEE ATTIVE</span>
             <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LE LINEE</span>
@@ -54,7 +54,6 @@
 <script type="text/javascript">
     $(function(){
         Realtime.init({{ daynight_actual_mode }});
-        Ami.login();
     });
 </script>
 {% endblock script %}

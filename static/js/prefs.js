@@ -30,7 +30,7 @@ var Pref = {
         data.username = $("#profile-username").val()
         data.password = $("#profile-password").val()
 
-        requestDataDjango("POST", "html", '/prefs/save/', {data : data},
+        requestData("POST", "html", '/prefs/save/', {data : data},
             function(response){
                 updateDOM('.application', response); 
             },

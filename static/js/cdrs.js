@@ -9,7 +9,7 @@ var Cdr = {
             data.id = id;
             data.custom_valid = newstatus;
 
-            requestDataDjango("POST", "html", '/cdrs/changevalid/', {data : data},
+            requestData("POST", "html", '/cdrs/changevalid/', {data : data},
                 function(response){
                     updateDOM('.cdrs', response);
                     showMessageBox("Conferma", "Modifica stato chiamata effettuata con successo.", "green");

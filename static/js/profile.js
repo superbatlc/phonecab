@@ -100,7 +100,7 @@ var Profile = {
             //}
             //
 
-            requestDataDjango("POST", "html", '/profiles/save/', {data : data},
+            requestData("POST", "html", '/profiles/save/', {data : data},
                 function(response){
                   if(isNew) {
                     updateDOM('#profiles', response); 
@@ -123,7 +123,7 @@ var Profile = {
         data.id = id;
         data.is_active = newstatus;
 
-        requestDataDjango("POST", "html", '/profiles/changestatus/', {data : data},
+        requestData("POST", "html", '/profiles/changestatus/', {data : data},
             function(response){
                 updateDOM('#profiles', response);
                 showMessageBox("Conferma", "Utente aggiornato con successo.", "green");
