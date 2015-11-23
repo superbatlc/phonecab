@@ -64,6 +64,10 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
     dataType: dataType,
     data: data,
     timeout: Config.timeout,
+    //xhrFields: {
+    //   withCredentials: true
+    //},
+    //crossDomain: true,
   })
 
   .done(function(response, textStatus, jqXHR) {
@@ -79,7 +83,7 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
     console.error("REQUEST FAILED '" + relativeUrl + "' (follows data object, and status)");
     console.log('request data: ', data);
     console.log('error: ' + jqXHR.statusText);
-    console.log([jqXHR.responseText.split('\n')]);
+    //console.log([jqXHR.responseText.split('\n')]);
     if (onError) onError(jqXHR);
     // if (onError) onError(jqXHR.statusText);
   });
