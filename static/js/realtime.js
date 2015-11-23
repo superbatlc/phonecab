@@ -41,30 +41,15 @@ var Ami = {
 
     // $('call-'+uniqueid+' .recording') // Selettore BOTTONE REGISTRAZIONE
 
-    authenticated: false,
-    callsLoop: null, //interval loop reference (to stop it)
-    durationLoop: null,
-    active: false,
+    authenticated: false, // flag if logged in
+    callsLoop: null, //interval calls update loop reference (to stop it)
+    durationLoop: null, // interval duration loop reference (to stop it)
+    active: false, // sync with Realtime.active thru manageLoops
+
+    /**************************** ACTIONS *************************************/
 
     init: function() {
-        Ami.login();
-    },
-
-    login: function() {
-        requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=login&username=' + Config.ami.username + '&secret=' + Config.ami.secret, {},
-            function(response) {
-                console.log('Login efettuato');
-                Ami.authenticated = true;
-                Ami.manageLoops(Ami.active); // start the loops
-            },
-            function(error) {
-                console.log('ERRORE', error);
-                showMessageBox("Errore", "Impossibile effettuare login al sitema AMI.", "alert-danger");
-                Ami.authenticated = false;
-                Ami.authenticated = true;
-                Ami.manageLoops(Ami.active); // start the loops
-            }
-        );
+        Ami._login();
     },
 
     manageLoops: function(active) {
@@ -78,7 +63,7 @@ var Ami = {
             Ami.callsLoop = window.setInterval(Ami._updateCallsLoop, Config.ami.loopInterval);
             Ami._updateCallsLoop();
         } else {
-            Ami._clearCalls();
+            Ami._noCalls();
         }
     },
 
@@ -86,10 +71,10 @@ var Ami = {
         if (!Ami._checkAuthenticated) return;
         requestData("GET", "xml", Config.ami.url + '/asterisk/mxml?action=hangup&channel=' + channel, {},
             function(response) {
-                console.log('Chiamata sul canale ' + channel + ' interrotta con successo.');
+                showMessageBox("Conferma", 'Chiamata interrotta con successo.', "green");
             },
             function(error) {
-                console.log('ERRORE', error);
+                // console.log('ERRORE', error);
                 showMessageBox("Errore", "Impossibile riagganciare la chiamata.", "alert-danger");
             }
         );
@@ -99,7 +84,7 @@ var Ami = {
         if (!Ami._checkAuthenticated) return;
 
         var errorAction = function(error) {
-            console.log('ERRORE', error);
+            // console.log('ERRORE', error);
             showMessageBox("Errore", "Impossibile registrare la chiamata.", "alert-danger");
         }
 
@@ -107,14 +92,14 @@ var Ami = {
             requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=setvar&channel=' + channel + '&variable=CALLFILENAME&value=' + file, {}, function(response) {
                 requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=setvar&channel=' + channel + '&variable=RECORDING_ENABLED&value=1', {}, function(response) {
 
-                    console.log('Chiamata sul canale ' + channel + ' interrotta con successo.');
+                    showMessageBox("Conferma", 'Registrazione avviata con successo', "green");
 
                 }, errorAction);
             }, errorAction);
         }, errorAction);
     },
 
-    linkCall: function() {
+    linkCall: function(channel) {
         if (!Ami._checkAuthenticated) return;
         // TODO
         /*var channel = jQuery(this).attr("data-channel");
@@ -127,31 +112,19 @@ var Ami = {
 
         // poi inviamo ad asterisk la variabile di canale per l'accountcode
 
-        jQuery.ajax({
-               type: 'GET',
-               url: '/asterisk/mxml?action=login&username=youramiuser&secret=youramipw',
-               async: true,
-               dataType: 'xml',
-               success: function(response){
-                 jQuery.ajax({
-                     type: 'GET',
-                     url: '/asterisk/mxml?action=hangup&channel='+channel,
-                     async: true,
-                     dataType: 'xml',
-                     success: function(response){
-                       alert('Chiamata interrotta con successo');
-                     },
-                     error: function(jqXHR, textStatus, errorThrown){
-                          //alert('Errore nella trasmissione del dato');
-                     },
-                 })
-               },
-               error: function(jqXHR, textStatus, errorThrown){
-                    //alert('Errore nella trasmissione del dato')
-               },
-        })
+        requestData("GET", "xml", Config.ami.url + '/asterisk/mxml?action=hangup&channel=' + channel, {},
+            function(response) {
+                showMessageBox("Conferma", 'Chiamata interrotta con successo.', "green");
+            },
+            function(error) {
+                // console.log('ERRORE', error);
+                showMessageBox("Errore", "Impossibile riagganciare la chiamata.", "alert-danger");
+            }
+        );
         */
     },
+
+    /****************************** UTILS *************************************/
 
     _checkAuthenticated: function() {
         if (!Ami.authenticated) {
@@ -160,6 +133,41 @@ var Ami = {
         }
         return true;
     },
+
+
+    // _getCallInfo: function(channel) {
+    //
+    //     if (Ami.channel.channel) {
+    //         return Ami.channel.channel;
+    //     } else {
+    //         // richiesta al server da implementare
+    //     }
+    //
+    //
+    // },
+
+    /****************************** LOGIN *************************************/
+
+
+    _login: function() {
+        requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=login&username=' + Config.ami.username + '&secret=' + Config.ami.secret, {},
+            function(response) {
+                Ami.authenticated = true;
+                Ami.manageLoops(Ami.active); // start the loops
+            },
+            function(error) {
+                // console.log('ERRORE', error);
+                showMessageBox("Errore", "Impossibile effettuare login al sitema AMI.", "alert-danger");
+                Ami.authenticated = false;
+
+                // fake it was ok
+                Ami.authenticated = true;
+                Ami.manageLoops(Ami.active); // start the loops
+            }
+        );
+    },
+
+    /****************************** LOOPS *************************************/
 
     _updateDurationLoop: function() {
         // console.log('LOOP DURATION');
@@ -170,10 +178,6 @@ var Ami = {
 
     _updateCallsLoop: function() {
         // console.log('LOOP CALLS');
-        var errorAction = function(error) {
-            console.log('ERRORE', error);
-            showMessageBox("Errore", "Impossibile aggiornare la lista chiamate.", "alert-danger");
-        }
 
         requestData("GET", "xml", Config.ami.url + 'asterisk/mxml?action=coreshowchannels', {}, function(response) {
 
@@ -219,6 +223,8 @@ var Ami = {
                 });
                 uniqueid_relation.push(channel_uniqueid);
             }); // END each channel
+
+            Ami._clearCalls();
 
             calls.forEach(function(acall) {
                 var incoming = 0;
@@ -270,24 +276,20 @@ var Ami = {
                                 acall.name = response.data.name;
                                 Ami._addCall(acall, response.data.recording);
                             },
-                            function(error) {});
+                            function(error) {
+                                console.log('Dati di link fra call<->db non recuperati');
+                            });
                     }
                 };
             }); // END call each
-        }, errorAction); // main request mxml
+        }, function(error) {
+            // console.log('ERRORE', error);
+            showMessageBox("Errore", "Impossibile aggiornare la lista chiamate.", "alert-danger");
+        }); // main request mxml
     },
 
 
-    _getCallInfo: function(channel) {
-
-        if (Ami.channel.channel) {
-            return Ami.channel.channel;
-        } else {
-            // richiesta al server da implementare
-        }
-
-
-    },
+    /*********************** DOM MANIPULATION *********************************/
 
     _clearCalls: function() {
         $('#realtime-table tbody').empty();
@@ -301,13 +303,14 @@ var Ami = {
     _addCall: function(acall, recording) {
 
         // var acall = {
-        //     channel: 'test',
-        //     name: 'nome',
-        //     accountcode: 'account',
+        //     channel: 'canale',
         //     src: 'sorgente',
         //     dst: 'destinazione',
-        //     startcall: '12:30:25',
-        //     duration: 10
+        //     accountcode: 'codice',
+        //     name: 'nome',
+        //     duration: '20',
+        //     uniqueid: 'univoco',
+        //     bridgeduniqueid: 'univocobridge',
         // }
 
         var d = new Date()
@@ -316,8 +319,11 @@ var Ami = {
         filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 
         var actions = '';
-        if (recording) actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>&nbsp;';
-        else actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>&nbsp;';
+        if (recording) {
+            actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>&nbsp;';
+        } else {
+            actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>&nbsp;';
+        }
         actions += '<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
         $('#realtime-table tbody').append(
@@ -344,6 +350,7 @@ var Ami = {
                 $(document.createElement('td')) // Ora inizio
                 .addClass('text-center')
                 .html(acall.startcall),
+
                 $(document.createElement('td')) // Durata
                 .addClass('text-center duration')
                 .html(acall.duration),
