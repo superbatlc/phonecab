@@ -56,11 +56,13 @@
                 <button data-target="#myModal" class="btn btn-primary" onClick="Phoneuser.edit({{ phoneuser.id }})" tabindex="-1">
                 <i class="zmdi zmdi-edit"></i> Modifica
                 </button>&nbsp;&nbsp;
+                {% comment %}
                 {% if user.is_staff %}
                     <button class="btn btn-success disabled" onClick="Phoneuser.export({{ phoneuser.id }})" tabindex="-1">
                         <i class="zmdi zmdi-download"></i> Esporta
                     </button>&nbsp;&nbsp;
                 {% endif %}
+                {% endcomment %}
                 <button class="btn btn-info" onClick="Phoneuser.archive({{ phoneuser.id }})" tabindex="-1">
                 <i class="zmdi zmdi-archive"></i> Archivia
                 </button>

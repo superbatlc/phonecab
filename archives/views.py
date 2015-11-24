@@ -13,6 +13,8 @@ from django.contrib.auth.models import User
 from acls.models import Acl
 from archives.models import *
 from helper.Helper import Helper
+from audits.models import Audit
+from prefs.models import Pref
 
 
 @login_required
@@ -436,4 +438,199 @@ def archive_records_items(request):
     return render_to_string(
         'archives/records/table.html', RequestContext(request, variables))
 
+@login_required
+def archive_cdrs_export_excel(request):
+    import time
+    import xlwt
+    book = xlwt.Workbook(encoding='utf8')
+    sheet = book.add_sheet('Esportazione')
 
+    default_style = xlwt.Style.default_style
+    datetime_style = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
+
+    start_date = request.GET.get("start_date", "")
+    end_date = request.GET.get("end_date", "")
+    start_time = request.GET.get("start_time", "00:00")
+    end_time = request.GET.get("end_time", "23:59")
+    accountcode = request.GET.get("accountcode", "")
+    dst = request.GET.get("dst", "")
+
+    q_obj = Q(accountcode__icontains=accountcode)
+    q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
+    q_obj.add(Q(dcontext='cabs-dial-number')|Q(dcontext='outgoing-operator-dial-number')|Q(dcontext='incoming-operator-dial-number'), Q.AND)
+    q_obj.add(Q(custom_valid=1), Q.AND) # esportiamo solo le chiamate ritenute valide
+    
+    if start_date != '':
+        start_date = Helper.convert_datestring_format(
+            start_date, "%d-%m-%Y", "%Y-%m-%d")
+        start_date = "%s %s:00" % (start_date, start_time)
+        q_obj.add(Q(calldate__gte=start_date), Q.AND)
+
+    if end_date != '':
+        end_date = Helper.convert_datestring_format(
+            end_date, "%d-%m-%Y", "%Y-%m-%d")
+        end_date = "%s %s:59" % (end_date, end_time)
+        q_obj.add(Q(calldate__lte=end_date), Q.AND)
+
+    details = ArchivedDetail.objects.filter(q_obj).order_by('-calldate')
+
+    sheet.write(0, 0, "Data e ora", style=default_style)
+    sheet.write(0, 1, "Codice", style=default_style)
+    sheet.write(0, 2, "Matricola", style=default_style)
+    sheet.write(0, 3, "Cognome e Nome", style=default_style)
+    sheet.write(0, 4, "Sorgente", style=default_style)
+    sheet.write(0, 5, "Destinazione", style=default_style)
+    sheet.write(0, 6, "Numero Autorizzato", style=default_style)
+    sheet.write(0, 7, "Durata", style=default_style)
+    sheet.write(0, 8, "Costo", style=default_style)
+
+    for row, rowdata in enumerate(details):
+        try:
+            archived_phoneuser = ArchivedPhoneUser.objects.get(pincode=rowdata.accountcode)
+            fullname = archived_phoneuser.get_full_name()
+            matricola = archived_phoneuser.serial_no
+            whitelist = ArchivedWhitelist.objects.get(phonenumber=rowdata.custom_dst,
+                archived_phoneuser_id=archived_phoneuser.id)
+            whitelist_label = whitelist.label
+        except:
+            fullname = '-'
+            matricola = '-'
+            whitelist_label = '-'
+
+        calldate = time.strftime("%d-%m-%Y %H:%M:%S",
+                                 time.strptime(str(rowdata.calldate),
+                                               "%Y-%m-%d %H:%M:%S"))
+        billsec = "%sm %ss" % (int(rowdata.billsec / 60), rowdata.billsec % 60)
+        rowdata.price = rowdata.price > 0 and rowdata.price or 0
+        sheet.write(row + 1, 0, calldate, style=datetime_style)
+        sheet.write(row + 1, 1, rowdata.accountcode, style=default_style)
+        sheet.write(row + 1, 2, matricola, style=default_style)
+        sheet.write(row + 1, 3, fullname, style=default_style)
+        sheet.write(row + 1, 4, rowdata.custom_src, style=default_style)
+        sheet.write(row + 1, 5, rowdata.custom_dst, style=default_style)
+        sheet.write(row + 1, 6, whitelist_label, style=default_style)
+        sheet.write(row + 1, 7, billsec, style=default_style)
+        sheet.write(row + 1, 8, rowdata.price, style=default_style)
+
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    filename = 'Dettaglio_chiamate_archiviate.xls'
+    response[
+        'Content-Disposition'] = 'attachment; filename=%s' % filename
+    book.save(response)
+
+    # logghiamo azione
+    audit = Audit()
+    audit.user = request.user
+    d = request.GET.dict()
+    audit.what = "Esportazione lista chiamate archiviate corrispondenti ai seguenti criteri: %s" \
+        % (urlencode(d))
+    audit.save()
+
+    return response
+
+@login_required
+def archive_record_action(request, action, item, archived_record_id=0):
+    """Unica funzione per gestire azioni diverse"""
+    # verifichiamo che l'utente possieda i privilegi
+    # e che non abbia digitato la url direttamente
+    if Acl.get_permission_for_function(
+            request.user.id, Acl.FUNCTION_RECORD) or request.user.is_staff:
+        if action == 'remove':
+            if item == 'single':
+                return _single_record_remove(request, archive_record_id)
+            else:
+                return _multi_record_remove(request)
+        elif action == 'download':
+            if item == 'single':
+                return _single_record_export(request, archive_record_id)
+            else:
+                return _multi_record_export_as_zip_file(request)
+        else:
+            raise Http404
+    else:
+        raise Http403
+
+def _multi_record_export_as_zip_file(request):
+    "Esportazione multifile in formato zip"""
+    import os
+    import contextlib
+    import zipfile
+
+    d = request.GET.dict()
+    start_date = request.GET.get("start_date", "")
+    end_date = request.GET.get("end_date", "")
+    start_time = request.GET.get("start_time", "00:00")
+    end_time = request.GET.get("end_time", "23:59")
+    pincode = request.GET.get("pincode", "")
+
+    q_obj = Q(pincode__icontains=pincode)
+
+    if start_date != '':
+        start_date = Helper.convert_datestring_format(
+            start_date, "%d-%m-%Y", "%Y-%m-%d")
+        start_date = "%s %s:00" % (start_date, start_time)
+        q_obj.add(Q(calldate__gte=start_date), Q.AND)
+
+    if end_date != '':
+        end_date = Helper.convert_datestring_format(
+            end_date, "%d-%m-%Y", "%Y-%m-%d")
+        end_date = "%s %s:59" % (end_date, end_time)
+        q_obj.add(Q(calldate__lte=end_date), Q.AND)
+
+    items_list = ArchivedRecord.objects.filter(q_obj).order_by('-calldate')
+    
+    filename = 'registrazioni'
+    if pincode != '':
+        try:
+            phoneuser = ArchivedPhoneUser.objects.get(pincode=pincode)
+            filename = 'registrazioni %s' % phoneuser
+        except:
+            pass
+    zipname = "%s.zip" % filename
+    tmpzippath = os.path.join(settings.TMP_ZIP_ROOT, zipname)
+    file_counter = 0
+    with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
+        for item in items_list:
+            detail = ArchivedDetail.objects.get(uniqueid=item.uniqueid) 
+            if detail.custom_valid and (detail.dcontext == 'cabs-dial-number' or detail.dcontext == 'outgoing-operator-dial-number' or detail.dcontext == 'incoming-operator-dial-number'):
+                file_counter += 1
+                path = os.path.join(settings.RECORDS_ROOT, item.filename)
+                myzip.write(path, arcname = item.filename) #TODO: verificare effettiva esportazione
+        
+    if not file_counter:
+        return redirect("/archives/records/?err=1&err_msg=Nessuno dei file soddisfa i criteri per l'esportazione&%s" % urlencode(d))
+
+    response = Helper.file_export(tmpzippath)
+
+    # logghiamo azione
+    audit = Audit()
+    audit.user_id = request.user.id
+    detail = Helper.get_filter_detail(d)
+    audit.what = "Esportazione registrazioni archiviate corrispondenti ai seguenti criteri: %s" \
+                            % (detail)
+    audit.save()
+
+    return response
+
+@login_required
+def archive_credit_print_recharge(request, archived_credit_id):
+    """Stampa Singola Ricarica"""
+    import datetime
+    archived_credit_id = int(archived_credit_id)
+    if archived_credit_id:
+        try:
+            archived_credit = ArchivedCredit.objects.get(pk=archived_credit_id)
+            archived_phoneuser = ArchivedPhoneUser.objects.get(pk=archived_credit.archived_phoneuser_id)
+        except:
+            raise Http404
+
+        variables = {
+            'header': Pref.header(),
+            'phoneuser': archived_phoneuser,
+            'today': datetime.date.today().strftime("%d-%m-%Y"),
+            'credit': archived_credit,
+        }
+
+        return render_to_response('phoneusers/credits/print_receipt.html', variables)
+    else:
+        raise Http404

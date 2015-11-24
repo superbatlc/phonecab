@@ -68,13 +68,21 @@ def record_items(request):
     if start_date != '':
         start_date = Helper.convert_datestring_format(
             start_date, "%d-%m-%Y", "%Y-%m-%d")
-        start_date = "%s %s:00" % (start_date, start_time)
+        if start_time:
+            start_time = "%s:00" % start_time
+        else:
+            start_time = "00:00:00"
+        start_date = "%s %s" % (start_date, start_time)
         q_obj.add(Q(calldate__gte=start_date), Q.AND)
 
     if end_date != '':
         end_date = Helper.convert_datestring_format(
             end_date, "%d-%m-%Y", "%Y-%m-%d")
-        end_date = "%s %s:59" % (end_date, end_time)
+        if end_time:
+            end_time = "%s:59" % end_time
+        else:
+            end_time = "23:59:59"
+        end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     items_list = Record.objects.filter(q_obj).order_by('-calldate')
@@ -140,7 +148,6 @@ def record_items(request):
     return render_to_string(
         'records/table.html', RequestContext(request, variables))
 
-
 @login_required
 def record_action(request, action, item, record_id=0):
     """Unica funzione per gestire azioni diverse"""
@@ -163,7 +170,6 @@ def record_action(request, action, item, record_id=0):
     else:
         raise Http403
 
-
 def _single_record_export(request, record_id="0"):
     """Esportazione singolo file"""
     import os
@@ -185,7 +191,6 @@ def _single_record_export(request, record_id="0"):
     audit.save()
 
     return response
-
 
 def _multi_record_export_as_zip_file(request):
     "Esportazione multifile in formato zip"""
@@ -247,7 +252,6 @@ def _multi_record_export_as_zip_file(request):
 
     return response
 
-
 def _single_record_remove(request, record_id):
     """Rimozione fisica singolo record"""
     try:
@@ -258,7 +262,6 @@ def _single_record_remove(request, record_id):
         ret = "0"
 
     return HttpResponse(ret)
-
 
 def _multi_record_remove(request):
     """

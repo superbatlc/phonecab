@@ -181,6 +181,7 @@ def cdr_change_valid(request):
 
 
 def cdr_export_excel(request):
+    import time
     import xlwt
     book = xlwt.Workbook(encoding='utf8')
     sheet = book.add_sheet('Esportazione')
@@ -216,18 +217,26 @@ def cdr_export_excel(request):
 
     sheet.write(0, 0, "Data e ora", style=default_style)
     sheet.write(0, 1, "Codice", style=default_style)
-    sheet.write(0, 2, "Cognome e Nome", style=default_style)
-    sheet.write(0, 3, "Sorgente", style=default_style)
-    sheet.write(0, 4, "Destinazione", style=default_style)
-    sheet.write(0, 5, "Durata", style=default_style)
-    sheet.write(0, 6, "Costo", style=default_style)
+    sheet.write(0, 2, "Matricola", style=default_style)
+    sheet.write(0, 3, "Cognome e Nome", style=default_style)
+    sheet.write(0, 4, "Sorgente", style=default_style)
+    sheet.write(0, 5, "Destinazione", style=default_style)
+    sheet.write(0, 6, "Numero Autorizzato", style=default_style)
+    sheet.write(0, 7, "Durata", style=default_style)
+    sheet.write(0, 8, "Costo", style=default_style)
 
     for row, rowdata in enumerate(details):
         try:
             phoneuser = PhoneUser.objects.get(pincode=rowdata.accountcode)
             fullname = phoneuser.get_full_name()
+            matricola = phoneuser.serial_no
+            whitelist = Whitelist.objects.get(phonenumber=rowdata.custom_dst,
+                phoneuser_id=phoneuser.id)
+            whitelist_label = whitelist.label
         except:
             fullname = '-'
+            matricola = '-'
+            whitelist_label = '-'
 
         calldate = time.strftime("%d-%m-%Y %H:%M:%S",
                                  time.strptime(str(rowdata.calldate),
@@ -236,24 +245,26 @@ def cdr_export_excel(request):
         rowdata.price = rowdata.price > 0 and rowdata.price or 0
         sheet.write(row + 1, 0, calldate, style=datetime_style)
         sheet.write(row + 1, 1, rowdata.accountcode, style=default_style)
-        sheet.write(row + 1, 2, fullname, style=default_style)
-        sheet.write(row + 1, 3, rowdata.custom_src, style=default_style)
-        sheet.write(row + 1, 4, rowdata.custom_dst, style=default_style)
-        sheet.write(row + 1, 5, billsec, style=default_style)
-        sheet.write(row + 1, 6, rowdata.price, style=default_style)
+        sheet.write(row + 1, 2, matricola, style=default_style)
+        sheet.write(row + 1, 3, fullname, style=default_style)
+        sheet.write(row + 1, 4, rowdata.custom_src, style=default_style)
+        sheet.write(row + 1, 5, rowdata.custom_dst, style=default_style)
+        sheet.write(row + 1, 6, whitelist_label, style=default_style)
+        sheet.write(row + 1, 7, billsec, style=default_style)
+        sheet.write(row + 1, 8, rowdata.price, style=default_style)
 
-        response = HttpResponse(mimetype='application/vnd.ms-excel')
-        filename = 'Dettaglio_chiamate.xls'
-        response[
-            'Content-Disposition'] = 'attachment; filename=%s' % filename
-        book.save(response)
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    filename = 'Dettaglio_chiamate.xls'
+    response[
+        'Content-Disposition'] = 'attachment; filename=%s' % filename
+    book.save(response)
 
     # logghiamo azione
     audit = Audit()
     audit.user = request.user
     d = request.GET.dict()
-    audit.what = "L'utente %s ha esportato in formato excel una lista chiamate corrispondenti ai seguenti criteri: %s" \
-        % (request.user.username, urlencode(d))
+    audit.what = "Esportazione lista chiamate corrispondenti ai seguenti criteri: %s" \
+        % (urlencode(d))
     audit.save()
 
     return response

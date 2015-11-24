@@ -568,14 +568,14 @@ def _get_extra_call(accountcode, dst):
 
 
 @login_required
-def whitelist_check_prefix(request):
+def whitelist_check_prefix(request): # TODO verificare
     from prefs.models import Fare
     phonenumber = request.POST.get("phonenumber", "0")
     ret = 0
     if(phonenumber):
         ret = Fare.check_prefix_existance(phonenumber)
 
-    return HttpResponse(ret, mimetype='text/plain')
+    return HttpResponse(ret, content_tyep='text/plain')
 
 
 @login_required

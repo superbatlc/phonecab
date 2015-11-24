@@ -252,6 +252,7 @@ class ArchivedDetail(models.Model):
     custom_src = models.CharField(max_length=80, default='')
     custom_dst = models.CharField(max_length=80, default='')
     custom_calltype = models.IntegerField(default=0)
+    custom_valid = models.IntegerField(default=0)
 
     def copy(self, detail):
         self.calldate = detail.calldate
@@ -277,6 +278,7 @@ class ArchivedDetail(models.Model):
         self.custom_src = detail.custom_src
         self.custom_dst = detail.custom_dst
         self.custom_calltype = detail.custom_calltype
+        self.custom_valid = detail.custom_valid
 
 
 class ArchivedRecord(models.Model):

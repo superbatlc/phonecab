@@ -22,11 +22,11 @@
                     <i class="zmdi zmdi-search mdc-text-grey"></i>
                 </a>
                 &nbsp;
-                <a href="/archives/cdrs/{{ item.id }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Mostra le chiamate archiviate effettuate da {{ item.last_name }} {{ item.first_name }}" data-toggle="tooltip" data-original-title="" title="">
+                <a href="/archives/cdrs/?archived_phoneuser_id={{ item.id }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Mostra le chiamate archiviate effettuate da {{ item.last_name }} {{ item.first_name }}" data-toggle="tooltip" data-original-title="" title="">
                     <i class="zmdi zmdi-phone"></i>
                 </a>
                 &nbsp;
-                <a href="/archives/records/{{ item.id }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Mostra le registrazioni archiviate relative a {{ item.last_name }} {{ item.first_name }}" data-toggle="tooltip" data-original-title="" title="">
+                <a href="/archives/records/?archived_phoneuser_id={{ item.id }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Mostra le registrazioni archiviate relative a {{ item.last_name }} {{ item.first_name }}" data-toggle="tooltip" data-original-title="" title="">
                     <i class="zmdi zmdi-playlist-audio"></i>
                 </a>
             </td>

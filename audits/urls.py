@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from .views import *
-from archives.views import archive_cdrs_home
 
 urlpatterns = [
    url(r'^audits/$', audit_home),

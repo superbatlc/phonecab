@@ -59,7 +59,7 @@
             <h4>Numero Chiamate: {{ total_items }} - Costo Chiamate: {{ total_costs }}&nbsp;&euro;</h4>
     	</div>
     	<div class="col-md-2">
-    		<a href="/cdrs/export/excel/?{{ query_string }}" class="btn btn-success"><i class="zmdi zmdi-download"></i> Esporta</a>
+    		<a href="/cdrs/export/excel/?{{ query_string }}" class="btn btn-success" data-help="Esportazione delle sole chiamate valide"><i class="zmdi zmdi-download"></i> Esporta</a>
     	</div>
     	<div class="col-md-4" style="text-align:right;">
     		{{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;

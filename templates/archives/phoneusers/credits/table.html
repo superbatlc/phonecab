@@ -20,10 +20,10 @@
                 <td>{{ c.recharge_date|utc|date:"d-m-Y" }}</td>
                 <td>{{ c.reason }}</td>
                 <td style="text-align:right;">{{ c.recharge }}</td>
-                <!--<td style="text-align:center;">
-                <a href="/credits/print_recharge/{{ c.id }}" target="_blank" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Stampa la ricevuta relativa a questa ricarica" data-toggle="tooltip" data-original-title="" title="">
+                <td style="text-align:center;">
+                <a href="/archives/credits/print_recharge/{{ c.id }}" target="_blank" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Stampa la ricevuta relativa a questa ricarica archiviata" data-toggle="tooltip" data-original-title="" title="">
                     <i class="zmdi zmdi-print mdc-text-grey"></i>
-                </a></td>-->
+                </a></td>
                 </tr>
                 {% endfor %}
             {% endif %}

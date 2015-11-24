@@ -52,8 +52,8 @@
                     <h4>Numero Registrazioni: {{ total_items }}</h4>
                     </div>
                     <div class="col-md-3" class="text-align:center">
-                        <a href="/records/export/?{{ query_string }}" class="btn btn-success" style="float:left;"><i class="zmdi zmdi-download"></i> Esporta</a>
-                        <a href="/records/remove/?{{ query_string }}" class="btn btn-danger records-confirm-remove hide" style="float:right;"><i class="zmdi zmdi-close"> Elimina registrazioni</i></a>
+                        <a href="/archives/records/export/?{{ query_string }}" class="btn btn-success" style="float:left;"><i class="zmdi zmdi-download"></i> Esporta</a>
+                        <a href="/archives/records/remove/?{{ query_string }}" class="btn btn-danger records-confirm-remove hide" style="float:right;"><i class="zmdi zmdi-close"> Elimina registrazioni</i></a>
                     </div>
                     <div class="col-md-5" style="text-align:right;">
                         {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;

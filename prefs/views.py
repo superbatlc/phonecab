@@ -91,7 +91,6 @@ def prefs_save(request):
         p.value = header
         p.save(request.user)
 
-        # return HttpResponse(ret, mimetype='text/plain')
         return redirect('/prefs/edit/')
 
     except Exception as e:
