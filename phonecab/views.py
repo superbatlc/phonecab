@@ -30,7 +30,11 @@ def phonecab_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return redirect('/phonecab/', RequestContext(request, {}))
+                # dobbiamo verificare se utente ha privilegi cdr
+                privs = Acl.get_permissions_for_user(user.id, user.is_staff)
+                if privs['priv_cdr'] > 0:
+                    return redirect('/phonecab/', RequestContext(request, {}))
+                return redirect('/phoneusers/', RequestContext(request, {}))
             else:
                 return render_to_response(
                     'registration/login.html',

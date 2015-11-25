@@ -29,8 +29,10 @@
 				</div>
 			</div> -->
 			<ul class="menu-links">
+                {% if priv_cdr > 0 %}
 				<li> <a href="/phonecab" data-menu="phonecab"><i class="zmdi zmdi-time"></i>&nbsp;<span>Tempo reale</span></a></li>
-				{% if priv_anagrafica > 1 %}
+                {% endif %}
+				{% if priv_anagrafica > 0 %}
 				<li> <a href="/phoneusers/" data-menu="phoneusers"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafiche</span></a></li>
 				{% endif %}
 				{% if priv_cdr > 0 %}
@@ -39,11 +41,11 @@
 				{% if priv_record > 0 %}
 				<li> <a href="/records/" data-menu="records"><i class="zmdi zmdi-mic"></i>&nbsp;<span>Registrazioni</span></a></li>
 				{% endif %}
+                {% if user.is_staff %}
 				<li> <a href="/profiles/" data-menu="profiles"><i class="zmdi zmdi-account-circle"></i>&nbsp;<span>Utenti</span></a></li>
-				{% if user.is_staff %}
 				<li> <a href="/prefs/edit/" data-menu="prefs"><i class="zmdi zmdi-settings"></i>&nbsp;<span>Preferenze</span></a></li>
-				{% endif %}
 				<li> <a href="/audits" data-menu="audits"><i class="zmdi zmdi-search-in-file"></i>&nbsp;<span>Audit</span></a></li>
+                {% endif %}
 			</ul>
 		</aside>
 		<div class="main-container">

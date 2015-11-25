@@ -1,18 +1,21 @@
 var Profile = {
 
     edit : function(id){
-        requestData("POST", "html", '/profiles/edit/', {id : id}, function(response){
-            var title = "Nuovo Utente";
-            if (id) title = "Modifica Utente";
-            var dict = {
-                title : title,
-                content : response,
-                onSave : Profile.save,
-                onRemove : null,
+        requestData("POST", "html", '/profiles/edit/', {id : id},
+            function(response){
+                var title = "Nuovo Utente";
+                if (id) title = "Modifica Utente";
+                var dict = {
+                    title : title,
+                    content : response,
+                    onSave : Profile.save,
+                    onRemove : null,
+                }
+                Modal.open(dict);
+            }, function(error){
+                showMessageBox("Errore", "Errore apertura maschera di modifica.", "alert-danger");
             }
-            Modal.open(dict);
-
-        });
+        );
     },
 
     check : function(isNew,callback){
@@ -40,7 +43,6 @@ var Profile = {
         var data = {};
         var isNew = false;
         data.profile_id = $('#profile-id').val();
-        console.log(data.profile_id);
         if (data.profile_id == "None" || data.profile_id == ''){
             data.profile_id = "0";
             isNew = true;
@@ -51,7 +53,6 @@ var Profile = {
             // chiama il callback di save con {success:bool} al termine
             if (!callback_return.success) { callback({success:false}); return; }
 
-            
             data.is_admin = 0
             if($("input[type=radio]#profile-type-ad").is(':checked')){
                 data.is_admin = 1
@@ -102,10 +103,8 @@ var Profile = {
 
             requestData("POST", "html", '/profiles/save/', {data : data},
                 function(response){
-                  if(isNew) {
-                    updateDOM('#profiles', response); 
-                  }
-                  else updateDOM('#profiles', response);
+                  updateDOM('#profiles', response);
+                  showMessageBox("Conferma", "Salvataggio utente effettuato con successo.", "green");
                   callback({success:true}); return;
                 },
                 function(error){

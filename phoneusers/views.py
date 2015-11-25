@@ -317,11 +317,6 @@ def phoneuser_realtime_info(request):
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
-    
-
-
-
-
 @login_required
 def whitelist_items(request, phoneuser_id):
     phoneuser_id = int(phoneuser_id)
@@ -342,7 +337,6 @@ def whitelist_items(request, phoneuser_id):
 
     return render_to_string(
         'phoneusers/whitelists/table.html', RequestContext(request, variables))
-
 
 @login_required
 def whitelist_edit(request):
@@ -371,7 +365,6 @@ def whitelist_edit(request):
     variables['change_threshold'] = Pref.get("change_threshold")
 
     return render_to_response('phoneusers/whitelists/whitelist.html', variables)
-
 
 @login_required
 def whitelist_save(request):
@@ -413,7 +406,6 @@ def whitelist_save(request):
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
-    
 @login_required
 def whitelist_remove(request):
     whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
@@ -486,7 +478,6 @@ def whitelist_change_ordinary(request):
     else:
         raise Http404
     
-
 @login_required
 def whitelist_check_extra(request): # TODO verificare i valori ritornati
 
@@ -566,7 +557,6 @@ def _get_extra_call(accountcode, dst):
 
     return (weekcalls, monthcalls)
 
-
 @login_required
 def whitelist_check_prefix(request): # TODO verificare
     from prefs.models import Fare
@@ -577,11 +567,10 @@ def whitelist_check_prefix(request): # TODO verificare
 
     return HttpResponse(ret, content_tyep='text/plain')
 
-
 @login_required
 def credit_items(request, phoneuser_id):
 
-    items_per_page = 10
+    items_per_page = int(settings.ITEMS_PER_PAGE)
 
     d = request.GET.dict()
     phoneuser_id = int(phoneuser_id)

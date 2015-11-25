@@ -1,7 +1,9 @@
 {% load tz %}
 <div class="card bordered">
     <div class="card-header">
+    {% if priv_credit > 1 %}
       <button class="action btn btn-primary btn-sm" onClick="Credit.new()"><i class="zmdi zmdi-plus"></i> Nuova Ricarica</button>
+    {% endif %}
       <span class="card-title"><i class="zmdi zmdi-money"></i> Ricariche</span>
     </div>
     <div class="table-responsive white">

@@ -5,12 +5,14 @@
 {% endblock stylesheet %}
 {% block application %}
 <div class="page-header">
+  {% if priv_anagrafica > 1 %}
   <button class="action btn btn-primary"
           onClick="Phoneuser.edit(0)"
           data-toggle="tooltip" type="button">
     <span class="zmdi zmdi-plus"></span> Nuova Anagrafica
     <div class="ripple-wrapper"></div>
   </button>
+  {% endif %}
   <a href="/archives/phoneusers/" class="action btn btn-info">
     <span class="zmdi zmdi-chevron-right"></span> Archivio
     <div class="ripple-wrapper"></div>

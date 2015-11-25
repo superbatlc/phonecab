@@ -1,19 +1,21 @@
 var Phoneuser = {
 
         edit : function(id){
-            requestData("POST", "html", '/phoneusers/edit/', {id : id}, function(response){
-                var title = "Nuova Anagrafica";
-                if (id) title = "Modifica Anagrafica";
-                var dict = {
-                    title : title,
-                    content : response,
-                    onSave : Phoneuser.save,
-                    onRemove : null,
-                }
+            requestData("POST", "html", '/phoneusers/edit/', {id : id}, 
+                function(response){
+                    var title = "Nuova Anagrafica";
+                    if (id) title = "Modifica Anagrafica";
+                    var dict = {
+                        title : title,
+                        content : response,
+                        onSave : Phoneuser.save,
+                        onRemove : null,
+                    }
                 Modal.open(dict);
-            }, function(error){
-                showMessageBox("Errore", "Errore apertura maschera di modifica.", "alert-danger");
-            });
+                }, function(error){
+                    showMessageBox("Errore", "Errore apertura maschera di modifica.", "alert-danger");
+                }
+            );
         },
 
         check : function(isNew,callback){
@@ -80,17 +82,18 @@ var Phoneuser = {
                 //
 
                 requestData("POST", "html", '/phoneusers/save/', {data : data},
-                function(response){
-                  if(isNew) {
-                    updateDOM('#phoneusers', response); // ricarichiamo la lista
-                  }
-                  else updateDOM('#phoneuser', response); // ricarichiamo il dettaglio
-                  showMessageBox("Conferma", "Salvataggio anagrafica effettuato con successo.", "green");
-                  callback({success:true}); return;
-                },function(error){
-                  showMessageBox("Errore", "Errore salvataggio.", "alert-danger");
-                  callback({success:false}); return;
-                });
+                    function(response){
+                      if(isNew) {
+                        updateDOM('#phoneusers', response); // ricarichiamo la lista
+                      }
+                      else updateDOM('#phoneuser', response); // ricarichiamo il dettaglio
+                      showMessageBox("Conferma", "Salvataggio anagrafica effettuato con successo.", "green");
+                      callback({success:true}); return;
+                    },function(error){
+                      showMessageBox("Errore", "Errore salvataggio.", "alert-danger");
+                      callback({success:false}); return;
+                    }
+                );
             }
 
             // chiama postCheck al termine del check (passando {success:bool})
