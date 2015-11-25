@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^archives/cdrs/export/excel/$', archive_cdrs_export_excel),
     url(r'^archives/records/export/$', archive_record_action, {'action': 'download', 'item': 'all'}),
     url(r'^archives/credits/print_recharge/(?P<archived_credit_id>[0-9]*)$', archive_credit_print_recharge),
-    #url(r'^archives/credits/export/(?P<archived_phoneuser_id>[0-9]*)$', archive_credit_export),
+    url(r'^archives/credits/export/(?P<archived_phoneuser_id>[0-9]*)$', archive_credit_export),
 ]

@@ -166,6 +166,7 @@ def archive_credit_items(request, archived_phoneuser_id):
 
     variables['items'] = credits
     variables['balance'] = archivedphoneuser.balance
+    variables['archived_phoneuser_id'] = archived_phoneuser_id
 
     if request.is_ajax():
         return render_to_response(
@@ -305,6 +306,7 @@ def archive_cdrs_items(request):
     variables['end_item'] = end_item
     variables['query_string'] = urlencode(d)
     variables['d'] = d
+    variables['archived_phoneuser_id'] = archived_phoneuser_id
 
     if request.is_ajax():
         return render_to_response(
@@ -632,5 +634,33 @@ def archive_credit_print_recharge(request, archived_credit_id):
         }
 
         return render_to_response('phoneusers/credits/print_receipt.html', variables)
+    else:
+        raise Http404
+
+@login_required
+def archive_credit_export(request, archived_phoneuser_id=0):
+    """Stampa bilancio"""
+    import datetime
+    archived_phoneuser_id = int(archived_phoneuser_id)
+    if archived_phoneuser_id:
+        try:
+            archived_phoneuser = ArchivedPhoneUser.objects.get(pk=archived_phoneuser_id)
+        except:
+            raise Http404
+
+        recharges = ArchivedCredit.objects.filter(archived_phoneuser_id=archived_phoneuser_id)
+        tot_recharges = ArchivedCredit.get_total(archived_phoneuser_id)
+        tot_cost = ArchivedDetail.get_cost(archived_phoneuser_id)
+
+        variables = {
+            'header': Pref.header(),
+            'phoneuser': archived_phoneuser,
+            'today': datetime.date.today().strftime("%d-%m-%Y"),
+            'recharges': recharges,
+            'tot_recharges': tot_recharges,
+            'tot_cost': tot_cost,
+        }
+
+        return render_to_response('phoneusers/credits/report.html', variables)
     else:
         raise Http404

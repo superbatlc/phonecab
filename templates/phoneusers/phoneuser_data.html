@@ -22,7 +22,7 @@
             </span>
         </div>
         <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
-       {% if not phoneuser.four_bis_limited %}<small>(4bis limitato)</small>{% endif %}</h3>
+       {% if phoneuser.four_bis_limited %}<small>(4bis limitato)</small>{% endif %}</h3>
         <div class="row">
             <div class="col-md-4">
                 <h4 style="color:#666;">Codice: {{ phoneuser.pincode }}</h4>

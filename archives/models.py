@@ -219,6 +219,12 @@ class ArchivedCredit(models.Model):
         self.recharge_date = credit.recharge_date
         self.reason = credit.reason
 
+    @staticmethod
+    def get_total(archived_phoneuser_id):
+        """Restituisce il totale delle ricariche effettuate"""
+        total = ArchivedCredit.objects.filter(archived_phoneuser_id=archived_phoneuser_id).aggregate(total=models.Sum('recharge'))
+        return total['total']
+
 
 class ArchivedDetail(models.Model):
     """
@@ -279,6 +285,16 @@ class ArchivedDetail(models.Model):
         self.custom_dst = detail.custom_dst
         self.custom_calltype = detail.custom_calltype
         self.custom_valid = detail.custom_valid
+
+    @staticmethod
+    def get_cost(archived_phoneuser_id):
+        """Calcola il totale dei costi sostenuti"""
+        try:
+            total = Detail.objects.filter(archived_phoneuser_id=archived_phoneuser_id).aggregate(total=models.Sum('price'))
+            return total['total']
+        except Exception as e:
+            print format(e)
+            pass #TODO gestire errore
 
 
 class ArchivedRecord(models.Model):
