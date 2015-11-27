@@ -64,10 +64,10 @@
         <div class="col-md-6">
             <h4>Numero anagrafiche: {{ total_items }}&nbsp;&nbsp;</h4>
         </div>
-        <div class="col-md-2">
+        <!--<div class="col-md-2">
             <a href="/phoneusers/export/excel/?{{ query_string }}" class="btn btn-success"><i class="zmdi zmdi-download"></i> Esporta</a>
-        </div>
-        <div class="col-md-4" style="text-align:right;">
+        </div>-->
+        <div class="col-md-6" style="text-align:right;">
             {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
             <a href="?page={{ prev_page }}&amp;{{ query_string }}" class="btn btn-info {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
             <a href="?page={{ next_page }}&amp;{{ query_string }}" class="btn btn-info {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>
