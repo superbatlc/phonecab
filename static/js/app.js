@@ -273,7 +273,7 @@ $(function() {
   $('.bootstrap-tagsinput input').attr('tabindex','-1'); //avoid TAB on tagsinput inputs
 
 
-  $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="tooltip"]').tooltip({'html': true});
   $('[data-toggle="popover"]').popover();
 
 

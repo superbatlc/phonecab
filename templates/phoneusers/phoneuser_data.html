@@ -41,12 +41,12 @@
             {% if priv_anagrafica > 1 %}
             <div class="col-md-6">
             {% if phoneuser.enabled %}
-                <button class="btn green switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)">
+                <button class="btn green switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)" data-help="Lo stato della scheda determina la possibilit&agrave; o meno di effettuare telefonate.">
                 <span class="status"><i class="zmdi zmdi-check"></i> SCHEDA ATTIVA</span>
                 <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LA SCHEDA</span>
                 </button>
             {% else %}
-                <button class="btn red switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)">
+                <button class="btn red switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 1)" data-help="Lo stato della scheda determina la possibilit&agrave; o meno di effettuare telefonate.">
                 <span class="status"><i class="zmdi zmdi-close"></i> SCHEDA DISATTIVA</span>
                 <span class="action"><i class="zmdi zmdi-check"></i> ATTIVA LA SCHEDA</span>
                 </button>
@@ -63,7 +63,7 @@
                     </button>&nbsp;&nbsp;
                 {% endif %}
                 {% endcomment %}
-                <button class="btn btn-info" onClick="Phoneuser.archive({{ phoneuser.id }})" tabindex="-1">
+                <button class="btn btn-info" onClick="Phoneuser.archive({{ phoneuser.id }})" tabindex="-1" data-help="Archiviazione di tutti i dati relativi alla anagrafica">
                 <i class="zmdi zmdi-archive"></i> Archivia
                 </button>
             </div>
