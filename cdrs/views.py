@@ -13,7 +13,7 @@ from cdrs.models import Detail
 from phoneusers.models import PhoneUser, Whitelist
 from audits.models import Audit
 from acls.models import Acl
-from prefs.models import Pref
+from prefs.models import Pref, Extension
 from helper.Helper import Helper
 
 
@@ -113,10 +113,9 @@ def cdr_items(request):
         except Exception as e:
             pass
 
-        #variables['callrange'] = call_range
-        #variables['call_next_page'] = call_next_page
-        #variables['query_string'] = urlencode(d)
-        #variables['d'] = d
+        src_name = Extension.get_extension_name(item.custom_src)
+        if src_name:
+            item.custom_src = "%s (%s)" % (src_name, item.custom_src)
 
     prev_page = page - 1
     prev_page_disabled = ''

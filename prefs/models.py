@@ -120,3 +120,28 @@ class Fare(models.Model):
                     result.append("^%s[0-9]+" % prefix.strip())
 
             self.reg_exp = "|".join(result)
+
+
+class Extension(models.Model):
+    """
+    Definisce i nomi che si vogliono assegnare agli inetrni
+    """
+
+    extension = models.CharField(max_length=5, default='')
+    name = models.CharField(max_length=20, default='')
+
+
+    @staticmethod
+    def get_extension_name(extension):
+        name = None
+        try:
+            ext = Extension.objects.get(extension=extension)
+            name = ext.name
+        except:
+            pass
+        return name
+
+
+
+
+

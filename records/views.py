@@ -14,7 +14,7 @@ from helper.Helper import Helper
 from phoneusers.models import PhoneUser, Whitelist
 from cdrs.models import Detail
 from audits.models import Audit
-from prefs.models import Pref
+from prefs.models import Pref, Extension
 from helper.Helper import Helper
 from helper.http import Http403
 
@@ -100,6 +100,10 @@ def record_items(request):
                 item.detail.custom_dst = ''
             else:
                 item.detail = details[0]
+                src_name = Extension.get_extension_name(item.detail.custom_src)
+                if src_name:
+                    item.detail.custom_src = "%s (%s)" % (src_name, item.detail.custom_src)
+                    print item.detail.custom_src
             item.whitelist = Whitelist.objects.get(
                 phoneuser_id=item.phoneuser.id, phonenumber=item.detail.custom_dst)
         except Exception as e:
@@ -107,6 +111,7 @@ def record_items(request):
 
         if item.filename != '':
             item.filename = "/recordings/%s" % item.filename
+
 
     prev_page = page - 1
     prev_page_disabled = ''

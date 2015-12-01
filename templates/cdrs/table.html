@@ -11,7 +11,7 @@
         <th style="width:60px;" class="acentro">Codice</th>
         <th style="width:80px;" class="acentro">Matricola</th>
         <th style="width:auto;">Nome Cognome</th>
-        <th style="width:90px;" class="acentro">Sorgente</th>
+        <th style="width:120px;" class="acentro">Sorgente</th>
         <th style="width:90px;" class="acentro">Destinazione</th>
         <th style="width:260px;">Numero Autorizzato</th>
         <th style="width:60px;" class="adestra">Durata</th>
@@ -23,11 +23,11 @@
         <tr>
         <td class="acentro">
             {% if item.custom_valid %}
-                <button class="btn btn-round btn-link" onClick="Cdr.changeValid({{ item.id }}, 0)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endfor %}>
+                <button class="btn btn-round btn-link" onClick="Cdr.changeValid({{ item.id }}, 0)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endif %}>
         		<i class="zmdi zmdi-check zmdi-hc-lg"></i>
                 </button>
             {% else %}
-                <button class="btn btn-round btn-link"  onClick="Cdr.changeValid({{ item.id }}, 1)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endfor %}>
+                <button class="btn btn-round btn-link"  onClick="Cdr.changeValid({{ item.id }}, 1)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endif %}>
         		<i class="zmdi zmdi-close zmdi-hc-lg"></i>
                 </button>
             {% endif %}
