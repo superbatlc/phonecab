@@ -17,7 +17,7 @@ from audits.models import Audit
 from helper.Helper import Helper
 from helper import http
 from acls.models import Acl
-from prefs.models import Pref
+from prefs.models import Pref, Extension
 from archives.models import ArchivedPhoneUser
 
 
@@ -288,6 +288,7 @@ def phoneuser_realtime_info(request):
     """Get call info for realtime displaying"""
     pincode = request.POST.get("data[pincode]", "")
     dst = request.POST.get("data[dst]", "")
+    src = request.POST.get("data[src]", "")
 
     values = {
               'data': {},
@@ -297,6 +298,7 @@ def phoneuser_realtime_info(request):
 
     values['data']['name'] = 'Non disponibile'
     values['data']['dst'] = 'Non disponibile'
+    values['data']['src'] = 'Non disponibile'
     values['data']['recording'] = 'show'
     try:
         if accountcode:
@@ -310,6 +312,11 @@ def phoneuser_realtime_info(request):
                         values['data']['dst'] = "%s %s" % (dst, whitelist.label)
                         if whitelist.frequency == 1:
                             values['data']['recording'] = 'hidden'
+                    src_name = Extension.get_extension_name(src)
+                    if src_name:
+                        values['data']['src_name'] = "%s (%s)" % (src_name, src)
+                    else:
+                        values['data']['src_name'] = src
 
 
         return HttpResponse(json.dumps(values), content_type="application/json")

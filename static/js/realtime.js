@@ -282,10 +282,12 @@ var Ami = {
                         var data = {};
                         data.pincode = acall.accountcode;
                         data.dst = acall.dst;
+                        data.src = acall.src;
 
                         requestData("POST", "json", '/phoneusers/realtime/info/', {data: data}, function(response) {
                                 acall.name = response.data.name;
                                 acall.dst = response.data.dst;
+                                acall.src = response.data.src_name
                                 Ami._addCall(acall, response.data.recording);
                             },
                             function(error) {
