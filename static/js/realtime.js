@@ -204,7 +204,7 @@ var Ami = {
 
             // No calls, no reason to continue
             if (channels.length == 0) return;
-	        console.log("channels :" + channels);
+	        console.log("channels :", channels);
             channels.forEach(function(response) {
 
                 var channel = response.generic.channel;
@@ -351,7 +351,7 @@ var Ami = {
             .attr('id', 'call-' + acall.uniqueid)
             .append([
                 $(document.createElement('td')) // Anagrafica
-                .addClass('text-center')
+                .addClass('text-left')
                 .html(acall.name),
 
                 $(document.createElement('td')) // Codice
