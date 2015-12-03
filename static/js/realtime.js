@@ -204,7 +204,7 @@ var Ami = {
 
             // No calls, no reason to continue
             if (channels.length == 0) return;
-	    console.log("channels :" + channels);
+	        console.log("channels :" + channels);
             channels.forEach(function(response) {
 
                 var channel = response.generic.channel;

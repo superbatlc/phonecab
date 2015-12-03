@@ -283,7 +283,7 @@ def phoneuser_name(request, accountcode):
 
     return HttpResponse(json.dumps(values), content_type="application/json")
 
-@login_required
+#@login_required
 def phoneuser_realtime_info(request):
     """Get call info for realtime displaying"""
     pincode = request.POST.get("data[pincode]", "")
@@ -299,25 +299,24 @@ def phoneuser_realtime_info(request):
     values['data']['name'] = 'Non disponibile'
     values['data']['dst'] = 'Non disponibile'
     values['data']['src'] = 'Non disponibile'
-    values['data']['recording'] = 'show'
+    values['data']['recording'] = 'hidden'
     try:
         if pincode:
-                phoneuser = PhoneUser.get_from_pincode(pincode)
-                if phoneuser:
-                    values['data']['name'] = phoneuser.get_full_name()
-                    if phoneuser.recording_enabled:
-                        values['data']['recording'] = 'progress'
-                    if dst:
-                        whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
-                        values['data']['dst'] = "%s %s" % (dst, whitelist.label)
-                        if whitelist.frequency == 1:
-                            values['data']['recording'] = 'hidden'
-                    src_name = Extension.get_extension_name(src)
-                    if src_name:
-                        values['data']['src_name'] = "%s (%s)" % (src_name, src)
-                    else:
-                        values['data']['src_name'] = src
-
+            phoneuser = PhoneUser.get_from_pincode(pincode)
+            if phoneuser:
+                values['data']['name'] = phoneuser.get_full_name()
+                if phoneuser.recording_enabled:
+                    values['data']['recording'] = 'progress'
+                if dst:
+                    whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
+                    values['data']['dst'] = "%s %s" % (dst, whitelist.label)
+                    if whitelist.frequency == 1:
+                        values['data']['recording'] = 'hidden'
+                src_name = Extension.get_extension_name(src)
+                if src_name:
+                    values['data']['src_name'] = "%s (%s)" % (src_name, src)
+                else:
+                    values['data']['src_name'] = src
 
         return HttpResponse(json.dumps(values), content_type="application/json")
 
