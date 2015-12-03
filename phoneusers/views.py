@@ -301,7 +301,7 @@ def phoneuser_realtime_info(request):
     values['data']['src'] = 'Non disponibile'
     values['data']['recording'] = 'show'
     try:
-        if accountcode:
+        if pincode:
                 phoneuser = PhoneUser.get_from_pincode(pincode)
                 if phoneuser:
                     values['data']['name'] = phoneuser.get_full_name()

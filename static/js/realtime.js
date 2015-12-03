@@ -12,7 +12,7 @@ var Realtime = {
     },
 
     _updateActiveLoop() {
-        console.log('LOOP ACTIVE');
+        //console.log('LOOP ACTIVE');
         requestData("GET", "json", '/nightmode', {}, function(response) {
             Realtime._setActive(!response.nightmode);
         });
@@ -171,7 +171,7 @@ var Ami = {
     /****************************** LOOPS *************************************/
 
     _updateDurationLoop: function() {
-        console.log('LOOP DURATION');
+        //console.log('LOOP DURATION');
         $('#realtime-table .duration').each(function(i) {
             var time = $(this).html().split(':');
             if (time.length!=3) { return; }
@@ -183,7 +183,7 @@ var Ami = {
     },
 
     _updateCallsLoop: function() {
-        console.log('LOOP CALLS');
+        //console.log('LOOP CALLS');
         if (!Ami._checkAuthenticated) return;
 
         requestData("GET", "xml", Config.ami.url + '?action=coreshowchannels', {}, function(response) {
@@ -204,7 +204,7 @@ var Ami = {
 
             // No calls, no reason to continue
             if (channels.length == 0) return;
-
+	    console.log("channels :" + channels);
             channels.forEach(function(response) {
 
                 var channel = response.generic.channel;
