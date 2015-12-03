@@ -283,7 +283,7 @@ def phoneuser_name(request, accountcode):
 
     return HttpResponse(json.dumps(values), content_type="application/json")
 
-#@login_required
+@login_required
 def phoneuser_realtime_info(request):
     """Get call info for realtime displaying"""
     pincode = request.POST.get("data[pincode]", "")
