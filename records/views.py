@@ -54,6 +54,7 @@ def record_items(request):
     start_time = request.GET.get("start_time", "00:00")
     end_time = request.GET.get("end_time", "23:59")
     pincode = request.GET.get("pincode", "")
+    dst = request.GET.get("dst", "")
     page = int(request.GET.get("page", "1"))
     d = request.GET.dict()
 
@@ -86,7 +87,20 @@ def record_items(request):
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     items_list = Record.objects.filter(q_obj).order_by('-calldate')
-    total_items = items_list.count()
+
+    if dst != '':
+        filtered_item_list = []
+        for item in items_list:
+            try:
+                detail = Detail.objects.get(uniqueid=item.uniqueid)
+                if dst in detail.custom_dst:
+                    filtered_item_list.append(item)
+            except:
+                pass
+        items_list = filtered_item_list
+
+    #total_items = items_list.count()
+    total_items = len(items_list)
 
     items, items_range, items_next_page = Helper.make_pagination(
         items_list, page, items_per_page)
@@ -103,11 +117,10 @@ def record_items(request):
                 src_name = Extension.get_extension_name(item.detail.custom_src)
                 if src_name:
                     item.detail.custom_src = "%s (%s)" % (src_name, item.detail.custom_src)
-                    print item.detail.custom_src
             item.whitelist = Whitelist.objects.get(
                 phoneuser_id=item.phoneuser.id, phonenumber=item.detail.custom_dst)
         except Exception as e:
-            print "Errore nel recupero delle informazioni sulla chiamata"
+            return redirect("/records/?err=1&err_msg=Impossibile caricare la lista dei record")
 
         if item.filename != '':
             item.filename = "/recordings/%s" % item.filename
@@ -257,6 +270,11 @@ def _multi_record_export_as_zip_file(request):
 
     return response
 
+def record_show_warning(request):
+    return render_to_response('records/show_warning.html',
+        RequestContext(request,{}))
+
+
 def _single_record_remove(request, record_id):
     """Rimozione fisica singolo record"""
     try:
@@ -269,27 +287,59 @@ def _single_record_remove(request, record_id):
     return HttpResponse(ret)
 
 def _multi_record_remove(request):
-    """
+    
     import os
-    d = request.GET.dict()
-    cursor = connection.cursor()
-    query_raw = _create_q_raw_from_filters(d,'')
-    record_list_raw = query_get_list(cursor, '*', 'records_record',
-        query_raw, 'deleted=0','' )
-    record_list = Record.fill_model_list(record_list_raw)
-    """
-    ret = "1"
-    """
-    for record in record_list:
-        path = os.path.join(settings.RECORDS_ROOT,record.filename)
-        print path
-        query = "UPDATE records_record SET deleted='1'
-                WHERE id='%s'" % record.id
+    d = request.POST.dict()
+    start_date = request.POST.get("data[start_date]", "")
+    end_date = request.POST.get("data[end_date]", "")
+    start_time = request.POST.get("data[start_time]", "00:00")
+    end_time = request.POST.get("data[end_time]", "23:59")
+    dst = request.POST.get("data[dst]", "")
+    pincode = request.POST.get("data[pincode]", "")
+
+    q_obj = Q(pincode__icontains=pincode)
+
+    if start_date != '':
+        start_date = Helper.convert_datestring_format(
+            start_date, "%d-%m-%Y", "%Y-%m-%d")
+        start_date = "%s %s:00" % (start_date, start_time)
+        q_obj.add(Q(calldate__gte=start_date), Q.AND)
+
+    if end_date != '':
+        end_date = Helper.convert_datestring_format(
+            end_date, "%d-%m-%Y", "%Y-%m-%d")
+        end_date = "%s %s:59" % (end_date, end_time)
+        q_obj.add(Q(calldate__lte=end_date), Q.AND)
+
+    items_list = Record.objects.filter(q_obj).order_by('-calldate')
+
+    if dst != '':
+        filtered_item_list = []
+        for item in items_list:
+            try:
+                detail = Detail.objects.get(uniqueid=item.uniqueid)
+                if dst in detail.custom_dst:
+                    filtered_item_list.append(item)
+            except:
+                pass
+        items_list = filtered_item_list
+
+    for item in items_list:
+        path = os.path.join(settings.RECORDS_ROOT, item.filename)
+        
         try:
-            cursor.execute(query)
-            #os.remove(path)
+            os.remove(path)
+            item.delete()
+            logghiamo azione
+            audit = Audit()
+            audit.user_id = request.user.id
+            detail = Helper.get_filter_detail(d)
+            audit.what = "Eliminazione registrazioni corrispondenti ai seguenti criteri: %s" \
+                                    % (detail)
+            audit.save()
+
         except Exception as e:
-            print "%s" % e
-            ret = "0"
-    """
-    return HttpResponse(ret)
+            return redirect("/records/?err=1&err_msg=ELiminazione registrazioni non avvenuta")
+
+    return redirect("/records/?ok=1&msg=ELiminazione registrazioni avvenuta con successo")
+

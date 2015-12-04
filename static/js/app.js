@@ -77,9 +77,13 @@ var Modal = {
     if (!dict.hasOwnProperty('title')) dict.title = 'No title';
     if (!dict.hasOwnProperty('content')) dict.content = 'No content';
     if (!dict.hasOwnProperty('onSave')) dict.onSave = null;
+    if (!dict.hasOwnProperty('saveButton')) dict.saveButton = 'Salva';
+    if (!dict.hasOwnProperty('removeButton')) dict.removeButton = 'Annulla';
     if (!dict.hasOwnProperty('onRemove')) dict.onRemove = null;
 
     $('#myModalLabel').text(dict.title);
+    $('#saveButton').text(dict.saveButton);
+    $('#removeButton').text(dict.removeButton);
     $('#myModal .modal-body').html(dict.content);
 
     $('#myModal').modal();
