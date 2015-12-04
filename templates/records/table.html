@@ -48,14 +48,14 @@
         <div class="card">
             <div class="card-content">
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                     <h4>Numero Registrazioni: {{ total_items }}</h4>
                     </div>
-                    <div class="col-md-2" style="text-align:center">
+                    <div class="col-md-4" style="text-align:center">
                         <a href="/records/export/?{{ query_string }}" class="btn btn-success" style="float:left;"><i class="zmdi zmdi-download"></i> Esporta</a>
-                        <a href="/records/remove/?{{ query_string }}" class="btn btn-danger records-confirm-remove hide" style="float:right;"><i class="zmdi zmdi-close"> Elimina registrazioni</i></a>
+                        <a href="/records/remove/?{{ query_string }}" class="btn btn-danger records-confirm-remove" style="float:right;"><i class="zmdi zmdi-close"> Elimina</i></a>
                     </div>
-                    <div class="col-md-5" style="text-align:right;">
+                    <div class="col-md-4" style="text-align:right;">
                         {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
                         <a href="?page={{ prev_page }}&amp;{{ query_string }}" class="btn btn-info {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
                         <a href="?page={{ next_page }}&amp;{{ query_string }}" class="btn btn-info {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>

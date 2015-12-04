@@ -16,6 +16,9 @@
                 </div>
                 <div class="card-content">
                     <div id="chart-diskusage" style="height:180px;"></div>
+                    {% if diskusage > 80.0 %}
+                        <p style="margin-top:20px;text-align:justify;">L'occupazione disco ha superato l'80%.<br/>Si consiglia di eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o di verificare la loro presenza sul disco di backup</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -48,11 +51,11 @@
                 //    width: 39 // for adjusting arc thickness
             },
             color: {
-                pattern: ['#60B044', '#FF0000', '#F97600', '#F6C600'], // the three color levels for the percentage values.
+                pattern: ['#60B044', '#F97600', '#FF0000'], // the three color levels for the percentage values.
                 threshold: {
                 //            unit: 'value', // percentage is default
                 //            max: 200, // 100 is default
-                    values: [30, 60, 90, 100]
+                    values: [60, 80]
                 }
             },
             size: {
