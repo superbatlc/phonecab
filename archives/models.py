@@ -134,7 +134,6 @@ class ArchivedPhoneUser(models.Model):
         deletes them from the cdrs_detail table
         """
         details = Detail.objects.filter(accountcode=self.phoneuser.pincode)
-        print details
         for detail in details:
             archived_detail = ArchivedDetail()
             archived_detail.archived_phoneuser = self
@@ -294,7 +293,7 @@ class ArchivedDetail(models.Model):
             return total['total']
         except Exception as e:
             print format(e)
-            pass #TODO gestire errore
+            pass # TODO gestire errore
 
 
 class ArchivedRecord(models.Model):

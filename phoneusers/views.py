@@ -80,8 +80,6 @@ def phoneuser_items(request):
             next_page = items.paginator.num_pages
             next_page_disabled = 'disabled'
 
-    # print "range: %s - next: %s" % (items_range, next_page)
-
     start_item = 1
     if page > 0:
         start_item = (page - 1) * items_per_page + 1
@@ -129,7 +127,7 @@ def phoneuser_view(request, phoneuser_id="0"):
 @login_required
 def phoneuser_data(request, phoneuser_id="0"):
     """Recupera e visualizza le informazioni sul phoneuser - pannello anagrafica"""
-    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff) #TODO solo priv_anagrafica
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff) # TODO solo priv_anagrafica
     if int(phoneuser_id):
         try:
             phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
@@ -588,7 +586,6 @@ def credit_items(request, phoneuser_id):
     try:
         phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
     except ObjectDoesNotExist:
-        # print "No phoneuser associated with id: %s" % phoneuser_id
         raise Http404
 
     page = 1

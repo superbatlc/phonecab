@@ -38,7 +38,7 @@
     </div>
     <div class="card-action">
         <div class="row">
-            {% if priv_anagrafica > 1 %}
+            {% if priv_anagrafica > 0 %}
             <div class="col-md-6">
             {% if phoneuser.enabled %}
                 <button class="btn green switchable" onClick="Phoneuser.changeStatus({{ phoneuser.id }}, 0)" data-help="Lo stato della scheda determina la possibilit&agrave; o meno di effettuare telefonate.">

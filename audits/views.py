@@ -109,8 +109,6 @@ def audit_items(request):
             next_page = items.paginator.num_pages
             next_page_disabled = 'disabled'
 
-    # print "range: %s - next: %s" % (items_range, next_page)
-
     start_item = 1
     if page > 0:
         start_item = (page - 1) * items_per_page + 1

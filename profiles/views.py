@@ -129,7 +129,6 @@ def profile_save(request):
     try:
         if user_id:
             user = User.objects.get(pk=user_id)
-            print user
             user.first_name = first_name.title()
             user.last_name = last_name.title()
             user.username = username
@@ -196,7 +195,6 @@ def profile_change_status(request):
             user = User.objects.get(pk=user_id)
             user.is_active = is_active
             user.save()
-            print user
             # log azione
             #audit = Audit()
             #audit.log(user=request.user,

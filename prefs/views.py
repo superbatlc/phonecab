@@ -31,8 +31,6 @@ def prefs_edit(request):
         'header': header,
     }
 
-    print variables
-
     variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))
 
     return render_to_response(
@@ -94,7 +92,7 @@ def prefs_save(request):
         return redirect('/prefs/edit/')
 
     except Exception as e:
-        print '%s (%s)' % (e.message, type(e))
+        print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
 
 
 def get_fee(value):

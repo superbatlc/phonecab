@@ -72,8 +72,6 @@ def archive_phoneuser_items(request):
             next_page = items.paginator.num_pages
             next_page_disabled = 'disabled'
 
-    # print "range: %s - next: %s" % (items_range, next_page)
-
     start_item = 1
     if page > 0:
         start_item = (page - 1) * items_per_page + 1
@@ -597,7 +595,7 @@ def _multi_record_export_as_zip_file(request):
             if detail.custom_valid and (detail.dcontext == 'cabs-dial-number' or detail.dcontext == 'outgoing-operator-dial-number' or detail.dcontext == 'incoming-operator-dial-number'):
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
-                myzip.write(path, arcname = item.filename) #TODO: verificare effettiva esportazione
+                myzip.write(path, arcname = item.filename)
         
     if not file_counter:
         return redirect("/archives/records/?err=1&err_msg=Nessuno dei file soddisfa i criteri per l'esportazione&%s" % urlencode(d))

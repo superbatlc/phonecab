@@ -145,11 +145,13 @@ var Phoneuser = {
 var Whitelist = {
 
     edit : function(id, phoneuser_id){
+        if(id == 0){
+            phoneuser_id = $('#phoneuser-id').val();
+        }
         data = {
             id: id,
             phoneuser_id: phoneuser_id
         }
-        console.log(data);
 
         requestData("POST", "html", '/whitelists/edit/', {data : data}, function(response){
             var title = "Nuova Autorizzazione";

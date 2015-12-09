@@ -56,7 +56,7 @@ class Detail(models.Model):
             return total['total']
         except Exception as e:
             print format(e)
-            pass #TODO gestire errore
+            pass # TODO gestire errore
 
 
 class RealTimeCall(models.Model):

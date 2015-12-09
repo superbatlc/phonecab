@@ -84,8 +84,7 @@ class Fare(models.Model):
         # recuperiamo la tariffa corrispondente alla espressione regolare
         # che matcha con l'ordine minore
         query = """SELECT COUNT(*) AS n FROM %s
-                        WHERE '%s' REGEXP reg_exp""" % (Fare._meta.db_table, phonenumber)
-        print query
+                WHERE '%s' REGEXP reg_exp""" % (Fare._meta.db_table, phonenumber)
         cursor.execute(query)
 
         existance = cursor.fetchone()
@@ -107,7 +106,7 @@ class Fare(models.Model):
             audit.what = "Modifica direttrice %s : %s" % (self.direction, detail)
             audit.save()
         except Exception as e:
-            print '%s (%s)' % (e.message, type(e))
+            print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
 
     def _create_regexp_from_prefix_list(self):
         """Crea le espressioni regolari necessarie per associare una tariffa

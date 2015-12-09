@@ -31,7 +31,7 @@
   <div class="form-group">
     <label for="pincode" class="col-xs-4 control-label">Codice Tessera</label>
     <div class="col-xs-3 filled">
-      <input type="text" class="form-control" id="pincode" placeholder="Codice" value="{{ phoneuser.pincode }}" max_size="10" {% if phoneuser.pincode %} readonly{% endif %}>
+      <input type="text" class="form-control" id="pincode" placeholder="Codice" value="{{ phoneuser.pincode }}" max_size="10" {% if phoneuser.pincode and not user.is_staff %} readonly{% endif %}>
       <span class="pincode-check hide" style="color: red;">Gi&agrave; in uso</span>
     </div>
   </div>
