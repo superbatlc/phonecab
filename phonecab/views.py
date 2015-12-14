@@ -96,7 +96,8 @@ def phonecab_set_nightmode(request, mode):
 
     if mode == '0':
         cmd = "sudo /etc/asterisk/giorno.sh"
-
-    ret = os.system(cmd)
-
-    return HttpResponse(status=200,content=json.dumps({'ret': ret}), content_type="application/json")
+    try:
+        ret = os.system(cmd)
+        return HttpResponse(status=200,content=json.dumps({'ret': ret}), content_type="application/json")
+    except:
+        redirect("/?err=1&err_msg=Impossibile accedere allo stato delle linee")

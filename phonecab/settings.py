@@ -34,7 +34,7 @@ ITEMS_PER_PAGE = 5
 RECORDS_ROOT = '/var/spool/asterisk/monitor'
 TMP_ZIP_ROOT = '/root/tmp_record'
 
-FILESYSTEM = '/dev/mapper/phonecab--vg-root'
+FILESYSTEM = '/dev/sda1/'
 
 # Chiusura sessione alla chiusura del browser
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

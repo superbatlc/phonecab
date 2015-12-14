@@ -16,7 +16,7 @@ def tools_home(request):
     if request.GET.get("err") != '1':
         try:
             variables['diskusage'] = _tool_get_disk_usage()
-        except Exceptio as e:
+        except Exception as e:
             return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco")
     
     return render_to_response(
