@@ -166,10 +166,7 @@
 
     /* FORBID DUPLICATES */
 
-    var fares = [
-        {% for fare in fares %}
-        '{{ fare.direction }}', {% endfor %}
-    ];
+    var fares = [{% for fare in fares %}'{{ fare.direction }}', {% endfor %}];
     $(function() {
         //bootstrap-tagsinput
         //http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
