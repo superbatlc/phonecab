@@ -167,10 +167,8 @@
     /* FORBID DUPLICATES */
 
     var fares = [
-        { % for fare in fares %
-        }
-        '{{ fare.direction }}', { % endfor %
-        }
+        {% for fare in fares %}
+        '{{ fare.direction }}', {% endfor %}
     ];
     $(function() {
         //bootstrap-tagsinput
