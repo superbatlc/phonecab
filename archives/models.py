@@ -47,8 +47,8 @@ class ArchivedPhoneUser(models.Model):
     balance = models.DecimalField(
         verbose_name="credito residuo",
         default=0,
-        max_digits=5,
-        decimal_places=2)
+        max_digits=7,
+        decimal_places=4)
     four_bis_limited = models.BooleanField(
         verbose_name="4bis limitato", default=False)
     archived_date = models.DateTimeField(default=datetime.datetime.now)

@@ -41,7 +41,7 @@
 
       <div class="total"><h3>Totale ricariche:</h3> {{ tot_recharges }} &euro;</div>
       <div class="total"><h3>Totale spese telefoniche:</h3> {{ tot_cost }} &euro; </div>
-      <div class="total"><h3>Credito residuo:</h3> {{ phoneuser.balance }} &euro; </div>
+      <div class="total"><h3>Credito residuo:</h3> {{ phoneuser.balance|floatformat:2 }} &euro; </div>
 
     </main>
     <footer>phonegap</footer>

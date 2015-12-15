@@ -37,8 +37,8 @@ class PhoneUser(models.Model):
     balance = models.DecimalField(
         verbose_name="credito residuo",
         default=0,
-        max_digits=5,
-        decimal_places=2)
+        max_digits=7,
+        decimal_places=4)
     language = models.CharField(
         max_length=4, verbose_name="lingua", choices=LANGUAGES, default='it')
     vipaccount = models.BooleanField(

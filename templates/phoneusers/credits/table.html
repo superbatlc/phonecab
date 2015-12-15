@@ -38,7 +38,7 @@
         <div class="card-action">
             <div class="row">
                 <div class="col-md-5">
-                    <h4>Credito residuo: {{ balance }} &euro;</h4>
+                    <h4>Credito residuo: {{ balance|floatformat:2 }} &euro;</h4>
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="/credits/export/{{ phoneuser_id }}" target="_blank" class="btn btn-success"><i class="zmdi zmdi-file-text"></i> Estratto Conto</a>
