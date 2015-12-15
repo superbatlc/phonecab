@@ -339,7 +339,7 @@ def _multi_record_remove(request):
             audit.save()
 
         except Exception as e:
-            return redirect("/records/?err=1&err_msg=ELiminazione registrazioni non avvenuta")
+            return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
-    return redirect("/records/?ok=1&msg=ELiminazione registrazioni avvenuta con successo")
+    return HttpResponse(status=200)
 

@@ -39,7 +39,7 @@ var Record = {
         requestData("POST", "html", '/records/remove/', {data: data},
         function(response){
             var with_filter = (window.location.href.indexOf('?') > -1 ? '&':'?');
-            //window.location.href += with_filter + "ok=1&msg=Registrazioni eliminate con successo.";
+            window.location.href += with_filter + "ok=1&msg=Registrazioni eliminate con successo.";
             callback({success: true}); // inutile se facciamo cambio pagina
         },
         function(error){
