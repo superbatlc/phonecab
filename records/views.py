@@ -334,6 +334,8 @@ def _multi_record_remove(request):
             audit = Audit()
             audit.user_id = request.user.id
             detail = Helper.get_filter_detail(d)
+            if detail == '':
+                detail = 'Tutte le registrazioni'
             audit.what = "Eliminazione registrazioni corrispondenti ai seguenti criteri: %s" \
                                     % (detail)
             audit.save()
