@@ -32,7 +32,7 @@ ITEMS_PER_PAGE = 5
 
 # percorso file audio
 RECORDS_ROOT = '/var/spool/asterisk/monitor'
-TMP_ZIP_ROOT = '/root/tmp_record'
+TMP_ZIP_ROOT = '/tmp/'
 
 FILESYSTEM = '/dev/sda1/'
 
