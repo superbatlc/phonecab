@@ -30,7 +30,7 @@
         <tr>
           <td style="text-align:center;">
             {% if wl.enabled %}
-              {% if priv_whitelist > 1 %}
+              {% if priv_whitelist > 0 %}
                 <button class="btn btn-xs btn-success" onClick="Whitelist.changeStatus({{ wl.id }},0)" title="Premi per disabilitare l&apos;autorizzazione" {% if forloop.first %}data-help="Lo stato della scheda determina la possibilit&agrave; o meno di effettuare telefonate."{% endif %}>
                   <i class="zmdi zmdi-check"></i>
                 </button>
@@ -38,7 +38,7 @@
                 <i class="zmdi zmdi-check"></i>
               {% endif %}
             {% else %}
-              {% if priv_whitelist > 1 %}
+              {% if priv_whitelist > 0 %}
                 <button class="btn btn-xs btn-danger" onClick="Whitelist.changeStatus({{ wl.id }},1)" title="Premi per abilitare l&apos;autorizzazione" {% if forloop.first %}data-help="Lo stato della scheda determina la possibilit&agrave; o meno di effettuare telefonate."{% endif %}>
                   <i class="zmdi zmdi-close"></i>
                 </button>
@@ -54,7 +54,7 @@
           <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
           <td style="text-align:center;">
             {% if wl.extraordinary %}
-              {% if priv_whitelist > 1 %}
+              {% if priv_whitelist > 0 %}
                 <button class="btn btn-xs btn-success" onClick="Whitelist.changeOrdinary({{ wl.id }},0)" title="Premi per rendere ordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinare determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
                   <i class="zmdi zmdi-check"></i>
                 </button>
@@ -62,7 +62,7 @@
                 <i class="zmdi zmdi-check"></i>
               {% endif %} 
             {% else %}
-              {% if priv_whitelist > 1 %}
+              {% if priv_whitelist > 0   %}
                 <button class="btn btn-xs btn-danger" onClick="Whitelist.changeOrdinary({{ wl.id }},1)" title="Premi per rendere straordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinare determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
                   <i class="zmdi zmdi-close"></i>
                 </button>
