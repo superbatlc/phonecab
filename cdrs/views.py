@@ -66,6 +66,7 @@ def cdr_items(request):
     q_obj = Q(accountcode__icontains=accountcode)
     q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
     q_obj.add(Q(dcontext='cabs-dial-number')|Q(dcontext='outgoing-operator-dial-number')|Q(dcontext='incoming-operator-dial-number'), Q.AND)
+    q_obj.add(Q(disposition="ANSWERED"), Q.AND)
 
     if start_date != '':
         start_date = Helper.convert_datestring_format(
@@ -196,6 +197,7 @@ def cdr_export_excel(request):
     q_obj = Q(accountcode__icontains=accountcode)
     q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
     q_obj.add(Q(dcontext='cabs-dial-number')|Q(dcontext='outgoing-operator-dial-number')|Q(dcontext='incoming-operator-dial-number'), Q.AND)
+    q_obj.add(Q(disposition="ANSWERED"), Q.AND)
     q_obj.add(Q(custom_valid=1), Q.AND) # esportiamo solo le chiamate ritenute valide
     
     if start_date != '':
