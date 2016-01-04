@@ -172,13 +172,21 @@ var Ami = {
 
     _updateDurationLoop: function() {
         //console.log('LOOP DURATION');
-        $('#realtime-table .duration').each(function(i) {
+        $('#realtime-table .call-duration').each(function(i) {
             var time = $(this).html().split(':');
-            if (time.length!=3) { return; }
-            time[2] = parseInt(time[2])+1;
-            if (time[2]==60) { time[2] = 0; time[1] = parseInt(time[1])+1; }
-            if (time[1]==60) { time[1] = 0; time[0] = parseInt(time[0])+1; }
-            $(this).html(time[0]+':'+("0"+time[1]).slice(-2)+':'+("0"+time[2]).slice(-2));
+            if (time.length != 3) {
+                return;
+            }
+            time[2] = parseInt(time[2]) + 1;
+            if (time[2] == 60) {
+                time[2] = 0;
+                time[1] = parseInt(time[1]) + 1;
+            }
+            if (time[1] == 60) {
+                time[1] = 0;
+                time[0] = parseInt(time[0]) + 1;
+            }
+            $(this).html(time[0] + ':' + ("0" + time[1]).slice(-2) + ':' + ("0" + time[2]).slice(-2));
         })
     },
 
@@ -188,114 +196,136 @@ var Ami = {
 
         requestData("GET", "xml", Config.ami.url + '?action=coreshowchannels', {}, function(response) {
 
-            var channels = [];
-            var uniqueid_relation = [];
-            var calls = [];
+            var channels = []; // valid channels
+            var bridged = {}; // grouped channels per bridgeid
+            var calls = []; // final selection to be considered a call
 
-            jQuery.each(jQuery.xml2json(response).response, function(idx, response) {
-                if (response.generic.event == 'CoreShowChannelsComplete' &&
-                    response.generic.eventlist == "Complete" &&
-                    response.generic.listitems == "0") {
-                    // nessuna chiamata
-                    Ami._noCalls();
-                }
-                if (response.generic.event == 'CoreShowChannel') channels.push(response);
+            // GET CHANNELS FROM RESPONSE
+            jQuery.each(jQuery.xml2json(response).response, function(idx, channel) {
+                // channel.generic = {
+                //     eventlist: "start",
+                //     message: "Channels will follow",
+                //     response: "Success",
+                // }
+
+                // channel.generic = {
+                //     event: "CoreShowChannelsComplete",
+                //     eventlist: "Complete",
+                //     listitems: "2" // number of items (excluded START and SHOWCHANNELCOMPLETE)
+                // }
+                if (channel.generic.event == 'CoreShowChannel') channels.push(channel);
             }); // END each channels.response
 
             // No calls, no reason to continue
-            if (channels.length == 0) return;
-	        console.log("channels :", channels);
-            channels.forEach(function(response) {
+            if (channels.length == 0) {
+                Ami._noCalls();
+                return;
+            }
 
-                var channel = response.generic.channel;
-                var channel_uniqueid = response.generic.uniqueid;
-                var channel_bridgeduniqueid = response.generic.bridgeduniqueid;
+            // Divide channels by bridges (and create calls objects, 1 per bridge)
+            jQuery.each(channels, function(channel) {
+                var channel_name = channel.generic.channel;
+                var channel_bridgeid = channel.generic.bridgeid;
 
-                //console.log("channel_uniqueid: " + channel_uniqueid + " - channel_bridgeduniqueid: " + channel_bridgeduniqueid);
+                // if (!channel_bridgeid) return; // ignore the ones without bridgeid
 
-                if (calls.length > 0 && (uniqueid_relation.indexOf(channel_uniqueid) >= 0 || uniqueid_relation.indexOf(channel_bridgeduniqueid) >= 0)) {
-                    // don't add call if there is already the uniqueid
-                    // add it anyway if it is the first one
-                    return;
+                if (bridged.hasOwnProperty(channel_bridgeid)) {
+                    bridged[channel_bridgeid].push(channel);
+                } else {
+                    bridged[channel_bridgeid] = [channel];
+                    calls.push({
+                        channel: channel_name,
+                        src: '',
+                        dst: '',
+                        accountcode: '',
+                        name: '',
+                        duration: '',
+                        bridgeid: bridgeid,
+                    });
                 }
-                calls.push({
-                    channel: channel,
-                    src: '',
-                    dst: '',
-                    accountcode: '',
-                    name: '',
-                    duration: '',
-                    uniqueid: channel_uniqueid,
-                    bridgeduniqueid: channel_bridgeduniqueid,
-                });
-                uniqueid_relation.push(channel_uniqueid);
+
             }); // END each channel
 
             Ami._clearCalls();
 
+            // Cycle calls (bridges) to get data
             calls.forEach(function(acall) {
-                var incoming = 0;
                 var call_exists = false;
-                channels.forEach(function(response) {
-                    if (acall.uniqueid == response.generic.uniqueid || acall.uniqueid == response.generic.bridgeduniqueid) {
+                var channel = {}; //temproary value
+                var current_channels = bridged[acall.bridgeid];
+                var current_contexts = utils.getValues(current_channels, 'context');
+
+                if (current_contexts.indexOf('cabs-dial-number') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+
+                    //DETENUTO [ cabs-dial-number + from-trunk]
+                    channel = utils.getItem(current_channels, 'context', 'from-trunk');
+                    call_exists = true;
+                    acall.accountcode = channel.generic.accountcode;
+                    acall.duration = channel.generic.duration;
+                    acall.src = channel.generic.connectedlinenum;
+                    acall.dst = channel.generic.calleridnum;
+
+                } else if (current_contexts.indexOf('from-cabs') >= 0) {
+
+                    if (current_contexts.indexOf('incoming-operator-dial-number') >= 0) {
+
+                        // ENTRANTE [ from-cabs + incoming-operator-dial-number ]
+                        channel = utils.getItem(current_channels, 'context', 'from-cabs');
                         call_exists = true;
-                        var d = new Date(response.generic.uniqueid * 1000);
-                        var startcall = d.toLocaleTimeString();
-                        acall.startcall = startcall;
-                        if (response.generic.context == 'from-cabs') {
-                            acall.accountcode = response.generic.accountcode;
-                            if (!incoming) {
-                                acall.src = response.generic.calleridnum;
-                            }
-                            incoming = 0;
-                            acall.duration = response.generic.duration;
-                        }
-                        if (response.generic.context == 'outgoing-operator-dial-number') {
-                            acall.dst = response.generic.calleridnum;
-                            incoming = 0;
-                        }
-                        if (response.generic.context == 'incoming-operator-dial-number') {
-                            incoming = 1;
-                            acall.src = response.generic.calleridnum;
-                            acall.dst = response.generic.exten;
-                        }
-                        if (response.generic.context == 'cabs-dial-number') {
-                            acall.accountcode = response.generic.accountcode;
-                            acall.src = response.generic.calleridnum;
-                            acall.dst = response.generic.exten;
-                            acall.duration = response.generic.duration;
-                        }
-                        if (response.generic.context == 'from-trunk') {
-                            acall.src = response.generic.connectedlinenum;
-                            acall.dst = response.generic.calleridnum;
-                        }
+                        acall.accountcode = channel.generic.accountcode;
+                        acall.duration = channel.generic.duration;
+                        acall.src = '';
+                        acall.dst = channel.generic.calleridnum;
+
+                    } else if (current_contexts.indexOf('from-trunk') >= 0) {
+
+                        // PER CONTO [ from-cabs + from-trunk ]
+                        channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                        call_exists = true;
+                        acall.accountcode = channel.generic.accountcode;
+                        acall.duration = channel.generic.duration;
+                        acall.src = channel.generic.calleridnum;
+                        acall.dst = channel.generic.connectedlinenum;
+
                     }
-                });
+                }
 
                 if (!call_exists) {
                     // rimuovi la chiamata
                     calls.pop(acall);
                 } else {
-                    // costruiamo la tabella se abbiamo tutti i dati
-                    if (acall.src != '' && acall.dst != '' && acall.accountcode != '') {
+                    // recuperiamo dati aggiuntivi sulla chiamata
+                    if (acall.accountcode != '') {
 
                         var data = {};
                         data.pincode = acall.accountcode;
                         data.dst = acall.dst;
                         data.src = acall.src;
 
-                        requestData("POST", "json", '/phoneusers/realtime/info/', {data: data}, function(response) {
+                        requestData("POST", "json", '/phoneusers/realtime/info/', {
+                                data: data
+                            }, function(response) {
                                 acall.name = response.data.name;
                                 acall.dst = response.data.dst;
-                                acall.src = response.data.src_name
+                                acall.src = response.data.src_name;
                                 Ami._addCall(acall, response.data.recording);
                             },
                             function(error) {
-                                console.log('Dati di link fra call<->db non recuperati');
+                                console.log('Dati di link fra call<->db non recuperati', error);
+                                Ami._addCall(acall, false);
                             });
                     }
                 };
             }); // END call each
+
+
+
+            console.log('----------');
+            console.log('channels:', channels);
+            console.log('bridged:', bridged);
+            console.log('calls:', calls);
+
+
         }, function(error) {
             // console.log('ERRORE', error);
             showMessageBox("Errore", "Impossibile aggiornare la lista chiamate.", "alert-danger");
@@ -324,7 +354,7 @@ var Ami = {
         //     name: 'nome',
         //     duration: '20',
         //     uniqueid: 'univoco',
-        //     bridgeduniqueid: 'univocobridge',
+        //     linkedid: 'univocobridge',
         // }
 
         var d = new Date()
@@ -333,7 +363,7 @@ var Ami = {
         filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 
         var actions = '';
-        switch(recording) {
+        switch (recording) {
             case 'progress':
                 actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
                 break;
@@ -342,7 +372,7 @@ var Ami = {
                 break;
             case 'hidden':
                 break;
-        } 
+        }
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
         $('#realtime-table tbody').append(
@@ -351,27 +381,27 @@ var Ami = {
             .attr('id', 'call-' + acall.uniqueid)
             .append([
                 $(document.createElement('td')) // Anagrafica
-                .addClass('text-left')
+                .addClass('call-name text-left')
                 .html(acall.name),
 
                 $(document.createElement('td')) // Codice
-                .addClass('text-center')
+                .addClass('call-accountcode text-center')
                 .html(acall.accountcode),
 
                 $(document.createElement('td')) // Sorgente
-                .addClass('text-center')
+                .addClass('call-src text-center')
                 .html(acall.src),
 
                 $(document.createElement('td')) // Destinazione
-                .addClass('text-center')
+                .addClass('call-dst text-center')
                 .html(acall.dst),
 
                 $(document.createElement('td')) // Ora inizio
-                .addClass('text-center')
+                .addClass('call-startcall text-center')
                 .html(acall.startcall),
 
                 $(document.createElement('td')) // Durata
-                .addClass('text-center duration')
+                .addClass('call-duration text-center')
                 .html(acall.duration),
 
                 // $(document.createElement('td')) // Credito residuo
@@ -379,7 +409,7 @@ var Ami = {
                 // .html(''),
 
                 $(document.createElement('td')) // Azioni
-                .addClass('text-center')
+                .addClass('call-actions text-center')
                 .html(actions),
             ]));
     }

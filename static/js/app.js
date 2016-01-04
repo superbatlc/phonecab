@@ -134,7 +134,37 @@ function showMessageBox(title, content, alertClass) {
   }, 5000);
 }
 
+var utils = {
+    getValues: function(objects, field) {
+        var output = [];
+        for (var i = 0; i < objects.length; i++) {
+            output.push(objects[i][field]);
+        }
+        return output;
+    },
+    getItem: function(objects, field, match) {
+        for (var i = 0; i < objects.length; i++) {
+            if (String(objects[i][field]) == String(match)) return objects[i];
+        }
+        return {};
+    },
 
+    getItemIndex: function(objects, field, match) {
+        for (var i = 0; i < objects.length; i++) {
+            if (String(objects[i][field]) == String(match)) return i;
+        }
+        return -1;
+    },
+
+    copy: function(src, dst) {
+        if (!(src && dst)) return;
+        for (var prop in src) {
+            if (src.hasOwnProperty(prop)) {
+                dst[prop] = src[prop];
+            }
+        }
+    },
+};
 
 function checkEmptyField(selector) {
   // restituisce false on error
