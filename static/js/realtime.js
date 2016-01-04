@@ -215,7 +215,7 @@ var Ami = {
             // Cycle calls (bridges) to get data
             calls.forEach(function(acall) {
                 var call_exists = false;
-                var channel = {}; //temproary value
+                var channel = {}; //temporary value
                 var current_channels = bridged[acall.bridgeid];
                 var current_contexts = utils.getValues(current_channels, 'context');
 
@@ -289,10 +289,10 @@ var Ami = {
 
 
 
-            console.log('----------');
-            console.log('channels:', channels);
-            console.log('bridged:', bridged);
-            console.log('calls:', calls);
+            //console.log('----------');
+            //console.log('channels:', channels);
+            //console.log('bridged:', bridged);
+            //console.log('calls:', calls);
 
 
         }, function(error) {
@@ -325,7 +325,7 @@ var Ami = {
             var ids = utils.getValues(calls, 'uniqueid');
             $('#realtime-table .realtime-table-row').each(function() {
                 if (ids.indexOf(String($(this).attr('data-uniqueid'))) < 0) {
-                    console.log('UI remove ', $(this));
+                    //console.log('UI remove ', $(this));
                     $(this).remove();
                 }
             });
@@ -367,7 +367,7 @@ var Ami = {
         if (!Ami.forceRefresh) {
             var element = $("[data-uniqueid='" + acall.uniqueid + "']");
             if (element.length) {
-                console.log('UI edit ', element);
+                //console.log('UI edit ', element);
                 element.find('.call-name').html(acall.name);
                 element.find('.call-accountcode').html(acall.accountcode);
                 element.find('.call-src').html(acall.src);
@@ -382,7 +382,7 @@ var Ami = {
 
         if (!element.length) {
 
-            console.log('UI add element');
+            //console.log('UI add element');
 
 
             $('#realtime-table tbody').append(
