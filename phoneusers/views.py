@@ -312,7 +312,7 @@ def phoneuser_realtime_info(request):
                         if whitelist.frequency == 1:
                             values['data']['recording'] = 'hidden'
                     except:
-                        pass
+                        values['data']['dst'] = dst
                 if src:
                     src_name = Extension.get_extension_name(src)
                     if src_name:
