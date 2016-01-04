@@ -306,10 +306,13 @@ def phoneuser_realtime_info(request):
                 if phoneuser.recording_enabled:
                     values['data']['recording'] = 'progress'
                 if dst:
-                    whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
-                    values['data']['dst'] = "%s %s" % (dst, whitelist.label)
-                    if whitelist.frequency == 1:
-                        values['data']['recording'] = 'hidden'
+                    try:
+                        whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
+                        values['data']['dst'] = "%s %s" % (dst, whitelist.label)
+                        if whitelist.frequency == 1:
+                            values['data']['recording'] = 'hidden'
+                    except:
+                        pass
                 if src:
                     src_name = Extension.get_extension_name(src)
                     if src_name:
