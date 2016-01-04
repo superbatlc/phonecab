@@ -213,7 +213,7 @@ var Ami = {
                 //     eventlist: "Complete",
                 //     listitems: "2" // number of items (excluded START and SHOWCHANNELCOMPLETE)
                 // }
-                if (channel.generic.event == 'CoreShowChannel') channels.push(channel);
+                if (channel.generic.event == 'CoreShowChannel') channels.push(channel.generic);
             }); // END each channels.response
 
             // No calls, no reason to continue
@@ -222,10 +222,13 @@ var Ami = {
                 return;
             }
 
+		console.log(channels);
+
             // Divide channels by bridges (and create calls objects, 1 per bridge)
-            jQuery.each(channels, function(channel) {
-                var channel_name = channel.generic.channel;
-                var channel_bridgeid = channel.generic.bridgeid;
+            channels.forEach(function(channel) {
+		console.log(channel);
+                var channel_name = channel.channel;
+                var channel_bridgeid = channel.bridgeid;
 
                 // if (!channel_bridgeid) return; // ignore the ones without bridgeid
 
@@ -240,7 +243,7 @@ var Ami = {
                         accountcode: '',
                         name: '',
                         duration: '',
-                        bridgeid: bridgeid,
+                        bridgeid: channel_bridgeid,
                     });
                 }
 
@@ -260,34 +263,28 @@ var Ami = {
                     //DETENUTO [ cabs-dial-number + from-trunk]
                     channel = utils.getItem(current_channels, 'context', 'from-trunk');
                     call_exists = true;
-                    acall.accountcode = channel.generic.accountcode;
-                    acall.duration = channel.generic.duration;
-                    acall.src = channel.generic.connectedlinenum;
-                    acall.dst = channel.generic.calleridnum;
+                    acall.accountcode = channel.accountcode;
+                    acall.duration = channel.duration;
+                    acall.src = channel.connectedlinenum;
+                    acall.dst = channel.calleridnum;
 
-                } else if (current_contexts.indexOf('from-cabs') >= 0) {
+                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
 
-                    if (current_contexts.indexOf('incoming-operator-dial-number') >= 0) {
-
-                        // ENTRANTE [ from-cabs + incoming-operator-dial-number ]
-                        channel = utils.getItem(current_channels, 'context', 'from-cabs');
-                        call_exists = true;
-                        acall.accountcode = channel.generic.accountcode;
-                        acall.duration = channel.generic.duration;
-                        acall.src = '';
-                        acall.dst = channel.generic.calleridnum;
-
-                    } else if (current_contexts.indexOf('from-trunk') >= 0) {
-
+                    channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                    var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
+                    call_exists = true;
+                    acall.accountcode = channel.accountcode;
+                    acall.duration = channel.duration;
+                    if (!trunk.exten) {
                         // PER CONTO [ from-cabs + from-trunk ]
-                        channel = utils.getItem(current_channels, 'context', 'from-cabs');
-                        call_exists = true;
-                        acall.accountcode = channel.generic.accountcode;
-                        acall.duration = channel.generic.duration;
-                        acall.src = channel.generic.calleridnum;
-                        acall.dst = channel.generic.connectedlinenum;
-
+                        acall.src = channel.calleridnum;
+                        acall.dst = channel.connectedlinenum;
+                    } else {
+                        // ENTRANTE [from-cabs + from-trunk + from-trunk.exten valorizzato]
+                        acall.src = '';
+                        acall.dst = channel.calleridnum;
                     }
+
                 }
 
                 if (!call_exists) {
