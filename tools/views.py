@@ -16,6 +16,7 @@ def tools_home(request):
     if request.GET.get("err") != '1':
         try:
             variables['diskusage'] = _tool_get_disk_usage()
+            variables['peers_staus'] = _get_peers_status()
         except Exception as e:
             return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco")
     
@@ -31,10 +32,14 @@ def _tool_get_disk_usage():
 def _get_peers_status():
 
     extensions = Extension.objects.all().order_by('extension')
-    statuses = []
+    stati = []
     
     for extension in extensions:
-        status = os.popen('sudo /usr/sbin/asterisk -rx "sip show peer %s"' % extension).read()
+        stato = 'OFF'
+        status = os.popen('sudo /usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"' % extension).read()
+        if "OK" in status:
+            stato = 'ON'
+        stati.append({'extension': extension, 'status': stato})
 
 
-    #sudo /usr/sbin/asterisk -rx "sip show peer 201" | grep 'Status'
+    return stati

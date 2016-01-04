@@ -22,7 +22,18 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="col-md-4" style="float: none; margin: 0 auto;">
+            <div class="card bordered">
+                <div class="card-header">
+                    <div class="card-title">Stato interni</div>
+                </div>
+                <div class="card-content">
+                    {% for peer in peers_status %}
+                        {{ peer.extension }} ({{ peer.stato }})
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
 {% endblock application %}
 {% block script %}
