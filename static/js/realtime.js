@@ -52,7 +52,7 @@ var Ami = {
     durationLoop: null, // interval duration loop reference (to stop it)
     active: false, // sync with Realtime.active thru manageLoops
 
-    forceRefresh: true, // SET FALSE IF PROBLEMS!!!
+    forceRefresh: false, // SET TRUE IF PROBLEMS!!!
 
     /**************************** ACTIONS *************************************/
 
