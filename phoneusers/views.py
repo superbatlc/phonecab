@@ -537,7 +537,7 @@ def _get_extra_call(accountcode, dst):
     query = """SELECT COUNT(*) AS n FROM cdrs_detail
             WHERE accountcode='%s' AND DATE(calldate)>='%s'
             AND DATE(calldate) <= '%s' AND custom_calltype = 1
-            AND lastapp='Dial' AND custom_valid=1
+            AND lastapp='Dial' AND custom_valid=1 AND disposition='ANSWERED'
             AND (dcontext='cabs-dial-number'
             OR dcontext='outgoing-operator-dial-number'
             OR dcontext='incoming-operator-dial-number')""" % (accountcode,
@@ -553,7 +553,7 @@ def _get_extra_call(accountcode, dst):
     query = """SELECT COUNT(*) AS n FROM cdrs_detail
             WHERE accountcode='%s' AND DATE(calldate)>='%s'
             AND DATE(calldate) <= '%s' AND custom_calltype = 1
-            AND lastapp='Dial' AND custom_valid=1
+            AND lastapp='Dial' AND custom_valid=1 AND disposition='ANSWERED'
             AND (dcontext='cabs-dial-number'
             OR dcontext='outgoing-operator-dial-number'
             OR dcontext='incoming-operator-dial-number')""" % (accountcode,
