@@ -217,10 +217,10 @@ var Ami = {
             }); // END each channels.response
 
             // No calls, no reason to continue
-            if (channels.length == 0) {
-                Ami._noUICalls();
-                return;
-            }
+            //if (channels.length == 0) {
+            //    Ami._noUICalls();
+            //    return;
+            //}
 
             // Divide channels by bridges (and create calls objects, 1 per bridge)
             channels.forEach(function(channel) {
@@ -293,6 +293,8 @@ var Ami = {
                 }
             });
 
+	//calls = Ami.calls;
+
             Ami._cleanUICalls(calls);
 
             calls.forEach(function(acall) {
@@ -353,9 +355,11 @@ var Ami = {
             // remove finished calls
             $('#realtime-table tr.empty').remove();
             var ids = utils.getValues(calls, 'uniqueid');
-            $('#realtime-table realtime-table-row').each(function() {
-                console.log('remove ', $(this));
-                if (ids.indexOf(String($(this).attr('data-uniqueid'))) < 0) $(this).remove();
+            $('#realtime-table .realtime-table-row').each(function() {
+                if (ids.indexOf(String($(this).attr('data-uniqueid'))) < 0) {
+                	console.log('UI remove ', $(this));
+			$(this).remove();
+		}
             });
         }
     },
@@ -393,21 +397,20 @@ var Ami = {
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
         var element = $("[data-uniqueid='" + acall.uniqueid + "']");
-        console.log(element);
         if (element.length) {
-            console.log('edit ', element);
+            console.log('UI edit ', element);
 
-            element.find('call-name').html(acall.name);
-            element.find('call-accountcode').html(acall.accountcode);
-            element.find('call-src').html(acall.src);
-            element.find('call-dst').html(acall.dst);
-            element.find('call-startcall').html(acall.startcall);
-            element.find('call-duration').html(acall.duration);
-            element.find('call-actions').html(acall.actions);
+            element.find('.call-name').html(acall.name);
+            element.find('.call-accountcode').html(acall.accountcode);
+            element.find('.call-src').html(acall.src);
+            element.find('.call-dst').html(acall.dst);
+            element.find('.call-startcall').html(acall.startcall);
+            element.find('.call-duration').html(acall.duration);
+            element.find('.call-actions').html(acall.actions);
 
         } else {
 
-            console.log('add element');
+            console.log('UI add element');
 
 
             $('#realtime-table tbody').append(
