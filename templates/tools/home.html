@@ -8,8 +8,8 @@
       <h1><i class="zmdi zmdi-remote-control"></i> Strumenti</h1>
       <!-- <p class="lead">Descrizione</p> -->
     </div>
-    <div class="row">
-        <div class="col-md-4" style="float: none; margin: 0 auto;">
+    <div class="row" style="float:none; margin: 0 auto">
+        <div class="col-md-4">
             <div class="card bordered">
                 <div class="card-header">
                     <div class="card-title">Occupazione disco</div>
@@ -22,15 +22,22 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4" style="float: none; margin: 0 auto;">
+        <div class="col-md-4">
             <div class="card bordered">
                 <div class="card-header">
                     <div class="card-title">Stato interni</div>
                 </div>
                 <div class="card-content">
-                    {% for peer in peers_status %}
-                        {{ peer.extension }} ({{ peer.stato }})
-                    {% endfor %}
+			<div class="list-group">
+                    	{% for peer in peers_status %}
+                            	{% if peer.status == 'ON' %}
+					<div class="pull-left m-r-10"> <i class="icon-circle green-border v-super"></i> </div>
+				{% else %}
+					<div class="pull-left m-r-10"> <i class="icon-circle red-border v-super"></i> </div>
+				{% endif %}
+                            	<div class="list-group-item-heading">{{ peer.extension.extension }} - {{ peer.extension.name }}</div>
+                    	{% endfor %}
+			</div>
                 </div>
             </div>
         </div>

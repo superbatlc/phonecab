@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -16,9 +17,10 @@ def tools_home(request):
     if request.GET.get("err") != '1':
         try:
             variables['diskusage'] = _tool_get_disk_usage()
-            variables['peers_staus'] = _get_peers_status()
+            variables['peers_status'] = _get_peers_status()
         except Exception as e:
-            return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco")
+            return redirect("/tools/?err=1&err_msg=%s" % format(e))
+            #return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco")
     
     return render_to_response(
         'tools/home.html', RequestContext(request, variables))
@@ -33,13 +35,14 @@ def _get_peers_status():
 
     extensions = Extension.objects.all().order_by('extension')
     stati = []
+    print extensions
     
     for extension in extensions:
         stato = 'OFF'
-        status = os.popen('sudo /usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"' % extension).read()
+        status = os.popen('sudo /usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"' % extension.extension).read()
+	print status
         if "OK" in status:
             stato = 'ON'
         stati.append({'extension': extension, 'status': stato})
-
 
     return stati
