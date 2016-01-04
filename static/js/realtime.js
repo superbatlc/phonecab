@@ -241,7 +241,7 @@ var Ami = {
                         name: '',
                         duration: '',
                         bridgeid: channel_bridgeid,
-                        recording = false,
+                        recording: false,
                     });
                 }
 
@@ -261,6 +261,7 @@ var Ami = {
                         call_exists = true;
                         acall.accountcode = channel.accountcode;
                         acall.duration = channel.duration;
+			acall.uniqueid = channel.uniqueid;
                         acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
                         acall.src = channel.connectedlinenum;
                         acall.dst = channel.calleridnum;
@@ -272,6 +273,7 @@ var Ami = {
                         call_exists = true;
                         acall.accountcode = channel.accountcode;
                         acall.duration = channel.duration;
+			acall.uniqueid = channel.uniqueid;
                         acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
                         if (!trunk.exten) {
                             // PER CONTO [ from-cabs + from-trunk ]
@@ -289,7 +291,7 @@ var Ami = {
                         // rimuovi la chiamata
                         calls.pop(acall);
                     }
-                }
+                });
 
                 Ami._cleanUICalls(calls);
 
@@ -316,8 +318,8 @@ var Ami = {
                                     Ami._addUICall(acall);
                                 });
                         }
-                    };
-                }); // END call each
+                    }
+                ); // END call each
 
 
 
@@ -348,6 +350,7 @@ var Ami = {
             // remove finished calls
             var ids = utils.getValues(calls, 'uniqueid');
             $('#realtime-table realtime-table-row').each(function() {
+		console.log('remove ',$(this));
                 if (ids.indexOf(String($(this).attr('data-uniqueid'))) < 0) $(this).remove();
             });
         }
@@ -385,8 +388,10 @@ var Ami = {
         }
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
-        var element = $('#call-' + acall.uniqueid);
-        if (element) {
+        var element = $("[data-uniqueid='"+acall.uniqueid+"']");
+	console.log(element);
+        if (element.length) {
+	console.log('edit ',element);
 
             element.find('call-name').html(acall.name);
             element.find('call-accountcode').html(acall.accountcode);
@@ -398,11 +403,12 @@ var Ami = {
 
         } else {
 
+		console.log('add element');
+
 
             $('#realtime-table tbody').append(
                 $(document.createElement('tr'))
                 .addClass("realtime-table-row")
-                .attr('id', 'call-' + acall.uniqueid)
                 .attr('data-uniqueid', acall.uniqueid)
                 .append([
                     $(document.createElement('td')) // Anagrafica
