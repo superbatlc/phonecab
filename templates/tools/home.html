@@ -28,16 +28,16 @@
                     <div class="card-title">Stato interni</div>
                 </div>
                 <div class="card-content">
-			<div class="list-group">
-                    	{% for peer in peers_status %}
-                            	{% if peer.status == 'ON' %}
-					<div class="pull-left m-r-10"> <i class="icon-circle green-border v-super"></i> </div>
-				{% else %}
-					<div class="pull-left m-r-10"> <i class="icon-circle red-border v-super"></i> </div>
-				{% endif %}
-                            	<div class="list-group-item-heading">{{ peer.extension.extension }} - {{ peer.extension.name }}</div>
-                    	{% endfor %}
-			</div>
+    			<div class="list-group">
+                    {% for peer in peers_status %}
+                        {% if peer.status == 'ON' %}
+    					   <div class="pull-left m-r-10"> <i class="icon-circle green-border v-super"></i> </div>
+    				    {% else %}
+    					   <div class="pull-left m-r-10"> <i class="icon-circle red-border v-super"></i> </div>
+    				    {% endif %}
+                        <div class="list-group-item-heading">{{ peer.extension.extension }} - {{ peer.extension.name }}</div>
+                    {% endfor %}
+    			</div>
                 </div>
             </div>
         </div>

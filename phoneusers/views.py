@@ -296,7 +296,7 @@ def phoneuser_realtime_info(request):
 
     values['data']['name'] = 'Non disponibile'
     values['data']['dst'] = 'Non disponibile'
-    values['data']['src'] = 'Non disponibile'
+    values['data']['src_name'] = 'Non disponibile'
     values['data']['recording'] = 'hidden'
     try:
         if pincode:
@@ -310,11 +310,12 @@ def phoneuser_realtime_info(request):
                     values['data']['dst'] = "%s %s" % (dst, whitelist.label)
                     if whitelist.frequency == 1:
                         values['data']['recording'] = 'hidden'
-                src_name = Extension.get_extension_name(src)
-                if src_name:
-                    values['data']['src_name'] = "%s (%s)" % (src_name, src)
-                else:
-                    values['data']['src_name'] = src
+                if src:
+                    src_name = Extension.get_extension_name(src)
+                    if src_name:
+                        values['data']['src_name'] = "%s (%s)" % (src_name, src)
+                    else:
+                        values['data']['src_name'] = src
 
         return HttpResponse(json.dumps(values), content_type="application/json")
 
