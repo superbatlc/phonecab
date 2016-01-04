@@ -52,6 +52,8 @@ var Ami = {
     durationLoop: null, // interval duration loop reference (to stop it)
     active: false, // sync with Realtime.active thru manageLoops
 
+    forceRefresh: true, // SET FALSE IF PROBLEMS!!!
+
     /**************************** ACTIONS *************************************/
 
     init: function() {
@@ -104,31 +106,6 @@ var Ami = {
         }, errorAction);
     },
 
-    linkCall: function(channel) {
-        if (!Ami._checkAuthenticated) return;
-        // TODO
-        /*var channel = jQuery(this).attr("data-channel");
-        var accountcode = jQuery('#realtime-accountcode').val();
-        // intanto settiamo il data-file per la registrazione
-        var calldate = d.getUTCFullYear().toString() + twoDigitsNum(d.getUTCMonth() + 1) + twoDigitsNum(d.getUTCDate());
-        var calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
-        var data_file = accountcode + '_' + calldate + '_' + calltime + '_' + dst;
-        jQuery('.record-call').attr('data-file', data_file);
-
-        // poi inviamo ad asterisk la variabile di canale per l'accountcode
-
-        requestData("GET", "xml", Config.ami.url + '?action=hangup&channel=' + channel, {},
-            function(response) {
-                showMessageBox("Conferma", 'Chiamata interrotta con successo.', "green");
-            },
-            function(error) {
-                // console.log('ERRORE', error);
-                showMessageBox("Errore", "Impossibile riagganciare la chiamata.", "alert-danger");
-            }
-        );
-        */
-    },
-
     /****************************** UTILS *************************************/
 
     _checkAuthenticated: function() {
@@ -138,18 +115,6 @@ var Ami = {
         }
         return true;
     },
-
-
-    // _getCallInfo: function(channel) {
-    //
-    //     if (Ami.channel.channel) {
-    //         return Ami.channel.channel;
-    //     } else {
-    //         // richiesta al server da implementare
-    //     }
-    //
-    //
-    // },
 
     /****************************** LOGIN *************************************/
 
@@ -217,10 +182,10 @@ var Ami = {
             }); // END each channels.response
 
             // No calls, no reason to continue
-            //if (channels.length == 0) {
-            //    Ami._noUICalls();
-            //    return;
-            //}
+            if (channels.length == 0) {
+                Ami._noUICalls();
+                return;
+            }
 
             // Divide channels by bridges (and create calls objects, 1 per bridge)
             channels.forEach(function(channel) {
@@ -293,7 +258,7 @@ var Ami = {
                 }
             });
 
-	//calls = Ami.calls;
+            //calls = Ami.calls;
 
             Ami._cleanUICalls(calls);
 
@@ -346,7 +311,10 @@ var Ami = {
 
     _cleanUICalls: function(calls) {
         // METHOD1 (refresh everytime)
-        //$('#realtime-table tbody').empty();
+        if (Ami.forceRefresh) {
+            $('#realtime-table tbody').empty();
+            return;
+        }
 
         // METHOD2
         if (calls.length == 0) {
@@ -357,9 +325,9 @@ var Ami = {
             var ids = utils.getValues(calls, 'uniqueid');
             $('#realtime-table .realtime-table-row').each(function() {
                 if (ids.indexOf(String($(this).attr('data-uniqueid'))) < 0) {
-                	console.log('UI remove ', $(this));
-			$(this).remove();
-		}
+                    console.log('UI remove ', $(this));
+                    $(this).remove();
+                }
             });
         }
     },
@@ -396,19 +364,23 @@ var Ami = {
         }
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
-        var element = $("[data-uniqueid='" + acall.uniqueid + "']");
-        if (element.length) {
-            console.log('UI edit ', element);
-
-            element.find('.call-name').html(acall.name);
-            element.find('.call-accountcode').html(acall.accountcode);
-            element.find('.call-src').html(acall.src);
-            element.find('.call-dst').html(acall.dst);
-            element.find('.call-startcall').html(acall.startcall);
-            element.find('.call-duration').html(acall.duration);
-            element.find('.call-actions').html(acall.actions);
-
+        if (!Ami.forceRefresh) {
+            var element = $("[data-uniqueid='" + acall.uniqueid + "']");
+            if (element.length) {
+                console.log('UI edit ', element);
+                element.find('.call-name').html(acall.name);
+                element.find('.call-accountcode').html(acall.accountcode);
+                element.find('.call-src').html(acall.src);
+                element.find('.call-dst').html(acall.dst);
+                element.find('.call-startcall').html(acall.startcall);
+                element.find('.call-duration').html(acall.duration);
+                element.find('.call-actions').html(acall.actions);
+            }
         } else {
+            var element = [];
+        }
+
+        if (!element.length) {
 
             console.log('UI add element');
 
