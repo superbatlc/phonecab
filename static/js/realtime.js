@@ -68,7 +68,7 @@ var Ami = {
             Ami.callsLoop = window.setInterval(Ami._updateCallsLoop, Config.ami.loopInterval);
             Ami._updateCallsLoop();
         } else {
-            Ami._noCalls();
+            Ami._noUICalls();
         }
     },
 
@@ -218,15 +218,12 @@ var Ami = {
 
             // No calls, no reason to continue
             if (channels.length == 0) {
-                Ami._noCalls();
+                Ami._noUICalls();
                 return;
             }
 
-		console.log(channels);
-
             // Divide channels by bridges (and create calls objects, 1 per bridge)
             channels.forEach(function(channel) {
-		console.log(channel);
                 var channel_name = channel.channel;
                 var channel_bridgeid = channel.bridgeid;
 
@@ -244,76 +241,83 @@ var Ami = {
                         name: '',
                         duration: '',
                         bridgeid: channel_bridgeid,
+                        recording = false,
                     });
                 }
 
             }); // END each channel
 
-            Ami._clearCalls();
-
             // Cycle calls (bridges) to get data
             calls.forEach(function(acall) {
-                var call_exists = false;
-                var channel = {}; //temproary value
-                var current_channels = bridged[acall.bridgeid];
-                var current_contexts = utils.getValues(current_channels, 'context');
+                    var call_exists = false;
+                    var channel = {}; //temproary value
+                    var current_channels = bridged[acall.bridgeid];
+                    var current_contexts = utils.getValues(current_channels, 'context');
 
-                if (current_contexts.indexOf('cabs-dial-number') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+                    if (current_contexts.indexOf('cabs-dial-number') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
 
-                    //DETENUTO [ cabs-dial-number + from-trunk]
-                    channel = utils.getItem(current_channels, 'context', 'from-trunk');
-                    call_exists = true;
-                    acall.accountcode = channel.accountcode;
-                    acall.duration = channel.duration;
-                    acall.src = channel.connectedlinenum;
-                    acall.dst = channel.calleridnum;
-
-                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
-
-                    channel = utils.getItem(current_channels, 'context', 'from-cabs');
-                    var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
-                    call_exists = true;
-                    acall.accountcode = channel.accountcode;
-                    acall.duration = channel.duration;
-                    if (!trunk.exten) {
-                        // PER CONTO [ from-cabs + from-trunk ]
-                        acall.src = channel.calleridnum;
-                        acall.dst = channel.connectedlinenum;
-                    } else {
-                        // ENTRANTE [from-cabs + from-trunk + from-trunk.exten valorizzato]
-                        acall.src = '';
+                        //DETENUTO [ cabs-dial-number + from-trunk]
+                        channel = utils.getItem(current_channels, 'context', 'from-trunk');
+                        call_exists = true;
+                        acall.accountcode = channel.accountcode;
+                        acall.duration = channel.duration;
+                        acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                        acall.src = channel.connectedlinenum;
                         acall.dst = channel.calleridnum;
+
+                    } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+
+                        channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                        var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
+                        call_exists = true;
+                        acall.accountcode = channel.accountcode;
+                        acall.duration = channel.duration;
+                        acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                        if (!trunk.exten) {
+                            // PER CONTO [ from-cabs + from-trunk ]
+                            acall.src = channel.calleridnum;
+                            acall.dst = channel.connectedlinenum;
+                        } else {
+                            // ENTRANTE [from-cabs + from-trunk + from-trunk.exten valorizzato]
+                            acall.src = '';
+                            acall.dst = channel.calleridnum;
+                        }
+
                     }
 
+                    if (!call_exists) {
+                        // rimuovi la chiamata
+                        calls.pop(acall);
+                    }
                 }
 
-                if (!call_exists) {
-                    // rimuovi la chiamata
-                    calls.pop(acall);
-                } else {
-                    // recuperiamo dati aggiuntivi sulla chiamata
-                    if (acall.accountcode != '') {
+                Ami._cleanUICalls(calls);
 
-                        var data = {};
-                        data.pincode = acall.accountcode;
-                        data.dst = acall.dst;
-                        data.src = acall.src;
+                calls.forEach(function(acall) {
+                        // recuperiamo dati aggiuntivi sulla chiamata
+                        if (acall.accountcode != '') {
 
-                        requestData("POST", "json", '/phoneusers/realtime/info/', {
-                                data: data
-                            }, function(response) {
-                                acall.name = response.data.name;
-                                acall.dst = response.data.dst;
-                                acall.src = response.data.src_name;
-                                Ami._addCall(acall, response.data.recording);
-                            },
-                            function(error) {
-                                console.log('Dati di link fra call<->db non recuperati', error);
-                                Ami._addCall(acall, false);
-                            });
-                    }
-                };
-            }); // END call each
+                            var data = {};
+                            data.pincode = acall.accountcode;
+                            data.dst = acall.dst;
+                            data.src = acall.src;
+
+                            requestData("POST", "json", '/phoneusers/realtime/info/', {
+                                    data: data
+                                }, function(response) {
+                                    acall.name = response.data.name;
+                                    acall.dst = response.data.dst;
+                                    acall.src = response.data.src_name;
+                                    acall.recording = response.data.recording;
+                                    Ami._addUICall(acall);
+                                },
+                                function(error) {
+                                    console.log('Dati di link fra call<->db non recuperati', error);
+                                    Ami._addUICall(acall);
+                                });
+                        }
+                    };
+                }); // END call each
 
 
 
@@ -332,16 +336,24 @@ var Ami = {
 
     /*********************** DOM MANIPULATION *********************************/
 
-    _clearCalls: function() {
+    _noUICalls: function() {
         $('#realtime-table tbody').empty();
-    },
-
-    _noCalls: function() {
-        Ami._clearCalls();
         $('#realtime-table tbody').append('<tr><td colspan="7" align="center"><h3>Non ci sono chiamate in corso</h3></td></tr>');
     },
 
-    _addCall: function(acall, recording) {
+    _cleanUICalls: function(calls) {
+        if (calls.length == 0) {
+            Ami._noUICalls();
+        } else {
+            // remove finished calls
+            var ids = utils.getValues(calls, 'uniqueid');
+            $('#realtime-table realtime-table-row').each(function() {
+                if (ids.indexOf(String($(this).attr('data-uniqueid'))) < 0) $(this).remove();
+            });
+        }
+    },
+
+    _addUICall: function(acall) {
 
         // var acall = {
         //     channel: 'canale',
@@ -352,6 +364,7 @@ var Ami = {
         //     duration: '20',
         //     uniqueid: 'univoco',
         //     linkedid: 'univocobridge',
+        //     recording: 'hidden|progress|show',
         // }
 
         var d = new Date()
@@ -360,55 +373,72 @@ var Ami = {
         filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 
         var actions = '';
-        switch (recording) {
+        switch (acall.recording) {
             case 'progress':
                 actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
                 break;
             case 'show':
                 actions += '<button class="recording btn btn-warning record-call" onclick="Ami.recordCall(\'' + acall.channel + '\',\'' + filename + '\')">Registra</button>'
                 break;
-            case 'hidden':
+            default:
                 break;
         }
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
-        $('#realtime-table tbody').append(
-            $(document.createElement('tr'))
-            .addClass("realtime-table-row")
-            .attr('id', 'call-' + acall.uniqueid)
-            .append([
-                $(document.createElement('td')) // Anagrafica
-                .addClass('call-name text-left')
-                .html(acall.name),
+        var element = $('#call-' + acall.uniqueid);
+        if (element) {
 
-                $(document.createElement('td')) // Codice
-                .addClass('call-accountcode text-center')
-                .html(acall.accountcode),
+            element.find('call-name').html(acall.name);
+            element.find('call-accountcode').html(acall.accountcode);
+            element.find('call-src').html(acall.src);
+            element.find('call-dst').html(acall.dst);
+            element.find('call-startcall').html(acall.startcall);
+            element.find('call-duration').html(acall.duration);
+            element.find('call-actions').html(acall.actions);
 
-                $(document.createElement('td')) // Sorgente
-                .addClass('call-src text-center')
-                .html(acall.src),
+        } else {
 
-                $(document.createElement('td')) // Destinazione
-                .addClass('call-dst text-center')
-                .html(acall.dst),
 
-                $(document.createElement('td')) // Ora inizio
-                .addClass('call-startcall text-center')
-                .html(acall.startcall),
+            $('#realtime-table tbody').append(
+                $(document.createElement('tr'))
+                .addClass("realtime-table-row")
+                .attr('id', 'call-' + acall.uniqueid)
+                .attr('data-uniqueid', acall.uniqueid)
+                .append([
+                    $(document.createElement('td')) // Anagrafica
+                    .addClass('call-name text-left')
+                    .html(acall.name),
 
-                $(document.createElement('td')) // Durata
-                .addClass('call-duration text-center')
-                .html(acall.duration),
+                    $(document.createElement('td')) // Codice
+                    .addClass('call-accountcode text-center')
+                    .html(acall.accountcode),
 
-                // $(document.createElement('td')) // Credito residuo
-                // .addClass('text-center')
-                // .html(''),
+                    $(document.createElement('td')) // Sorgente
+                    .addClass('call-src text-center')
+                    .html(acall.src),
 
-                $(document.createElement('td')) // Azioni
-                .addClass('call-actions text-center')
-                .html(actions),
-            ]));
+                    $(document.createElement('td')) // Destinazione
+                    .addClass('call-dst text-center')
+                    .html(acall.dst),
+
+                    $(document.createElement('td')) // Ora inizio
+                    .addClass('call-startcall text-center')
+                    .html(acall.startcall),
+
+                    $(document.createElement('td')) // Durata
+                    .addClass('call-duration text-center')
+                    .html(acall.duration),
+
+                    // $(document.createElement('td')) // Credito residuo
+                    // .addClass('text-center')
+                    // .html(''),
+
+                    $(document.createElement('td')) // Azioni
+                    .addClass('call-actions text-center')
+                    .html(actions),
+                ]));
+
+        } // IF exists
     }
 
 
