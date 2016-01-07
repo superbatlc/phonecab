@@ -18,7 +18,7 @@
         {% if items %}
             {% for item in items %}
             <tr>
-            <td>{{ item.last_name }} {{ item.first_name }}</td>
+            <td><a href="/phoneusers/view/{{ item.id }}">{{ item.last_name }} {{ item.first_name }}</a></td>
             <td style="text-align:center;">{{ item.pincode}}</td>
             <td style="text-align:center;">{{ item.serial_no}}</td>
             {% if priv_credit %}
