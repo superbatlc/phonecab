@@ -203,12 +203,20 @@ def cdr_export_excel(request):
     if start_date != '':
         start_date = Helper.convert_datestring_format(
             start_date, "%d-%m-%Y", "%Y-%m-%d")
-        start_date = "%s %s:00" % (start_date, start_time)
+        if start_time:
+            start_time = "%s:00" % start_time
+        else:
+            start_time = "00:00:00"
+        start_date = "%s %s" % (start_date, start_time)
         q_obj.add(Q(calldate__gte=start_date), Q.AND)
 
     if end_date != '':
         end_date = Helper.convert_datestring_format(
             end_date, "%d-%m-%Y", "%Y-%m-%d")
+        if end_time:
+            end_time = "%s:59" % end_time
+        else:
+            end_time = "23:59:59"
         end_date = "%s %s:59" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
