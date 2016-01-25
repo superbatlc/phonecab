@@ -77,8 +77,8 @@ class Helper(object):
         if 'end_date' in d.keys():
             detail += "Data fine: %s " % d['end_date']
 
-        if 'accountcode' in d.keys():
-            detail += "Codice: %s " % d['accountcode']
+        if 'pincode' in d.keys():
+            detail += "Codice: %s " % d['pincode']
 
         if 'dst' in d.keys():
             detail += "Destinazione: %s " % d['dst']

@@ -75,22 +75,6 @@ class Fare(models.Model):
 
         return (float(fare[0]) + float(fare[1]) * duration) / 100  # eurocent
 
-    @staticmethod
-    def check_prefix_existance(phonenumber):
-        """Restituisce 1 se il prefisso del numero passato compare nel db. 0 altrimenti"""
-        from django.db import connection
-        cursor = connection.cursor()
-
-        # recuperiamo la tariffa corrispondente alla espressione regolare
-        # che matcha con l'ordine minore
-        query = """SELECT COUNT(*) AS n FROM %s
-                WHERE '%s' REGEXP reg_exp""" % (Fare._meta.db_table, phonenumber)
-        cursor.execute(query)
-
-        existance = cursor.fetchone()
-        if existance:
-            return str(existance[0])
-        return "0"
 
     def save(self, user, *args, **kwargs):
         """Override della funzione save per impostare correttamente le espressioni regolari
@@ -132,12 +116,12 @@ class Extension(models.Model):
 
     @staticmethod
     def get_extension_name(extension):
-        name = None
+        """Restituisce il nome estensione o solo estensione"""
         try:
             ext = Extension.objects.get(extension=extension)
-            name = ext.name
+            name = "%s (%s)" % (ext.name, extension)
         except:
-            pass
+            name = extension
         return name
 
 

@@ -26,8 +26,8 @@ $('.cdr-do-filter').on('click',function(){
         }
     }
                                                     
-    if($('input[name=accountcode]').val()){
-        dict['accountcode'] = $('input[name=accountcode]').val()
+    if($('input[name=pincode]').val()){
+        dict['pincode'] = $('input[name=pincode]').val()
     }
                                           
     if($('input[name=dst]').val()){

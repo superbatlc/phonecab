@@ -27,7 +27,7 @@ $('.records-do-filter').on('click',function(){
     }
                                                     
     if($('input[name=pincode]').val()){
-        dict['accountcode'] = $('input[name=pincode]').val()
+        dict['pincode'] = $('input[name=pincode]').val()
     }
 
     

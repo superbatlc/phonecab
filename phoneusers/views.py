@@ -12,10 +12,9 @@ from django.db.models import Q
 from phoneusers.models import PhoneUser, Whitelist, Credit
 #from acls.models import Acl
 
-from cdrs.models import Detail
+from cdrs.models import SuperbaCDR
 from audits.models import Audit
 from helper.Helper import Helper
-from helper import http
 from acls.models import Acl
 from prefs.models import Pref, Extension
 from archives.models import ArchivedPhoneUser
@@ -127,7 +126,7 @@ def phoneuser_view(request, phoneuser_id="0"):
 @login_required
 def phoneuser_data(request, phoneuser_id="0"):
     """Recupera e visualizza le informazioni sul phoneuser - pannello anagrafica"""
-    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff) # TODO solo priv_anagrafica
+    variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
     if int(phoneuser_id):
         try:
             phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
@@ -260,7 +259,7 @@ def phoneuser_archive(request):
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     
 @login_required
-def phoneuser_name(request, accountcode):
+def phoneuser_name(request, pincode):
     """Get phoneuser name for realtime displaying"""
     values = {
               'data': {},
@@ -270,8 +269,8 @@ def phoneuser_name(request, accountcode):
 
     values['data']['name'] = 'Non disponibile'
     values['data']['recording'] = False
-    if accountcode:
-        phoneuser = PhoneUser.get_from_pincode(accountcode)
+    if pincode:
+        phoneuser = PhoneUser.get_from_pincode(pincode)
         if phoneuser:
             values['data']['name'] = phoneuser.get_full_name()
             values['data']['recording'] = phoneuser.recording_enabled
@@ -314,11 +313,7 @@ def phoneuser_realtime_info(request):
                     except:
                         values['data']['dst'] = dst
                 if src:
-                    src_name = Extension.get_extension_name(src)
-                    if src_name:
-                        values['data']['src_name'] = "%s (%s)" % (src_name, src)
-                    else:
-                        values['data']['src_name'] = src
+                    values['data']['src_name'] = Extension.get_extension_name(src)
 
         return HttpResponse(json.dumps(values), content_type="application/json")
 
@@ -430,7 +425,8 @@ def whitelist_remove(request):
             return whitelist_items(request, phoneuser_id)
             
         except Exception as e:
-            return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
+            return HttpResponse(status=400, 
+                content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     else:
         raise Http404
 
@@ -456,7 +452,8 @@ def whitelist_change_status(request):
                 what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
             return whitelist_items(request, phoneuser_id)
         except Exception as e:
-            return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
+            return HttpResponse(status=400, 
+                content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     else:
         raise Http404
 
@@ -487,7 +484,7 @@ def whitelist_change_ordinary(request):
         raise Http404
     
 @login_required
-def whitelist_check_extra(request): # TODO verificare i valori ritornati
+def whitelist_check_extra(request):
 
     whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
     phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
@@ -514,10 +511,9 @@ def whitelist_check_extra(request): # TODO verificare i valori ritornati
             values['err_msg'] = e.message
     else:
         raise Http404
-    #return http.JSONResponse(request, values)
     return HttpResponse(json.dumps(values), content_type="application/json")
 
-def _get_extra_call(accountcode, dst):
+def _get_extra_call(pincode, dst):
     import datetime
     from django.db import connection
 
@@ -526,7 +522,7 @@ def _get_extra_call(accountcode, dst):
     monthcalls = 0
 
     # cerchiamo quante chiamate sono state effettuate
-    # da accountcode all dst indicata
+    # da pincode all dst indicata
     # nella settimana e nel mese
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
@@ -535,12 +531,9 @@ def _get_extra_call(accountcode, dst):
     # lunedi di questa settimana
     previous_monday = (today - datetime.timedelta(days=today.weekday())).strftime("%Y-%m-%d")
     query = """SELECT COUNT(*) AS n FROM cdrs_detail
-            WHERE accountcode='%s' AND DATE(calldate)>='%s'
-            AND DATE(calldate) <= '%s' AND custom_calltype = 1
-            AND lastapp='Dial' AND custom_valid=1 AND disposition='ANSWERED'
-            AND (dcontext='cabs-dial-number'
-            OR dcontext='outgoing-operator-dial-number'
-            OR dcontext='incoming-operator-dial-number')""" % (accountcode,
+            WHERE pincode='%s' AND DATE(calldate)>='%s'
+            AND DATE(calldate) <= '%s' 
+            AND calltype=1 AND valid=1""" % (pincode,
                                      previous_monday,
                                      yesterday_str)
 
@@ -551,12 +544,9 @@ def _get_extra_call(accountcode, dst):
     # primo giorno del mese
     first_of_month = today.replace(day=1).strftime("%Y-%m-%d")
     query = """SELECT COUNT(*) AS n FROM cdrs_detail
-            WHERE accountcode='%s' AND DATE(calldate)>='%s'
-            AND DATE(calldate) <= '%s' AND custom_calltype = 1
-            AND lastapp='Dial' AND custom_valid=1 AND disposition='ANSWERED'
-            AND (dcontext='cabs-dial-number'
-            OR dcontext='outgoing-operator-dial-number'
-            OR dcontext='incoming-operator-dial-number')""" % (accountcode,
+            WHERE pincode='%s' AND DATE(calldate)>='%s'
+            AND DATE(calldate) <= '%s' AND calltype=1
+            AND valid=1)""" % (pincode,
                                      first_of_month,
                                      yesterday_str)
     cursor.execute(query)
@@ -565,15 +555,6 @@ def _get_extra_call(accountcode, dst):
 
     return (weekcalls, monthcalls)
 
-@login_required
-def whitelist_check_prefix(request): # TODO verificare
-    from prefs.models import Fare
-    phonenumber = request.POST.get("phonenumber", "0")
-    ret = 0
-    if(phonenumber):
-        ret = Fare.check_prefix_existance(phonenumber)
-
-    return HttpResponse(ret, content_tyep='text/plain')
 
 @login_required
 def credit_items(request, phoneuser_id):
@@ -693,9 +674,9 @@ def credit_export(request, phoneuser_id=0):
         except:
             raise Http404
 
-        recharges = Credit.objects.filter(phoneuser_id=phoneuser_id)
-        tot_recharges = Credit.get_total(phoneuser_id)
-        tot_cost = Detail.get_cost(phoneuser_id)
+        recharges = Credit.objects.filter(phoneuser=phoneuser)
+        tot_recharges = Credit.get_total(phoneuser)
+        tot_cost = SuperbaCDR.get_cost(phoneuser)
 
         variables = {
             'header': Pref.header(),

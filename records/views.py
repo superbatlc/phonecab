@@ -12,7 +12,7 @@ from records.models import Record
 from acls.models import Acl
 from helper.Helper import Helper
 from phoneusers.models import PhoneUser, Whitelist
-from cdrs.models import Detail
+from cdrs.models import SuperbaCDR
 from audits.models import Audit
 from prefs.models import Pref, Extension
 from helper.Helper import Helper
@@ -88,18 +88,19 @@ def record_items(request):
 
     items_list = Record.objects.filter(q_obj).order_by('-calldate')
 
+    # se filtriamo per destinazione dobbiamo visualizzare solo
+    # i record associati a una chiamata
     if dst != '':
         filtered_item_list = []
         for item in items_list:
             try:
-                detail = Detail.objects.get(uniqueid=item.uniqueid)
-                if dst in detail.custom_dst:
+                detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid)
+                if dst == detail.dst:
                     filtered_item_list.append(item)
             except:
                 pass
         items_list = filtered_item_list
 
-    #total_items = items_list.count()
     total_items = len(items_list)
 
     items, items_range, items_next_page = Helper.make_pagination(
@@ -108,17 +109,15 @@ def record_items(request):
     for item in items:
         item.phoneuser = PhoneUser.get_from_pincode(item.pincode)
         try:
-            details = Detail.objects.filter(uniqueid=item.uniqueid)
+            details = SuperbaCDR.objects.filter(uniqueid=item.uniqueid)
             if not details:
-                item.detail = Detail
-                item.detail.custom_dst = ''
+                item.detail = SuperbaCDR
+                item.detail.dst = ''
             else:
                 item.detail = details[0]
-                src_name = Extension.get_extension_name(item.detail.custom_src)
-                if src_name:
-                    item.detail.custom_src = "%s (%s)" % (src_name, item.detail.custom_src)
+                item.detail.src = Extension.get_extension_name(item.detail.src)
             item.whitelist = Whitelist.objects.get(
-                phoneuser_id=item.phoneuser.id, phonenumber=item.detail.custom_dst)
+                phoneuser=item.phoneuser, phonenumber=item.detail.dst)
         except Exception as e:
             return redirect("/records/?err=1&err_msg=Impossibile caricare la lista dei record")
 
@@ -210,7 +209,7 @@ def _single_record_export(request, record_id="0"):
 
     return response
 
-def _multi_record_export_as_zip_file(request):
+def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
     "Esportazione multifile in formato zip"""
     import os
     import contextlib
@@ -249,8 +248,8 @@ def _multi_record_export_as_zip_file(request):
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
             
-            detail = Detail.objects.get(uniqueid=item.uniqueid) 
-            if detail.custom_valid and (detail.dcontext == 'cabs-dial-number' or detail.dcontext == 'outgoing-operator-dial-number' or detail.dcontext == 'incoming-operator-dial-number'):
+            detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid) 
+            if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
                 myzip.write(path, arcname = item.filename)
@@ -317,8 +316,8 @@ def _multi_record_remove(request):
         filtered_item_list = []
         for item in items_list:
             try:
-                detail = Detail.objects.get(uniqueid=item.uniqueid)
-                if dst in detail.custom_dst:
+                detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid)
+                if dst in detail.dst:
                     filtered_item_list.append(item)
             except:
                 pass

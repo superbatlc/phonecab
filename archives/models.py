@@ -2,7 +2,7 @@ import datetime
 from django.db import models
 
 from phoneusers.models import PhoneUser, Whitelist, Credit
-from cdrs.models import Detail
+from cdrs.models import SuperbaCDR
 from records.models import Record
 
 
@@ -133,7 +133,7 @@ class ArchivedPhoneUser(models.Model):
         Archives all the cdr details and if required
         deletes them from the cdrs_detail table
         """
-        details = Detail.objects.filter(accountcode=self.phoneuser.pincode)
+        details = SuperbaCDR.objects.filter(pincode=self.phoneuser.pincode)
         for detail in details:
             archived_detail = ArchivedDetail()
             archived_detail.archived_phoneuser = self
@@ -167,13 +167,13 @@ class ArchivedWhitelist(models.Model):
     This class stores the whitelists of an archived phoneuser
     """
 
-    FIRST_FREQUENCY = 0           # free
+    FIRST_IN_FREQUENCY = 0           # free
     LAWYER_FREQUENCY = 1          # free
     ORDINARY_FREQUENCY = 2        # 1 per week
     ORDINARY_4BIS_FREQUENCY = 3   # 2 per month not in the same week
 
     CALL_FREQUENCY = (
-        (FIRST_FREQUENCY, 'Primo Ingresso'),
+        (FIRST_IN_FREQUENCY, 'Primo Ingresso'),
         (LAWYER_FREQUENCY, 'Avvocato'),
         (ORDINARY_FREQUENCY, 'Ordinaria'),
         (ORDINARY_4BIS_FREQUENCY, 'Ordinaria 4bis limitato')
@@ -219,9 +219,10 @@ class ArchivedCredit(models.Model):
         self.reason = credit.reason
 
     @staticmethod
-    def get_total(archived_phoneuser_id):
+    def get_total(archived_phoneuser):
         """Restituisce il totale delle ricariche effettuate"""
-        total = ArchivedCredit.objects.filter(archived_phoneuser_id=archived_phoneuser_id).aggregate(total=models.Sum('recharge'))
+        total = ArchivedCredit.objects.filter(
+            archived_phoneuser=archived_phoneuser).aggregate(total=models.Sum('recharge'))
         return total['total']
 
 
@@ -234,67 +235,43 @@ class ArchivedDetail(models.Model):
 
     archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
     calldate = models.DateTimeField()
-    clid = models.CharField(max_length=80, default='')
     src = models.CharField(max_length=80, default='')
     dst = models.CharField(max_length=80, default='')
-    dcontext = models.CharField(max_length=80, default='')
-    channel = models.CharField(max_length=80, default='')
-    dstchannel = models.CharField(max_length=80, default='')
-    lastapp = models.CharField(max_length=80, default='')
-    lastdata = models.CharField(max_length=80, default='')
+    calltype = models.IntegerField(default=0)
+    direction = models.IntegerField(default=1)
     duration = models.IntegerField(default=0)
     billsec = models.IntegerField(default=0)
-    disposition = models.CharField(max_length=45, default='')
-    amaflags = models.IntegerField(default=0)
     # rappresenta il pincode anagrafica
-    accountcode = models.CharField(max_length=20, default='')
-    userfield = models.CharField(max_length=255, default='')
+    pincode = models.CharField(max_length=40, default='')
     uniqueid = models.CharField(max_length=32, default='')
-    linkedid = models.CharField(max_length=32, default='')
-    sequence = models.CharField(max_length=32, default='')
-    peeraccount = models.CharField(max_length=32, default='')
-    price = models.DecimalField(default=0, max_digits=7, decimal_places=4)
-    custom_src = models.CharField(max_length=80, default='')
-    custom_dst = models.CharField(max_length=80, default='')
-    custom_calltype = models.IntegerField(default=0)
-    custom_valid = models.IntegerField(default=0)
+    price = models.DecimalField(max_digits=7, decimal_places=4, default=0)
+    valid = models.BooleanField(default=True)
+
 
     def copy(self, detail):
         self.calldate = detail.calldate
-        self.clid = detail.clid
         self.src = detail.src
         self.dst = detail.dst
-        self.dcontext = detail.dcontext
-        self.channel = detail.channel
-        self.dstchannel = detail.dstchannel
-        self.lastapp = detail.lastapp
-        self.lastdata = detail.lastdata
         self.duration = detail.duration
         self.billsec = detail.billsec
-        self.disposition = detail.disposition
-        self.amaflags = detail.amaflags
-        self.accountcode = detail.accountcode
-        self.userfield = detail.userfield
+        self.pincode = detail.pincode
         self.uniqueid = detail.uniqueid
-        self.linkedid = detail.linkedid
-        self.sequence = detail.sequence
-        self.peeraccount = detail.peeraccount
         self.price = detail.price
-        self.custom_src = detail.custom_src
-        self.custom_dst = detail.custom_dst
-        self.custom_calltype = detail.custom_calltype
-        self.custom_valid = detail.custom_valid
+        self.direction = detail.direction
+        self.calltype = detail.calltype
+        self.valid = detail.valid
 
     @staticmethod
-    def get_cost(archived_phoneuser_id):
+    def get_cost(archived_phoneuser):
         """Calcola il totale dei costi sostenuti"""
-        try:
-            total = Detail.objects.filter(archived_phoneuser_id=archived_phoneuser_id).aggregate(total=models.Sum('price'))
-            return total['total']
-        except Exception as e:
-            print format(e)
-            pass # TODO gestire errore
-
+        
+        total = SuperbaCDR.objects.filter(
+            archived_phoneuser=archived_phoneuser).aggregate(total=models.Sum('price'))
+        cost = total['total']
+        if cost:
+            return cost
+        return None
+    
 
 class ArchivedRecord(models.Model):
     """

@@ -106,18 +106,18 @@ jQuery('body').on('click','.record-call', function(e){
 })
 
 /**
- * Funzione associa accountcode
+ * Funzione associa pincode
  */
 jQuery('body').on('click','.link-call', function(e){
 	var channel = jQuery(this).attr("data-channel");
-	var accountcode = jQuery('#realtime-accountcode').val();
+	var pincode = jQuery('#realtime-pincode').val();
 	// intanto settiamo il data-file per la registrazione
 	var calldate = d.getUTCFullYear().toString()+twoDigitsNum(d.getUTCMonth()+1)+twoDigitsNum(d.getUTCDate());
     var calltime = twoDigitsNum(d.getHours())+twoDigitsNum(d.getMinutes())+twoDigitsNum(d.getSeconds());
-    var data_file = accountcode + '_' + calldate + '_' + calltime + '_' + dst; 
+    var data_file = pincode + '_' + calldate + '_' + calltime + '_' + dst; 
 	jQuery('.record-call').attr('data-file', data_file);
 	
-	// poi inviamo ad asterisk la variabile di canale per l'accountcode
+	// poi inviamo ad asterisk la variabile di canale per l'pincode
 	/*
 	jQuery.ajax({
 	       type: 'GET',
@@ -169,7 +169,7 @@ function twoDigitsNum(num){
  */
 function update_realtime(){
         //var channel;
-        //var accountcode = '-';
+        //var pincode = '-';
         //var src = 'non disponibile';
         //var dst = 'non disponibile';
 		//var calldate;
@@ -181,14 +181,14 @@ function update_realtime(){
 			this.channel = '';
 			this.src = '';
 			this.dst = '';
-			this.accountcode = '';
+			this.pincode = '';
 			this.name = ''
 			this.duration = '';
 			this.uniqueid = '';
 			this.bridgeduniqueid = '';
 			/*
 			check : function(){
-				if(this.src != '' && this.dst != '' && this.accountcode != ''){
+				if(this.src != '' && this.dst != '' && this.pincode != ''){
 					return true;
 				}
 				return false;
@@ -276,7 +276,7 @@ function update_realtime(){
 											var startcall = d.toLocaleTimeString();
 											acall.startcall = startcall;
 											if(response.generic.context == 'from-cabs'){
-												acall.accountcode = response.generic.accountcode;
+												acall.pincode = response.generic.pincode;
 												if(!incoming){
 													acall.src = response.generic.calleridnum;
 												}
@@ -296,7 +296,7 @@ function update_realtime(){
 											}
 											
 											if(response.generic.context == 'cabs-dial-number'){
-												acall.accountcode = response.generic.accountcode;
+												acall.pincode = response.generic.pincode;
 												acall.src = response.generic.calleridnum;
 												acall.dst = response.generic.extension;
 												acall.duration = response.generic.duration;
@@ -315,17 +315,17 @@ function update_realtime(){
 										calls.pop(acall);
 									}else{
 										// costruiamo la tabella se abbiamo tutti i dati
-										if(acall.src != '' && acall.dst != '' && acall.accountcode != ''){
+										if(acall.src != '' && acall.dst != '' && acall.pincode != ''){
 											jQuery.ajax({
 												   type: 'GET',
-												   url: '/phoneusers/name/'+acall.accountcode,
+												   url: '/phoneusers/name/'+acall.pincode,
 												   async: false,
 												   dataType: 'json',
 												   success: function(response){
 														acall.name = response.data.name;
 														var recording = response.data.recording;
 														var row = '<tr class="realtime-table-row"><td style="text-align:left">' + acall.name + '</td>';
-														row += '<td style="text-align:center">' + acall.accountcode + '</td>';
+														row += '<td style="text-align:center">' + acall.pincode + '</td>';
 														row += '<td style="text-align:center">' + acall.src + '</td>';
 														row += '<td style="text-align:center">' + acall.dst + '</td>';
 														row += '<td style="text-align:center">' + acall.startcall  + '</td>';
@@ -334,7 +334,7 @@ function update_realtime(){
 														var d = new Date()
 														calldate = d.getUTCFullYear().toString()+twoDigitsNum(d.getUTCMonth()+1)+twoDigitsNum(d.getUTCDate());
 														calltime = twoDigitsNum(d.getHours())+twoDigitsNum(d.getMinutes())+twoDigitsNum(d.getSeconds());
-														filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
+														filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 														row += '<td style="text-align:center">';
 														if(recording){
 															row += '<button class="btn btn-warning disabled">In registrazione</button>&nbsp;';														

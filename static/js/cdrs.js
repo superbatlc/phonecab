@@ -7,7 +7,7 @@ var Cdr = {
 
             var data = {};
             data.id = id;
-            data.custom_valid = newstatus;
+            data.valid = newstatus;
 
             requestData("POST", "html", '/cdrs/changevalid/', {data : data},
                 function(response){

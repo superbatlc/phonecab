@@ -9,11 +9,8 @@ from django.template.loader import render_to_string
 from django.db.models import Q
 from django.conf import settings
 
-#from cdrs.models import Detail
-#from phoneusers.models import PhoneUser, Whitelist
 from audits.models import Audit
 from acls.models import Acl
-#from prefs.models import Pref
 from helper.Helper import Helper
 
 

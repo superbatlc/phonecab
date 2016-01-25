@@ -38,7 +38,7 @@
                 </a>
                 {% if priv_cdr > 0 %}
                 &nbsp;
-                    <a href="/cdrs/?accountcode={{ item.pincode }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Mostra le chiamate effettuate da {{ item.last_name }} {{ item.first_name }}" data-toggle="tooltip" data-original-title="" title="">
+                    <a href="/cdrs/?pincode={{ item.pincode }}" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Mostra le chiamate effettuate da {{ item.last_name }} {{ item.first_name }}" data-toggle="tooltip" data-original-title="" title="">
                         <i class="zmdi zmdi-phone"></i>
                     </a>
                 {% endif %}

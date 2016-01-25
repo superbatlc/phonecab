@@ -59,19 +59,80 @@ class Detail(models.Model):
             pass # TODO gestire errore
 
 
-class RealTimeCall(models.Model):
+class SuperbaCDRManager(models.Manager):
 
-    """
-    RealTimeCall
+    def valid(self):
+        return self.filter(valid=True)
 
-    Modella i dati nella tabella delle chiamate realtime
+    def incoming(self):
+        return self.filter(direction=SuperbaCDR.DIRECTION_INCOMING)
+
+    def outgoing(self):
+        return self.filter(direction=SuperbaCDR.DIRECTION_OUTGOING)
+
+
+
+class SuperbaCDR(models.Model):
     """
-    pincode = models.CharField(max_length=10, default='')
+    SuperbaCDR
+
+    Mappa il cdr custom
+    """
+
+    CALL_ORDINARY = 0
+    CALL_EXTRAORDINARY = 1
+    CALL_SPECIAL = 2
+
+    CALL_TYPES = (
+        (CALL_ORDINARY, 'ordinaria'),
+        (CALL_EXTRAORDINARY, 'strordinaria'),
+        (CALL_SPECIAL, 'speciale'),
+    )
+
+    DIRECTION_INTERCOM = 0
+    DIRECTION_OUTGOING = 1
+    DIRECTION_INCOMING = 2
+
+    DIRECTIONS = (
+        (DIRECTION_INTERCOM, 'interna'),
+        (DIRECTION_OUTGOING, 'uscente'),
+        (DIRECTION_INCOMING, 'entrante'),
+    )
+
+    calldate = models.DateTimeField()
     src = models.CharField(max_length=80, default='')
     dst = models.CharField(max_length=80, default='')
-    calldate = models.IntegerField()
-    max_duration = models.IntegerField(default=0)
-    balance = models.FloatField(default=0)
-    connection_charge = models.FloatField(default=0)
-    fee_per_second = models.FloatField(default=0)
-    channel = models.CharField(max_length=80, default='')
+    pincode = models.CharField(max_length=40, default='')
+    calltype = models.IntegerField(choices=CALL_TYPES, default=CALL_ORDINARY)
+    direction = models.IntegerField(choices=DIRECTIONS, default=DIRECTION_OUTGOING)
+    duration = models.IntegerField(default=0)
+    billsec = models.IntegerField(default=0)
+    price = models.DecimalField(max_digits=7, decimal_places=4, default=0)
+    valid = models.BooleanField(default=True)
+    uniqueid = models.CharField(max_length=32, default='')
+
+    class Meta:
+        db_table = 'superbacdr'
+
+    
+
+    @staticmethod
+    def get_cost(phoneuser):
+        """Calcola il totale dei costi sostenuti"""
+        try:
+            total = SuperbaCDR.objects.filter(pincode=phoneuser.pincode).aggregate(total=models.Sum('price'))
+            return total['total']
+        except Exception as e:
+            return None
+
+
+
+    
+    
+    
+    
+
+
+
+
+

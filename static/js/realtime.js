@@ -202,7 +202,7 @@ var Ami = {
                         channel: channel_name,
                         src: '',
                         dst: '',
-                        accountcode: '',
+                        pincode: '',
                         name: '',
                         duration: '',
                         bridgeid: channel_bridgeid,
@@ -224,7 +224,7 @@ var Ami = {
                     //DETENUTO [ cabs-dial-number + from-trunk]
                     channel = utils.getItem(current_channels, 'context', 'from-trunk');
                     call_exists = true;
-                    acall.accountcode = channel.accountcode;
+                    acall.pincode = channel.pincode;
                     acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
@@ -236,7 +236,7 @@ var Ami = {
                     channel = utils.getItem(current_channels, 'context', 'from-cabs');
                     var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
                     call_exists = true;
-                    acall.accountcode = channel.accountcode;
+                    acall.pincode = channel.pincode;
                     acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
@@ -264,10 +264,10 @@ var Ami = {
 
             calls.forEach(function(acall) {
                 // recuperiamo dati aggiuntivi sulla chiamata
-                if (acall.accountcode != '') {
+                if (acall.pincode != '') {
 
                     var data = {};
-                    data.pincode = acall.accountcode;
+                    data.pincode = acall.pincode;
                     data.dst = acall.dst;
                     data.src = acall.src;
 
@@ -338,7 +338,7 @@ var Ami = {
         //     channel: 'canale',
         //     src: 'sorgente',
         //     dst: 'destinazione',
-        //     accountcode: 'codice',
+        //     pincode: 'codice',
         //     name: 'nome',
         //     duration: '20',
         //     uniqueid: 'univoco',
@@ -349,7 +349,7 @@ var Ami = {
         var d = new Date()
         calldate = d.getUTCFullYear().toString() + twoDigitsNum(d.getUTCMonth() + 1) + twoDigitsNum(d.getUTCDate());
         calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
-        filename = acall.accountcode + '_' + calldate + '_' + calltime + '_' + acall.dst;
+        filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
 
         var actions = '';
         switch (acall.recording) {
@@ -369,7 +369,7 @@ var Ami = {
             if (element.length) {
                 //console.log('UI edit ', element);
                 element.find('.call-name').html(acall.name);
-                element.find('.call-accountcode').html(acall.accountcode);
+                element.find('.call-pincode').html(acall.pincode);
                 element.find('.call-src').html(acall.src);
                 element.find('.call-dst').html(acall.dst);
                 element.find('.call-startcall').html(acall.startcall);
@@ -395,8 +395,8 @@ var Ami = {
                     .html(acall.name),
 
                     $(document.createElement('td')) // Codice
-                    .addClass('call-accountcode text-center')
-                    .html(acall.accountcode),
+                    .addClass('call-pincode text-center')
+                    .html(acall.pincode),
 
                     $(document.createElement('td')) // Sorgente
                     .addClass('call-src text-center')

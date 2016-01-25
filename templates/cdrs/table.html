@@ -22,7 +22,7 @@
         {% for item in items %}
         <tr>
         <td class="acentro">
-            {% if item.custom_valid %}
+            {% if item.valid %}
                 <button class="btn btn-round btn-link" onClick="Cdr.changeValid({{ item.id }}, 0)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endif %}>
         		<i class="zmdi zmdi-check zmdi-hc-lg"></i>
                 </button>
@@ -34,12 +34,12 @@
 
         </td>
         <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
-        <td class="acentro">{{ item.custom_calltype|calltype|safe }}</td>
-        <td class="acentro">{{ item.accountcode }}</td>
+        <td class="acentro">{{ item.calltype|calltype|safe }}</td>
+        <td class="acentro">{{ item.pincode }}</td>
         <td class="acentro">{{ item.phoneuser.serial_no }}</td>
         <td><a href="/phoneusers/view/{{ item.phoneuser.id }}">{{ item.phoneuser.get_full_name }}</a></td>
-        <td class="acentro">{{ item.custom_src }}</td>
-        <td class="acentro">{{ item.custom_dst }}</td>
+        <td class="acentro">{{ item.src }}</td>
+        <td class="acentro">{{ item.dst }}</td>
         <td>{{ item.whitelist.label }}</td>
         <td class="adestra">{{ item.billsec|format_time }}</td>
         <td class="adestra">{{ item.price }}</td>

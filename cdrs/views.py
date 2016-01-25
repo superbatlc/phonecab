@@ -9,12 +9,15 @@ from django.template.loader import render_to_string
 from django.db.models import Q
 from django.conf import settings
 
-from cdrs.models import Detail
+from cdrs.models import SuperbaCDR
 from phoneusers.models import PhoneUser, Whitelist
 from audits.models import Audit
 from acls.models import Acl
 from prefs.models import Pref, Extension
 from helper.Helper import Helper
+
+
+
 
 
 @login_required
@@ -39,7 +42,6 @@ def cdr_home(request):
     return render_to_response(
         'cdrs/home.html', RequestContext(request, variables))
 
-
 def cdr_items(request):
     """CDR Items"""
     variables = {}
@@ -50,9 +52,9 @@ def cdr_items(request):
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", None)
     end_time = request.GET.get("end_time", None)
-    accountcode = request.GET.get("accountcode", "")
+    pincode = request.GET.get("pincode", "")
     dst = request.GET.get("dst", "")
-    custom_calltype = request.GET.get("custom_calltype", None)
+    calltype = request.GET.get("calltype", None)
     page = int(request.GET.get("page", "1"))
 
     d = request.GET.dict()
@@ -63,10 +65,8 @@ def cdr_items(request):
         # elimino la pagina dal dizionario
         del d['page']
 
-    q_obj = Q(accountcode__icontains=accountcode)
-    q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
-    q_obj.add(Q(dcontext='cabs-dial-number')|Q(dcontext='outgoing-operator-dial-number')|Q(dcontext='incoming-operator-dial-number'), Q.AND)
-    q_obj.add(Q(disposition="ANSWERED"), Q.AND)
+    q_obj = Q(pincode__icontains=pincode)
+    q_obj.add(Q(dst__icontains=dst), Q.AND)
 
     if start_date != '':
         start_date = Helper.convert_datestring_format(
@@ -88,10 +88,10 @@ def cdr_items(request):
         end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
         
-    if custom_calltype:
-        q_obj.add(Q(custom_calltype=custom_calltype), Q.AND)
+    if calltype:
+        q_obj.add(Q(calltype=calltype), Q.AND)
 
-    items_list = Detail.objects.filter(q_obj).order_by('-calldate')
+    items_list = SuperbaCDR.objects.filter(q_obj).order_by('-calldate')
     total_items = items_list.count()
     total_costs = 0.0
 
@@ -107,16 +107,14 @@ def cdr_items(request):
         if item.price < 0:
             item.price = "0.00"
             # cerchiamo di recuperare informazioni sul phoneuser
-        item.phoneuser = PhoneUser.get_from_pincode(item.accountcode)
+        item.phoneuser = PhoneUser.get_from_pincode(item.pincode)
         try:
             item.whitelist = Whitelist.objects.filter(
-                phoneuser_id=item.phoneuser.id, phonenumber=item.custom_dst)[0]
+                phoneuser=item.phoneuser, phonenumber=item.dst)[0]
         except Exception as e:
-            pass
+            item.whitelist = ''
 
-        src_name = Extension.get_extension_name(item.custom_src)
-        if src_name:
-            item.custom_src = "%s (%s)" % (src_name, item.custom_src)
+        item.src = Extension.get_extension_name(item.src)
 
     prev_page = page - 1
     prev_page_disabled = ''
@@ -164,18 +162,20 @@ def cdr_items(request):
 def cdr_change_valid(request):
 
     id = int(request.POST.get("data[id]", "0"))
-    custom_valid = int(request.POST.get("data[custom_valid]", None))
+    valid = int(request.POST.get("data[valid]", None))
     try:
         if id:
-            detail = Detail.objects.get(pk=id)
-            detail.custom_valid = custom_valid
+            detail = SuperbaCDR.objects.get(pk=id)
+            detail.valid = valid
             detail.save()
 
             return cdr_items(request)
         else:
             raise Http404
     except Exception as e:
-        return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
+        return HttpResponse(status=400, 
+            content=json.dumps({'err_msg': format(e)}), 
+            content_type='application/json')
 
 
 def cdr_export_excel(request):
@@ -191,14 +191,12 @@ def cdr_export_excel(request):
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", "00:00")
     end_time = request.GET.get("end_time", "23:59")
-    accountcode = request.GET.get("accountcode", "")
+    pincode = request.GET.get("pincode", "")
     dst = request.GET.get("dst", "")
 
-    q_obj = Q(accountcode__icontains=accountcode)
-    q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
-    q_obj.add(Q(dcontext='cabs-dial-number')|Q(dcontext='outgoing-operator-dial-number')|Q(dcontext='incoming-operator-dial-number'), Q.AND)
-    q_obj.add(Q(disposition="ANSWERED"), Q.AND)
-    q_obj.add(Q(custom_valid=1), Q.AND) # esportiamo solo le chiamate ritenute valide
+    q_obj = Q(pincode__icontains=pincode)
+    q_obj.add(Q(dst__icontains=dst), Q.AND)
+    q_obj.add(Q(valid=1), Q.AND) # esportiamo solo le chiamate ritenute valide
     
     if start_date != '':
         start_date = Helper.convert_datestring_format(
@@ -220,7 +218,7 @@ def cdr_export_excel(request):
         end_date = "%s %s:59" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
-    details = Detail.objects.filter(q_obj).order_by('-calldate')
+    details = SuperbaCDR.objects.filter(q_obj).order_by('-calldate')
 
     sheet.write(0, 0, "Data e ora", style=default_style)
     sheet.write(0, 1, "Codice", style=default_style)
@@ -234,11 +232,11 @@ def cdr_export_excel(request):
 
     for row, rowdata in enumerate(details):
         try:
-            phoneuser = PhoneUser.objects.get(pincode=rowdata.accountcode)
+            phoneuser = PhoneUser.objects.get(pincode=rowdata.pincode)
             fullname = phoneuser.get_full_name()
             matricola = phoneuser.serial_no
-            whitelist = Whitelist.objects.get(phonenumber=rowdata.custom_dst,
-                phoneuser_id=phoneuser.id)
+            whitelist = Whitelist.objects.get(phonenumber=rowdata.dst,
+                phoneuser=phoneuser)
             whitelist_label = whitelist.label
         except:
             fullname = '-'
@@ -251,11 +249,11 @@ def cdr_export_excel(request):
         billsec = "%sm %ss" % (int(rowdata.billsec / 60), rowdata.billsec % 60)
         rowdata.price = rowdata.price > 0 and rowdata.price or 0
         sheet.write(row + 1, 0, calldate, style=datetime_style)
-        sheet.write(row + 1, 1, rowdata.accountcode, style=default_style)
+        sheet.write(row + 1, 1, rowdata.pincode, style=default_style)
         sheet.write(row + 1, 2, matricola, style=default_style)
         sheet.write(row + 1, 3, fullname, style=default_style)
-        sheet.write(row + 1, 4, rowdata.custom_src, style=default_style)
-        sheet.write(row + 1, 5, rowdata.custom_dst, style=default_style)
+        sheet.write(row + 1, 4, rowdata.src, style=default_style)
+        sheet.write(row + 1, 5, rowdata.dst, style=default_style)
         sheet.write(row + 1, 6, whitelist_label, style=default_style)
         sheet.write(row + 1, 7, billsec, style=default_style)
         sheet.write(row + 1, 8, rowdata.price, style=default_style)

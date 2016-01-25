@@ -1,4 +1,7 @@
-# Django settings for sunwise project.
+""" 
+Django settings for Phonecab 3 project.
+
+"""
 from unipath import Path
 
 PROJECT_DIR = Path(__file__).ancestor(2)

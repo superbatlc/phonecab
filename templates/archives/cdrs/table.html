@@ -22,19 +22,19 @@
         {% for item in items %}
         <tr>
         <td class="acentro">
-            {% if item.custom_valid %}
+            {% if item.valid %}
                 <i class="zmdi zmdi-check zmdi-hc-lg"></i>
             {% else %}
                 <i class="zmdi zmdi-close zmdi-hc-lg"></i>
             {% endif %}
         </td>
         <td class="acentro">{{ item.calldate|date:"d-m-Y H:i"}}</td>
-        <td class="acentro">{{ item.custom_calltype|calltype|safe }}</td>
-        <td class="acentro">{{ item.accountcode }}</td>
+        <td class="acentro">{{ item.calltype|calltype|safe }}</td>
+        <td class="acentro">{{ item.pincode }}</td>
         <td class="acentro">{{ item.archived_phoneuser.serial_no }}</td>
         <td>{{ item.archived_phoneuser.get_full_name }}</td>
-        <td class="acentro">{{ item.custom_src }}</td>
-        <td class="acentro">{{ item.custom_dst }}</td>
+        <td class="acentro">{{ item.src }}</td>
+        <td class="acentro">{{ item.dst }}</td>
         <td>{{ item.whitelist.label }}</td>
         <td class="adestra">{{ item.billsec|format_time }}</td>
         <td class="adestra">{{ item.price }}</td>

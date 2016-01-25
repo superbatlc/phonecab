@@ -1,3 +1,7 @@
+"""
+General Url pattern
+"""
+
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
@@ -21,10 +25,10 @@ urlpatterns = [
     url(r'^nightmode/(?P<mode>.*)$', 'phonecab.views.phonecab_set_nightmode'),
 
     url(r'^recordings/(?P<path>.*)$', 'django.views.static.serve',
-        { 'document_root': settings.RECORDS_ROOT }),
+        {'document_root': settings.RECORDS_ROOT}),
 
     url(r'^admin/doc/',
-    include('django.contrib.admindocs.urls')),
+        include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]
 

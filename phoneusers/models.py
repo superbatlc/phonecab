@@ -78,13 +78,13 @@ class Whitelist(models.Model):
     Modella i numeri che il phoneuser puo chiamare
     """
 
-    FIRST_FREQUENCY = 0           # free
+    FIRST_IN_FREQUENCY = 0           # free
     LAWYER_FREQUENCY = 1          # free
     ORDINARY_FREQUENCY = 2        # 1 per week
     ORDINARY_4BIS_FREQUENCY = 3   # 2 per month not in the same week
 
     CALL_FREQUENCY = (
-        (FIRST_FREQUENCY, 'Primo Ingresso'),
+        (FIRST_IN_FREQUENCY, 'Primo Ingresso'),
         (LAWYER_FREQUENCY, 'Avvocato'),
         (ORDINARY_FREQUENCY, 'Ordinaria'),
         (ORDINARY_4BIS_FREQUENCY, 'Ordinaria 4bis limitato')
@@ -97,7 +97,7 @@ class Whitelist(models.Model):
     frequency = models.IntegerField(
         verbose_name="frequenza",
         choices=CALL_FREQUENCY,
-        default=FIRST_FREQUENCY)
+        default=FIRST_IN_FREQUENCY)
     extraordinary = models.BooleanField(
         verbose_name='straordinaria',
         default=False)
@@ -127,7 +127,7 @@ class Credit(models.Model):
     reason = models.CharField(max_length=255)
 
     @staticmethod
-    def get_total(phoneuser_id):
+    def get_total(phoneuser):
         """Restituisce il totale delle ricariche effettuate"""
-        total = Credit.objects.filter(phoneuser_id=phoneuser_id).aggregate(total=models.Sum('recharge'))
+        total = Credit.objects.filter(phoneuser=phoneuser).aggregate(total=models.Sum('recharge'))
         return total['total']

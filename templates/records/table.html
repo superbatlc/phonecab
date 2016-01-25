@@ -22,12 +22,12 @@
             {% for item in items %}
             <tr>
                 <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
-                <td class="acentro">{{ item.detail.custom_calltype|calltype|safe }}</td>
+                <td class="acentro">{{ item.detail.calltype|calltype|safe }}</td>
                 <td class="acentro">{{ item.pincode }}</td>
                 <td class="acentro">{{ item.phoneuser.serial_no }}</td>
                 <td><a href="/phoneusers/view/{{ item.phoneuser.id }}">{{ item.phoneuser.get_full_name }}</a></td>
-                <td class="acentro">{{ item.detail.custom_src }}</td>
-                <td class="acentro">{{ item.detail.custom_dst }}</td>
+                <td class="acentro">{{ item.detail.src }}</td>
+                <td class="acentro">{{ item.detail.dst }}</td>
                 <td>{{ item.whitelist.label }}</td>
                 <td class="acentro">
                     {% if item.filename != '' %}

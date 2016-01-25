@@ -15,6 +15,7 @@ from archives.models import *
 from helper.Helper import Helper
 from audits.models import Audit
 from prefs.models import Pref
+from cdrs.models import SuperbaCDR
 
 
 @login_required
@@ -122,10 +123,10 @@ def archive_phoneuser_data(request, archived_phoneuser_id):
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
     if int(archived_phoneuser_id):
         try:
-            phoneuser = ArchivedPhoneUser.objects.get(pk=archived_phoneuser_id)
+            archived_phoneuser = ArchivedPhoneUser.objects.get(pk=archived_phoneuser_id)
         except:
             raise Http404
-    variables['phoneuser'] = phoneuser
+    variables['phoneuser'] = archived_phoneuser
     if request.is_ajax():
         return render_to_response(
             'archives/phoneusers/phoneuser.html', RequestContext(request, variables))
@@ -160,7 +161,7 @@ def archive_credit_items(request, archived_phoneuser_id):
     user = request.user
     variables = Acl.get_permissions_for_user(user.id, user.is_staff)
     credits = ArchivedCredit.objects.filter(
-        archived_phoneuser_id=archived_phoneuser_id).order_by('-recharge_date')
+        archivedphoneuser=archivedphoneuser).order_by('-recharge_date')
 
     variables['items'] = credits
     variables['balance'] = archivedphoneuser.balance
@@ -205,10 +206,10 @@ def archive_cdrs_items(request):
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", None)
     end_time = request.GET.get("end_time", None)
-    accountcode = request.GET.get("accountcode", "")
+    pincode = request.GET.get("pincode", "")
     archived_phoneuser_id = request.GET.get("archived_phoneuser_id", "")
     dst = request.GET.get("dst", "")
-    custom_calltype = request.GET.get("custom_calltype", None)
+    calltype = request.GET.get("calltype", None)
     page = int(request.GET.get("page", "1"))
 
     d = request.GET.dict()
@@ -219,8 +220,8 @@ def archive_cdrs_items(request):
         # elimino la pagina dal dizionario
         del d['page']
 
-    q_obj = Q(accountcode__icontains=accountcode)
-    q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
+    q_obj = Q(pincode__icontains=pincode)
+    q_obj.add(Q(dst__icontains=dst), Q.AND)
 
     if archived_phoneuser_id:
         q_obj.add(Q(archived_phoneuser_id=archived_phoneuser_id), Q.AND)
@@ -245,8 +246,8 @@ def archive_cdrs_items(request):
         end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
         
-    if custom_calltype:
-        q_obj.add(Q(custom_calltype=custom_calltype), Q.AND)
+    if calltype:
+        q_obj.add(Q(calltype=calltype), Q.AND)
 
     items_list = ArchivedDetail.objects.filter(q_obj).order_by('-calldate')
     total_items = items_list.count()
@@ -265,9 +266,9 @@ def archive_cdrs_items(request):
             item.price = "0.00"
         try:
             item.whitelist = ArchivedWhitelist.objects.filter(
-                archived_phoneuser=item.archived_phoneuser_id, phonenumber=item.custom_dst)[0]
+                archived_phoneuser_id=item.archived_phoneuser_id, phonenumber=item.dst)[0]
         except Exception as e:
-            pass # TODO gestire errore
+            item.whitelist = '-'
 
     prev_page = page - 1
     prev_page_disabled = ''
@@ -283,7 +284,6 @@ def archive_cdrs_items(request):
             next_page = items.paginator.num_pages
             next_page_disabled = 'disabled'
 
-    # print "range: %s - next: %s" % (items_range, next_page)
 
     start_item = 1
     if page > 0:
@@ -385,12 +385,12 @@ def archive_records_items(request):
         try:
             details = ArchivedDetail.objects.filter(uniqueid=item.uniqueid)
             if not details:
-                item.detail = Detail
-                item.detail.custom_dst = ''
+                item.detail = SuperbaCDR
+                item.detail.dst = ''
             else:
                 item.detail = details[0]
             item.whitelist = ArchivedWhitelist.objects.get(
-                archived_phoneuser_id=item.archived_phoneuser_id, phonenumber=item.detail.custom_dst)
+                archived_phoneuser_id=item.archived_phoneuser_id, phonenumber=item.detail.dst)
         except Exception as e:
             pass # TODO gestire
             print "Errore nel recupero delle informazioni sulla chiamata"
@@ -452,13 +452,12 @@ def archive_cdrs_export_excel(request):
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", "00:00")
     end_time = request.GET.get("end_time", "23:59")
-    accountcode = request.GET.get("accountcode", "")
+    pincode = request.GET.get("pincode", "")
     dst = request.GET.get("dst", "")
 
-    q_obj = Q(accountcode__icontains=accountcode)
-    q_obj.add(Q(custom_dst__icontains=dst), Q.AND)
-    q_obj.add(Q(dcontext='cabs-dial-number')|Q(dcontext='outgoing-operator-dial-number')|Q(dcontext='incoming-operator-dial-number'), Q.AND)
-    q_obj.add(Q(custom_valid=1), Q.AND) # esportiamo solo le chiamate ritenute valide
+    q_obj = Q(pincode__icontains=pincode)
+    q_obj.add(Q(pincodedst__icontains=dst), Q.AND)
+    q_obj.add(Q(valid=True), Q.AND) # esportiamo solo le chiamate ritenute valide
     
     if start_date != '':
         start_date = Helper.convert_datestring_format(
@@ -486,11 +485,11 @@ def archive_cdrs_export_excel(request):
 
     for row, rowdata in enumerate(details):
         try:
-            archived_phoneuser = ArchivedPhoneUser.objects.get(pincode=rowdata.accountcode)
+            archived_phoneuser = ArchivedPhoneUser.objects.get(pincode=rowdata.pincode)
             fullname = archived_phoneuser.get_full_name()
             matricola = archived_phoneuser.serial_no
-            whitelist = ArchivedWhitelist.objects.get(phonenumber=rowdata.custom_dst,
-                archived_phoneuser_id=archived_phoneuser.id)
+            whitelist = ArchivedWhitelist.objects.get(phonenumber=rowdata.dst,
+                archived_phoneuser=archived_phoneuser)
             whitelist_label = whitelist.label
         except:
             fullname = '-'
@@ -503,11 +502,11 @@ def archive_cdrs_export_excel(request):
         billsec = "%sm %ss" % (int(rowdata.billsec / 60), rowdata.billsec % 60)
         rowdata.price = rowdata.price > 0 and rowdata.price or 0
         sheet.write(row + 1, 0, calldate, style=datetime_style)
-        sheet.write(row + 1, 1, rowdata.accountcode, style=default_style)
+        sheet.write(row + 1, 1, rowdata.pincode, style=default_style)
         sheet.write(row + 1, 2, matricola, style=default_style)
         sheet.write(row + 1, 3, fullname, style=default_style)
-        sheet.write(row + 1, 4, rowdata.custom_src, style=default_style)
-        sheet.write(row + 1, 5, rowdata.custom_dst, style=default_style)
+        sheet.write(row + 1, 4, rowdata.src, style=default_style)
+        sheet.write(row + 1, 5, rowdata.dst, style=default_style)
         sheet.write(row + 1, 6, whitelist_label, style=default_style)
         sheet.write(row + 1, 7, billsec, style=default_style)
         sheet.write(row + 1, 8, rowdata.price, style=default_style)
@@ -592,7 +591,7 @@ def _multi_record_export_as_zip_file(request):
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
             detail = ArchivedDetail.objects.get(uniqueid=item.uniqueid) 
-            if detail.custom_valid and (detail.dcontext == 'cabs-dial-number' or detail.dcontext == 'outgoing-operator-dial-number' or detail.dcontext == 'incoming-operator-dial-number'):
+            if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
                 myzip.write(path, arcname = item.filename)
@@ -647,8 +646,8 @@ def archive_credit_export(request, archived_phoneuser_id=0):
             raise Http404
 
         recharges = ArchivedCredit.objects.filter(archived_phoneuser_id=archived_phoneuser_id)
-        tot_recharges = ArchivedCredit.get_total(archived_phoneuser_id)
-        tot_cost = ArchivedDetail.get_cost(archived_phoneuser_id)
+        tot_recharges = ArchivedCredit.get_total(archived_phoneuser)
+        tot_cost = ArchivedDetail.get_cost(archived_phoneuser)
 
         variables = {
             'header': Pref.header(),
