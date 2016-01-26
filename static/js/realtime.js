@@ -249,6 +249,18 @@ var Ami = {
                         acall.src = '';
                         acall.dst = channel.calleridnum;
                     }
+                } else if (current_contexts.indexOf('from-operatore') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+
+                    channel = utils.getItem(current_channels, 'context', 'from-operatore');
+                    var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
+                    call_exists = true;
+                    acall.pincode = "";
+                    acall.duration = channel.duration;
+                    acall.uniqueid = channel.uniqueid;
+                    acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                    // PER CONTO [ from-cabs + from-trunk ]
+                    acall.src = channel.exten;
+                    acall.dst = "209";
 
                 }
 
@@ -349,7 +361,12 @@ var Ami = {
         var d = new Date()
         calldate = d.getUTCFullYear().toString() + twoDigitsNum(d.getUTCMonth() + 1) + twoDigitsNum(d.getUTCDate());
         calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
-        filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
+        if(!acall.pincode){
+            actions += '<button class="recording btn btn-info" onclick="Ami.recordAddPin()">Assegna Codice</button>';
+        } else{
+            filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
+        }
+
 
         var actions = '';
         switch (acall.recording) {
