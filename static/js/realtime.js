@@ -259,8 +259,8 @@ var Ami = {
                     acall.uniqueid = channel.uniqueid;
                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
                     // PER CONTO [ from-cabs + from-trunk ]
-                    acall.src = channel.exten;
-                    acall.dst = "209";
+                    acall.src = trunk.exten;
+                    acall.dst = "299";
 
                 }
 
@@ -296,6 +296,8 @@ var Ami = {
                             console.log('Dati di link fra call<->db non recuperati', error);
                             Ami._addUICall(acall);
                         });
+                } else {
+                    Ami._addUICall(acall);
                 }
             }); // END call each
 
@@ -361,14 +363,13 @@ var Ami = {
         var d = new Date()
         calldate = d.getUTCFullYear().toString() + twoDigitsNum(d.getUTCMonth() + 1) + twoDigitsNum(d.getUTCDate());
         calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
+        var actions = '';
         if(!acall.pincode){
-            actions += '<button class="recording btn btn-info" onclick="Ami.recordAddPin()">Assegna Codice</button>';
+            actions += '<input type="text" id="pincode" size="11">&nbsp;&nbsp;<button class="recording btn btn-info" onclick="Ami.recordAddPin()">Assegna Codice</button>';
         } else{
             filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
         }
 
-
-        var actions = '';
         switch (acall.recording) {
             case 'progress':
                 actions += '<button class="recording btn btn-warning" disabled><i class="zmdi zmdi-rotate-right zmdi-hc-spin zmdi-hc-lg"></i> In registrazione</button>';
