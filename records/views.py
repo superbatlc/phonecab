@@ -16,7 +16,6 @@ from cdrs.models import SuperbaCDR
 from audits.models import Audit
 from prefs.models import Pref, Extension
 from helper.Helper import Helper
-from helper.http import Http403
 
 
 @login_required
@@ -185,7 +184,7 @@ def record_action(request, action, item, record_id=0):
         else:
             raise Http404
     else:
-        raise Http403
+        raise Http404
 
 def _single_record_export(request, record_id="0"):
     """Esportazione singolo file"""
@@ -237,7 +236,7 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     items_list = Record.objects.filter(q_obj).order_by('-calldate')
-    
+
     filename = 'registrazioni'
     if pincode != '':
         phoneuser = PhoneUser.get_from_pincode(pincode)
@@ -247,13 +246,13 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
     file_counter = 0
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
-            
-            detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid) 
+
+            detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid)
             if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
                 myzip.write(path, arcname = item.filename)
-        
+
     if not file_counter:
         return redirect("/records/?err=1&err_msg=Nessuno dei file soddisfa i criteri per l'esportazione&%s" % urlencode(d))
 
@@ -286,7 +285,7 @@ def _single_record_remove(request, record_id):
     return HttpResponse(ret)
 
 def _multi_record_remove(request):
-    
+
     import os
     d = request.POST.dict()
     start_date = request.POST.get("data[start_date]", "")
@@ -325,7 +324,7 @@ def _multi_record_remove(request):
 
     for item in items_list:
         path = os.path.join(settings.RECORDS_ROOT, item.filename)
-        
+
         try:
             os.remove(path)
             item.delete()
