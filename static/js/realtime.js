@@ -240,7 +240,7 @@ var Ami = {
                     //DETENUTO [ cabs-dial-number + from-trunk]
                     channel = utils.getItem(current_channels, 'context', 'from-trunk');
                     call_exists = true;
-                    acall.pincode = channel.pincode;
+                    acall.pincode = channel.accountcode;
                     acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
@@ -252,7 +252,7 @@ var Ami = {
                     channel = utils.getItem(current_channels, 'context', 'from-cabs');
                     var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
                     call_exists = true;
-                    acall.pincode = channel.pincode;
+                    acall.pincode = channel.accountcode;
                     acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
@@ -265,20 +265,21 @@ var Ami = {
                         acall.src = '';
                         acall.dst = channel.calleridnum;
                     }
-                } else if (current_contexts.indexOf('from-operatore') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
-
-                    channel = utils.getItem(current_channels, 'context', 'from-operatore');
-                    var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
-                    call_exists = true;
-                    acall.pincode = "";
-                    acall.duration = channel.duration;
-                    acall.uniqueid = channel.uniqueid;
-                    acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
-                    // PER CONTO [ from-cabs + from-trunk ]
-                    acall.src = trunk.exten;
-                    acall.dst = "299";
-
                 }
+                // else if (current_contexts.indexOf('from-operatore') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+
+                //     channel = utils.getItem(current_channels, 'context', 'from-operatore');
+                //     var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
+                //     call_exists = true;
+                //     acall.pincode = "";
+                //     acall.duration = channel.duration;
+                //     acall.uniqueid = channel.uniqueid;
+                //     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                //     // PER CONTO [ from-cabs + from-trunk ]
+                //     acall.src = trunk.exten;
+                //     acall.dst = "299";
+
+                // }
 
                 if (!call_exists) {
                     // rimuovi la chiamata
