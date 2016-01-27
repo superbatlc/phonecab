@@ -106,6 +106,19 @@ var Ami = {
         }, errorAction);
     },
 
+    addPin: function(channel) {
+        if (!Ami._checkAuthenticated) return;
+
+        var errorAction = function(error) {
+            // console.log('ERRORE', error);
+            showMessageBox("Errore", "Impossibile associare il codice alla chiamata.", "alert-danger");
+        }
+
+        requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=CHANNEL(accountcode)&value=' + value, {}, function(response) {
+            showMessageBox("Conferma", 'Associazione effettuata con successo', "green");
+        }, errorAction);
+    },
+
     /****************************** UTILS *************************************/
 
     _checkAuthenticated: function() {
@@ -365,7 +378,7 @@ var Ami = {
         calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
         var actions = '';
         if(!acall.pincode){
-            actions += '<input type="text" id="pincode" size="11">&nbsp;&nbsp;<button class="recording btn btn-info" onclick="Ami.recordAddPin()">Assegna Codice</button>';
+            actions += '<input type="text" id="pincode" size="11">&nbsp;&nbsp;<button class="recording btn btn-info" onclick="Ami.addPin()">Assegna Codice</button>';
         } else{
             filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
         }
