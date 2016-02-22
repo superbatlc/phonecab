@@ -114,7 +114,7 @@ class SuperbaCDR(models.Model):
     class Meta:
         db_table = 'superbacdr'
 
-    
+
 
     @staticmethod
     def get_cost(phoneuser):
@@ -124,15 +124,3 @@ class SuperbaCDR(models.Model):
             return total['total']
         except Exception as e:
             return None
-
-
-
-    
-    
-    
-    
-
-
-
-
-
