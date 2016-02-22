@@ -53,19 +53,19 @@ h2, h3, h4 {
 	margin-right: auto;
   	margin-left: auto;
   	*zoom: 1;
-	
+
 }
 .main h3{
 	color:#666;
 }
 .pin{
-	background-color:#dfdfdf; 
-	padding:6px 2px 0; 
+	background-color:#dfdfdf;
+	padding:6px 2px 0;
 	border:1px solid #ccc;
 	 border-radius: 4px 4px 4px 4px;
      width:200px;
      text-align:center;
-	
+
 }
 
 .navbar-inverse .navbar-search .search-query:-moz-placeholder {
@@ -118,4 +118,3 @@ h2, h3, h4 {
 }
 label {
     display: inline-block;}
-    

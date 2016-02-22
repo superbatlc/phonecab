@@ -13,7 +13,7 @@
             <th style="width:120px;">Data</th>
             <th style="width:auto;">Causale</th>
             <th style="width:100px;text-align:right;">Importo</th>
-            <th style="width:100px;text-align:center;">Azione</th>
+            <th class="noprint" style="width:100px;text-align:center;">Azione</th>
             </tr>
             </thead>
             <tbody>
@@ -23,7 +23,7 @@
                 <td>{{ c.recharge_date|utc|date:"d-m-Y" }}</td>
                 <td>{{ c.reason }}</td>
                 <td style="text-align:right;">{{ c.recharge }}</td>
-                <td style="text-align:center;">
+                <td style="text-align:center;" class="noprint">
                 <a href="/credits/print_recharge/{{ c.id }}" target="_blank" class="btn btn-lg btn-round btn-default" data-placement="bottom" data-title="Stampa la ricevuta relativa a questa ricarica" data-toggle="tooltip" data-original-title="" title="">
                     <i class="zmdi zmdi-print mdc-text-grey"></i>
                 </a>
@@ -41,12 +41,12 @@
                     <h4>Credito residuo: {{ balance|floatformat:2 }} &euro;</h4>
                 </div>
                 <div class="col-md-2" style="text-align:right;">
-                    <a href="/credits/export/{{ phoneuser_id }}" target="_blank" class="btn btn-success"><i class="zmdi zmdi-file-text"></i> Estratto Conto</a>
+                    <a href="/credits/export/{{ phoneuser_id }}" target="_blank" class="btn btn-success noprint"><i class="zmdi zmdi-file-text"></i> Estratto Conto</a>
                 </div>
                 <div class="col-md-5" style="text-align:right;">
                     {{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
-                    <a href="?page={{ prev_page }}" class="btn btn-primary {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
-                    <a href="?page={{ next_page }}" class="btn btn-primary {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>
+                    <a href="?page={{ prev_page }}" class="noprint btn btn-primary {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
+                    <a href="?page={{ next_page }}" class="noprint btn btn-primary {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>
                     <input type="hidden" id="items-current-page" value="{{ current_page }}">
                 </div>
             </div>
