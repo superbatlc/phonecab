@@ -55,6 +55,7 @@
           <!--<td style="text-align:center;">{{ wl.duration|format_time }}</td>-->
           <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
           <td style="text-align:center;">
+          {% if wl.frequency > 1 %}
             {% if wl.extraordinary %}
               {% if priv_whitelist > 0 %}
                 <button class="btn btn-xs btn-success" onClick="Whitelist.changeOrdinary({{ wl.id }},0)" title="Premi per rendere ordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinare determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
@@ -74,6 +75,7 @@
                 <i class="zmdi zmdi-close"></i>
               {% endif %}
             {% endif %}
+          {% endif %}
           </td>
           <td class="noprint" style="text-align:center;">
             {% if priv_whitelist > 1 %}
