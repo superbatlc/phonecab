@@ -12,12 +12,12 @@
         <div class="col-md-4">
             <div class="card bordered">
                 <div class="card-header">
-                    <div class="card-title">Occupazione disco</div>
+                    <div class="card-title">Occupazione Disco Interno</div>
                 </div>
                 <div class="card-content">
                     <div id="chart-diskusage" style="height:180px;"></div>
                     {% if diskusage > 80.0 %}
-                        <p style="margin-top:20px;text-align:justify;">L'occupazione disco ha superato l'80%.<br/>Si consiglia di eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o di verificare la loro presenza sul disco di backup</p>
+                        <p style="margin-top:20px;text-align:justify;">L'occupazione disco ha superato l'80%.<br/>Si consiglia di eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o di verificare la loro presenza sul disco di backup.</p>
                     {% endif %}
                 </div>
             </div>
@@ -25,7 +25,20 @@
         <div class="col-md-4">
             <div class="card bordered">
                 <div class="card-header">
-                    <div class="card-title">Stato interni</div>
+                    <div class="card-title">Occupazione Disco Esterno</div>
+                </div>
+                <div class="card-content">
+                    <div id="chart-diskusage-ext" style="height:180px;"></div>
+                    {% if extdiskusage > 80.0 %}
+                        <p style="margin-top:20px;text-align:justify;">L'occupazione disco esterno ha superato l'80%.<br/>Si consiglia di collegare l&apos;unit&agrave; di back a un computer ed eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o un salvatggio su altro media.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bordered">
+                <div class="card-header">
+                    <div class="card-title">Stato Interni Telefonici</div>
                 </div>
                 <div class="card-content">
     			<div class="list-group">
@@ -84,10 +97,52 @@
             }
         });
 
+        var chart_ext = c3.generate({
+            bindto: '#chart-diskusage-ext',
+            data: {
+                columns: [
+                    ['disco', 0]
+                ],
+                type: 'gauge',
+                //onclick: function (d, i) { console.log("onclick", d, i); },
+                //onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            gauge: {
+                //        label: {
+                //            format: function(value, ratio) {
+                //                return value;
+                //            },
+                //            show: false // to turn off the min/max labels.
+                //        },
+                //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+                //    max: 100, // 100 is default
+                //    units: ' %',
+                //    width: 39 // for adjusting arc thickness
+            },
+            color: {
+                pattern: ['#60B044', '#F97600', '#FF0000'], // the three color levels for the percentage values.
+                threshold: {
+                //            unit: 'value', // percentage is default
+                //            max: 200, // 100 is default
+                    values: [60, 80]
+                }
+            },
+            size: {
+                height: 180
+            },
+            transition: {
+                duration: 1000
+            }
+        });
+
         $(function(){
             setTimeout(function(){
                 chart.load({
                     columns: [['disco', {{ diskusage }}]]
+                });
+                chart_ext.load({
+                    columns: [['disco', {{ extdiskusage }}]]
                 });
             }, 100)
         })
