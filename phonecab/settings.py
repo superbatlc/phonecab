@@ -1,4 +1,4 @@
-""" 
+"""
 Django settings for Phonecab 3 project.
 
 """
@@ -37,7 +37,8 @@ ITEMS_PER_PAGE = 5
 RECORDS_ROOT = '/var/spool/asterisk/monitor'
 TMP_ZIP_ROOT = '/tmp/'
 
-FILESYSTEM = '/dev/sda1/'
+FILESYSTEM = '/dev/sda1'
+EXT_FILESYSTEM = '/dev/sdb1'
 
 # Chiusura sessione alla chiusura del browser
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
