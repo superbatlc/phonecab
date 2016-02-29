@@ -66,7 +66,8 @@
 									</form>
 	              </li>
 	              <li class="username pull-right">
-					<span class="print">printed by</span> {{ user.get_full_name }}
+					<span class="noprint">{{ user.get_full_name }}</span>
+                    <span class="print-only">{{ carcere }}</span>
 	              </li>
                   <li class="logout pull-right">
                          <button id="help-toggle" class="pointer btn btn-round-sm btn-link withoutripple"><i class="zmdi zmdi-pin-help"></i> </button>
