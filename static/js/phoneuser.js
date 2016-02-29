@@ -1,7 +1,7 @@
 var Phoneuser = {
 
         edit : function(id){
-            requestData("POST", "html", '/phoneusers/edit/', {id : id}, 
+            requestData("POST", "html", '/phoneusers/edit/', {id : id},
                 function(response){
                     var title = "Nuova Anagrafica";
                     if (id) title = "Modifica Anagrafica";
@@ -136,7 +136,7 @@ var Phoneuser = {
                     showMessageBox("Errore", "Errore archiviazione anagrafica.", "alert-danger");
                 });
             }
-                
+
             return;
         },
 }
@@ -167,7 +167,7 @@ var Whitelist = {
         });
     },
 
-    check : function(){
+    check : function(whitelist_id, callback){
         // async check
         // chiama il callback con {success:bool} al termine
         var ok = true;
@@ -175,6 +175,13 @@ var Whitelist = {
         ok &= checkEmptyField("#whitelist-label");
         ok &= checkEmptyField("#whitelist-phonenumber");
         ok &= checkEmptyField("#whitelist-duration");
+
+        if(ok){
+              phoneuser_id = $('#whitelist-phoneuser-id').val()
+              checkUniqueWhitelist("#whitelist-phonenumber", phoneuser_id, whitelist_id, callback);
+            } else {
+              callback({success:ok}); return;
+            }
 
         return ok;
     },
@@ -190,34 +197,39 @@ var Whitelist = {
             data.whitelist_id = "0";
         }
 
-        console.log(data.whitelist_id);
         // async post save
         // chiama il callback di save con {success:bool} al termine
-        if (!Whitelist.check()) { callback({success:false}); return; }
+        //if (!Whitelist.check(isNew, callback)) { callback({success:false}); return; }
+        var postCheck = function(callback_return){
+            // chiama il callback di save con {success:bool} al termine
+            if (!callback_return.success) { callback({success:false}); return; }
 
-        data.label = $("#whitelist-label").val()
-        data.phonenumber = $("#whitelist-phonenumber").val()
-        data.duration = $("#whitelist-duration").val()
-        data.frequency = $("#whitelist-frequency").val()
+            data.label = $("#whitelist-label").val()
+            data.phonenumber = $("#whitelist-phonenumber").val()
+            data.duration = $("#whitelist-duration").val()
+            data.frequency = $("#whitelist-frequency").val()
 
-        data.real_mobile = 0
-        if($("input[type=checkbox]#whitelist-real-mobile").is(':checked')){
-            data.real_mobile = 1
+            data.real_mobile = 0
+            if($("input[type=checkbox]#whitelist-real-mobile").is(':checked')){
+                data.real_mobile = 1
+            }
+
+            data.phoneuser_id = $("#phoneuser-id").val()
+
+            requestData("POST", "html", '/whitelists/save/', {data : data},
+                function(response){
+                    updateDOM('#whitelists', response);
+                    showMessageBox("Conferma", "Salvataggio effettuato con successo.", "green");
+                    callback({success:true}); return;
+                },
+                function(error){
+                  callback({success:false}); return;
+                  showMessageBox("Errore", "Salvataggio non effettuata.", "alert-danger");
+                }
+            );
         }
 
-        data.phoneuser_id = $("#phoneuser-id").val()
-
-        requestData("POST", "html", '/whitelists/save/', {data : data},
-            function(response){
-                updateDOM('#whitelists', response);
-                showMessageBox("Conferma", "Salvataggio effettuato con successo.", "green");
-                callback({success:true}); return;
-            },
-            function(error){
-              callback({success:false}); return;
-              showMessageBox("Errore", "Salvataggio non effettuata.", "alert-danger");
-            }
-        );
+        Whitelist.check(data.whitelist_id, postCheck);
     },
 
     changeStatus : function(id, newstatus){
@@ -303,7 +315,7 @@ var Whitelist = {
                 msg += '- nella settimana: '+ response.data.weekcalls+'\n';
                 msg += '- nel mese: '+ response.data.monthcalls+'\n';
                 msg += 'Confermare l\'autorizzazione strordinaria?';
-             
+
                 if(confirm(msg)){
                     callback({success:true}); return;
                 }else{

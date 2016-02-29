@@ -191,7 +191,7 @@ function checkUniquePincode(pincode_sel, callback) {
     return;
   }
 
-  requestData("POST", "text", '/phoneusers/check/', {
+  requestData("POST", "text", '/phoneusers/check/pincode/', {
     pincode: pincode
   }, function(response) {
     if (response == "0") {
@@ -211,6 +211,47 @@ function checkUniquePincode(pincode_sel, callback) {
     }
   })
 }
+
+
+function checkUniqueWhitelist(whitelist_sel, phoneuser_id, whitelist_id, callback) {
+  // async check
+  // chiama il callback con {success:bool} al termine
+  var phonenumber = $(whitelist_sel).val();
+  var parent = $(whitelist_sel).parent().parent();
+  if (!phonenumber) {
+    parent.addClass('has-error');
+    $('.whitelist-check').show();
+    callback({
+      success: false
+    });
+    return;
+  }
+
+  requestData("POST", "text", '/phoneusers/check/whitelist/', {
+    phonenumber: phonenumber,
+    phoneuser_id: phoneuser_id,
+    whitelist_id: whitelist_id,
+  }, function(response) {
+    console.log(response);
+
+    if (response == "0") {
+      parent.removeClass('has-error');
+      $('.whitelist-check').hide();
+      callback({
+        success: true
+      });
+      return;
+    } else {
+      parent.addClass('has-error');
+      $('.whitelist-check').removeClass('hide');
+      callback({
+        success: false
+      });
+      return;
+    }
+  })
+}
+
 
 function checkUniqueUsername(username_sel, callback) {
   // async check

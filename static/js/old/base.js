@@ -693,7 +693,7 @@ function check_unique_pincode(pincode){
 
     $.ajax({
        type: 'POST',
-       url: '/phoneusers/check/',
+       url: '/phoneusers/check/pincode/',
        async: false,
        data: {pincode: $(pincode).val()},
        success: function(e){

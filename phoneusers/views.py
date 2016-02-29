@@ -219,6 +219,20 @@ def phoneuser_check_pincode(request):
     return HttpResponse(str(check))
 
 @login_required
+def phoneuser_check_whitelist(request):
+    """Verifica che il numero sia univoco per phoneuser"""
+    phonenumber = request.POST.get("phonenumber", "")
+    phoneuser_id = request.POST.get("phoneuser_id", "")
+    whitelist_id = request.POST.get("whitelist_id", None)
+
+    check = Whitelist.objects.filter(phoneuser_id=phoneuser_id, phonenumber=phonenumber)
+
+    if whitelist_id:
+        check = check.exclude(id=whitelist_id)
+
+    return HttpResponse(str(check.count()))
+
+@login_required
 def phoneuser_change_status(request):
     phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
     newstatus = request.POST.get("data[newstatus]", "")
@@ -367,6 +381,7 @@ def whitelist_edit(request):
                 raise Http404
 
     variables['whitelist'] = whitelist
+    variables['phoneuser_id'] = phoneuser_id
     variables['enable_first_in'] = Pref.get("enable_first_in")
     variables['change_threshold'] = Pref.get("change_threshold")
 
