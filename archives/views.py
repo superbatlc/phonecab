@@ -110,7 +110,7 @@ def archive_phoneuser_view(request, archived_phoneuser_id):
     phoneuser = archive_phoneuser_data(request, archived_phoneuser_id)
     whitelists = archive_whitelist_items(request, archived_phoneuser_id)
     credits = archive_credit_items(request, archived_phoneuser_id)
-   
+
     variables['phoneuser'] = phoneuser
     variables['whitelists'] = whitelists
     variables['credits'] = credits
@@ -245,7 +245,7 @@ def archive_cdrs_items(request):
             end_time = "23:59:59"
         end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
-        
+
     if calltype:
         q_obj.add(Q(calltype=calltype), Q.AND)
 
@@ -345,8 +345,8 @@ def archive_records_items(request):
 
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")
-    start_time = request.GET.get("start_time", "00:00")
-    end_time = request.GET.get("end_time", "23:59")
+    start_time = request.GET.get("start_time", None)
+    end_time = request.GET.get("end_time", None)
     archived_phoneuser_id = request.GET.get("archived_phoneuser_id", "")
     pincode = request.GET.get("pincode", "")
     page = int(request.GET.get("page", "1"))
@@ -366,13 +366,21 @@ def archive_records_items(request):
     if start_date != '':
         start_date = Helper.convert_datestring_format(
             start_date, "%d-%m-%Y", "%Y-%m-%d")
-        start_date = "%s %s:00" % (start_date, start_time)
+        if start_time:
+            start_time = "%s:00" % start_time
+        else:
+            start_time = "00:00:00"
+        start_date = "%s %s" % (start_date, start_time)
         q_obj.add(Q(calldate__gte=start_date), Q.AND)
 
     if end_date != '':
         end_date = Helper.convert_datestring_format(
             end_date, "%d-%m-%Y", "%Y-%m-%d")
-        end_date = "%s %s:59" % (end_date, end_time)
+        if end_time:
+            end_time = "%s:59" % end_time
+        else:
+            end_time = "23:59:59"
+        end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     items_list = ArchivedRecord.objects.filter(q_obj).order_by('-calldate')
@@ -450,25 +458,33 @@ def archive_cdrs_export_excel(request):
 
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")
-    start_time = request.GET.get("start_time", "00:00")
-    end_time = request.GET.get("end_time", "23:59")
+    start_time = request.GET.get("start_time", None)
+    end_time = request.GET.get("end_time", None)
     pincode = request.GET.get("pincode", "")
     dst = request.GET.get("dst", "")
 
     q_obj = Q(pincode__icontains=pincode)
-    q_obj.add(Q(pincodedst__icontains=dst), Q.AND)
+    q_obj.add(Q(dst__icontains=dst), Q.AND)
     q_obj.add(Q(valid=True), Q.AND) # esportiamo solo le chiamate ritenute valide
-    
+
     if start_date != '':
         start_date = Helper.convert_datestring_format(
             start_date, "%d-%m-%Y", "%Y-%m-%d")
-        start_date = "%s %s:00" % (start_date, start_time)
+        if start_time:
+            start_time = "%s:00" % start_time
+        else:
+            start_time = "00:00:00"
+        start_date = "%s %s" % (start_date, start_time)
         q_obj.add(Q(calldate__gte=start_date), Q.AND)
 
     if end_date != '':
         end_date = Helper.convert_datestring_format(
             end_date, "%d-%m-%Y", "%Y-%m-%d")
-        end_date = "%s %s:59" % (end_date, end_time)
+        if end_time:
+            end_time = "%s:59" % end_time
+        else:
+            end_time = "23:59:59"
+        end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     details = ArchivedDetail.objects.filter(q_obj).order_by('-calldate')
@@ -485,16 +501,19 @@ def archive_cdrs_export_excel(request):
 
     for row, rowdata in enumerate(details):
         try:
-            archived_phoneuser = ArchivedPhoneUser.objects.get(pincode=rowdata.pincode)
+            archived_phoneuser = ArchivedPhoneUser.objects.get(id=rowdata.archived_phoneuser_id)
+            print archived_phoneuser
             fullname = archived_phoneuser.get_full_name()
             matricola = archived_phoneuser.serial_no
-            whitelist = ArchivedWhitelist.objects.get(phonenumber=rowdata.dst,
-                archived_phoneuser=archived_phoneuser)
-            whitelist_label = whitelist.label
+            try:
+                whitelist = ArchivedWhitelist.objects.get(phonenumber=rowdata.dst,
+                    archived_phoneuser=archived_phoneuser)
+                whitelist_label = whitelist.label
+            except:
+                whitelist_label = '-'
         except:
             fullname = '-'
             matricola = '-'
-            whitelist_label = '-'
 
         calldate = time.strftime("%d-%m-%Y %H:%M:%S",
                                  time.strptime(str(rowdata.calldate),
@@ -558,8 +577,8 @@ def _multi_record_export_as_zip_file(request):
     d = request.GET.dict()
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")
-    start_time = request.GET.get("start_time", "00:00")
-    end_time = request.GET.get("end_time", "23:59")
+    start_time = request.GET.get("start_time", None)
+    end_time = request.GET.get("end_time", None)
     pincode = request.GET.get("pincode", "")
 
     q_obj = Q(pincode__icontains=pincode)
@@ -567,17 +586,25 @@ def _multi_record_export_as_zip_file(request):
     if start_date != '':
         start_date = Helper.convert_datestring_format(
             start_date, "%d-%m-%Y", "%Y-%m-%d")
-        start_date = "%s %s:00" % (start_date, start_time)
+        if start_time:
+            start_time = "%s:00" % start_time
+        else:
+            start_time = "00:00:00"
+        start_date = "%s %s" % (start_date, start_time)
         q_obj.add(Q(calldate__gte=start_date), Q.AND)
 
     if end_date != '':
         end_date = Helper.convert_datestring_format(
             end_date, "%d-%m-%Y", "%Y-%m-%d")
-        end_date = "%s %s:59" % (end_date, end_time)
+        if end_time:
+            end_time = "%s:59" % end_time
+        else:
+            end_time = "23:59:59"
+        end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     items_list = ArchivedRecord.objects.filter(q_obj).order_by('-calldate')
-    
+
     filename = 'registrazioni'
     if pincode != '':
         try:
@@ -590,12 +617,12 @@ def _multi_record_export_as_zip_file(request):
     file_counter = 0
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
-            detail = ArchivedDetail.objects.get(uniqueid=item.uniqueid) 
+            detail = ArchivedDetail.objects.get(uniqueid=item.uniqueid)
             if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
                 myzip.write(path, arcname = item.filename)
-        
+
     if not file_counter:
         return redirect("/archives/records/?err=1&err_msg=Nessuno dei file soddisfa i criteri per l'esportazione&%s" % urlencode(d))
 

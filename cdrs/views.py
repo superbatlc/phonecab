@@ -54,6 +54,7 @@ def cdr_items(request):
     end_time = request.GET.get("end_time", None)
     pincode = request.GET.get("pincode", "")
     dst = request.GET.get("dst", "")
+    src = request.GET.get("src", "")
     calltype = request.GET.get("calltype", None)
     page = int(request.GET.get("page", "1"))
 
@@ -67,6 +68,7 @@ def cdr_items(request):
 
     q_obj = Q(pincode__icontains=pincode)
     q_obj.add(Q(dst__icontains=dst), Q.AND)
+    q_obj.add(Q(src__icontains=src), Q.AND)
 
     if start_date != '':
         start_date = Helper.convert_datestring_format(
@@ -87,7 +89,7 @@ def cdr_items(request):
             end_time = "23:59:59"
         end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
-        
+
     if calltype:
         q_obj.add(Q(calltype=calltype), Q.AND)
 
@@ -129,7 +131,7 @@ def cdr_items(request):
         if next_page > items.paginator.num_pages:
             next_page = items.paginator.num_pages
             next_page_disabled = 'disabled'
-            
+
     start_item = 1
     if page > 0:
         start_item = (page - 1) * items_per_page + 1
@@ -173,8 +175,8 @@ def cdr_change_valid(request):
         else:
             raise Http404
     except Exception as e:
-        return HttpResponse(status=400, 
-            content=json.dumps({'err_msg': format(e)}), 
+        return HttpResponse(status=400,
+            content=json.dumps({'err_msg': format(e)}),
             content_type='application/json')
 
 
@@ -193,11 +195,13 @@ def cdr_export_excel(request):
     end_time = request.GET.get("end_time", "23:59")
     pincode = request.GET.get("pincode", "")
     dst = request.GET.get("dst", "")
+    src = request.GET.get("src", "")
 
     q_obj = Q(pincode__icontains=pincode)
     q_obj.add(Q(dst__icontains=dst), Q.AND)
+    q_obj.add(Q(src__icontains=src), Q.AND)
     q_obj.add(Q(valid=1), Q.AND) # esportiamo solo le chiamate ritenute valide
-    
+
     if start_date != '':
         start_date = Helper.convert_datestring_format(
             start_date, "%d-%m-%Y", "%Y-%m-%d")
@@ -215,7 +219,7 @@ def cdr_export_excel(request):
             end_time = "%s:59" % end_time
         else:
             end_time = "23:59:59"
-        end_date = "%s %s:59" % (end_date, end_time)
+        end_date = "%s %s" % (end_date, end_time)
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     details = SuperbaCDR.objects.filter(q_obj).order_by('-calldate')
