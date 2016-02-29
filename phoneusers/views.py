@@ -116,10 +116,11 @@ def phoneuser_view(request, phoneuser_id="0"):
     phoneuser = phoneuser_data(request, phoneuser_id)
     whitelists = whitelist_items(request, phoneuser_id)
     credits = credit_items(request, phoneuser_id)
-   
+
     variables['phoneuser'] = phoneuser
     variables['whitelists'] = whitelists
     variables['credits'] = credits
+    variables['carcere'] = Pref.header()
     return render_to_response('phoneusers/page.html',
         RequestContext(request,variables))
 
@@ -200,7 +201,7 @@ def phoneuser_save(request):
         audit = Audit()
         audit.log(user=request.user,
             what="%s anagrafica: %s" % (action, phoneuser))
-        
+
         if is_new:
             return phoneuser_items(request)
         variables['phoneuser'] = phoneuser
@@ -216,7 +217,7 @@ def phoneuser_check_pincode(request):
     check = PhoneUser.objects.filter(pincode=pincode).count()
 
     return HttpResponse(str(check))
-    
+
 @login_required
 def phoneuser_change_status(request):
     phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
@@ -239,7 +240,7 @@ def phoneuser_change_status(request):
         return phoneuser_data(request, phoneuser_id)
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
-    
+
 @login_required
 def phoneuser_archive(request):
     """Archiviazione anagrafica"""
@@ -257,7 +258,7 @@ def phoneuser_archive(request):
             raise Http404
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
-    
+
 @login_required
 def phoneuser_name(request, pincode):
     """Get phoneuser name for realtime displaying"""
@@ -304,6 +305,8 @@ def phoneuser_realtime_info(request):
                 values['data']['name'] = phoneuser.get_full_name()
                 if phoneuser.recording_enabled:
                     values['data']['recording'] = 'progress'
+                else:
+                    values['data']['recording'] = 'show'
                 if dst:
                     try:
                         whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
@@ -423,9 +426,9 @@ def whitelist_remove(request):
             audit.log(user=request.user,
                 what="Rimozione autorizzazione: %s" % phoneuser)
             return whitelist_items(request, phoneuser_id)
-            
+
         except Exception as e:
-            return HttpResponse(status=400, 
+            return HttpResponse(status=400,
                 content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     else:
         raise Http404
@@ -452,7 +455,7 @@ def whitelist_change_status(request):
                 what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
             return whitelist_items(request, phoneuser_id)
         except Exception as e:
-            return HttpResponse(status=400, 
+            return HttpResponse(status=400,
                 content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     else:
         raise Http404
@@ -482,7 +485,7 @@ def whitelist_change_ordinary(request):
             return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
     else:
         raise Http404
-    
+
 @login_required
 def whitelist_check_extra(request):
 
@@ -530,9 +533,9 @@ def _get_extra_call(pincode, dst):
 
     # lunedi di questa settimana
     previous_monday = (today - datetime.timedelta(days=today.weekday())).strftime("%Y-%m-%d")
-    query = """SELECT COUNT(*) AS n FROM cdrs_detail
+    query = """SELECT COUNT(*) AS n FROM superbacdr
             WHERE pincode='%s' AND DATE(calldate)>='%s'
-            AND DATE(calldate) <= '%s' 
+            AND DATE(calldate) <= '%s'
             AND calltype=1 AND valid=1""" % (pincode,
                                      previous_monday,
                                      yesterday_str)
@@ -543,10 +546,10 @@ def _get_extra_call(pincode, dst):
 
     # primo giorno del mese
     first_of_month = today.replace(day=1).strftime("%Y-%m-%d")
-    query = """SELECT COUNT(*) AS n FROM cdrs_detail
+    query = """SELECT COUNT(*) AS n FROM superbacdr
             WHERE pincode='%s' AND DATE(calldate)>='%s'
             AND DATE(calldate) <= '%s' AND calltype=1
-            AND valid=1)""" % (pincode,
+            AND valid=1""" % (pincode,
                                      first_of_month,
                                      yesterday_str)
     cursor.execute(query)
@@ -657,7 +660,7 @@ def credit_save(request):
         phoneuser.save()
         audit = Audit()
         audit.log(user=request.user,
-            what="Effettuata ricarica di importo %s a favore di %s" % (credit.recharge, 
+            what="Effettuata ricarica di importo %s a favore di %s" % (credit.recharge,
                 credit.phoneuser))
         return credit_items(request, phoneuser_id)
     except Exception as e:
