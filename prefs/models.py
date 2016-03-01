@@ -13,6 +13,9 @@ class Pref(models.Model):
     key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
+    def __unicode__(self):
+        return "key: %s - value: %s" % (self.key, self.value)
+
     def save(self, user, *args, **kwargs):
         """Override funzione save per loggare azione"""
         try:
@@ -57,6 +60,9 @@ class Fare(models.Model):
     ordering = models.IntegerField(verbose_name="Ordinamento")
     icon = models.CharField(max_length=50, default="zmdi zmdi-home")
     position = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return "direction: %s" % self.direction
 
     @staticmethod
     def get_call_cost(phonenumber, duration):
@@ -113,6 +119,8 @@ class Extension(models.Model):
     extension = models.CharField(max_length=5, default='')
     name = models.CharField(max_length=20, default='')
 
+    def __unicode__(self):
+        return "extension: %s - name: %s" % (self.extension, self.name)
 
     @staticmethod
     def get_extension_name(extension):
