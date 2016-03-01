@@ -157,14 +157,14 @@ def archive_whitelist_items(request, archived_phoneuser_id):
 @login_required
 def archive_credit_items(request, archived_phoneuser_id):
     archived_phoneuser_id = int(archived_phoneuser_id)
-    archivedphoneuser = ArchivedPhoneUser.objects.get(pk=archived_phoneuser_id)
+    archived_phoneuser = ArchivedPhoneUser.objects.get(pk=archived_phoneuser_id)
     user = request.user
     variables = Acl.get_permissions_for_user(user.id, user.is_staff)
     credits = ArchivedCredit.objects.filter(
-        archivedphoneuser=archivedphoneuser).order_by('-recharge_date')
+        archived_phoneuser=archived_phoneuser).order_by('-recharge_date')
 
     variables['items'] = credits
-    variables['balance'] = archivedphoneuser.balance
+    variables['balance'] = archived_phoneuser.balance
     variables['archived_phoneuser_id'] = archived_phoneuser_id
 
     if request.is_ajax():
