@@ -557,7 +557,9 @@ def _get_extra_call(pincode, dst):
 
     cursor.execute(query)
     calls = cursor.fetchone()
-    weekcalls = calls[0]
+    weekcalls = -1
+    if calls:
+        weekcalls = calls[0]
 
     # primo giorno del mese
     first_of_month = today.replace(day=1).strftime("%Y-%m-%d")
@@ -569,7 +571,9 @@ def _get_extra_call(pincode, dst):
                                      yesterday_str)
     cursor.execute(query)
     calls = cursor.fetchone()
-    monthcalls = calls[0]
+    monthcalls = -1
+    if calls:
+        monthcalls = calls[0]
 
     return (weekcalls, monthcalls)
 
