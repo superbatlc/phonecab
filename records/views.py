@@ -201,7 +201,6 @@ def _single_record_export(request, record_id="0"):
 
     # logghiamo azione
     audit = Audit()
-    audit.user =
     what = "L'utente %s ha scaricato il seguente file: %s" \
         % (request.user.username, record.filename)
     audit.log(user=request.user, what=what)
