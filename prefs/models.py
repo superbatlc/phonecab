@@ -21,10 +21,9 @@ class Pref(models.Model):
         try:
             super(Pref, self).save(*args, **kwargs)
             audit = Audit()
-            audit.user = user
-            audit.what = "L'utente %s ha modificato la preferenza %s impostandola al valore %s" \
+            what = "L'utente %s ha modificato la preferenza %s impostandola al valore %s" \
                 % (user.username, self.key, str(self.value))
-            audit.save()
+            audit.log(user=user, what=what)
         except Exception as e:
             print '%s (%s)' % (e.message, type(e))
 
@@ -90,11 +89,10 @@ class Fare(models.Model):
         try:
             super(Fare, self).save(*args, **kwargs)
             audit = Audit()
-            audit.user = user
             detail = "Scatto: %s - Tariffa: %s - Lista Prefissi: %s" % (
                 self.connection_charge, self.fee_per_second, self.prefix_list)
-            audit.what = "Modifica direttrice %s : %s" % (self.direction, detail)
-            audit.save()
+            what = "Modifica direttrice %s : %s" % (self.direction, detail)
+            audit.log(user=user, what=what)
         except Exception as e:
             print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
 

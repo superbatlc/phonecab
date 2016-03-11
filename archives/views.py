@@ -538,11 +538,10 @@ def archive_cdrs_export_excel(request):
 
     # logghiamo azione
     audit = Audit()
-    audit.user = request.user
     d = request.GET.dict()
-    audit.what = "Esportazione lista chiamate archiviate corrispondenti ai seguenti criteri: %s" \
+    what = "Esportazione lista chiamate archiviate corrispondenti ai seguenti criteri: %s" \
         % (urlencode(d))
-    audit.save()
+    audit.log(user=request.user, what=what)
 
     return response
 
@@ -630,10 +629,10 @@ def _multi_record_export_as_zip_file(request):
 
     # logghiamo azione
     audit = Audit()
-    audit.user_id = request.user.id
     detail = Helper.get_filter_detail(d)
-    audit.what = "Esportazione registrazioni archiviate corrispondenti ai seguenti criteri: %s" \
+    what = "Esportazione registrazioni archiviate corrispondenti ai seguenti criteri: %s" \
                             % (detail)
+    audit.log(user=request.user, what=what)
     audit.save()
 
     return response

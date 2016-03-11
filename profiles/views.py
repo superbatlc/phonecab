@@ -191,14 +191,14 @@ def profile_change_status(request):
     if is_active:
         action = "Abilitazione"
     try:
-        if user_id:        
+        if user_id:
             user = User.objects.get(pk=user_id)
             user.is_active = is_active
             user.save()
             # log azione
-            #audit = Audit()
-            #audit.log(user=request.user,
-            #    what="%s utente: %s" % (action, user))
+            audit = Audit()
+            audit.log(user=request.user,
+            what="%s utente: %s" % (action, user))
             return profile_items(request)
         else:
             raise Http404

@@ -12,7 +12,7 @@ class Audit(models.Model):
     """
 
     user = models.ForeignKey(User)
-    when = models.DateTimeField(default=datetime.datetime.now())
+    when = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
     what = models.TextField()
     params = models.CharField(max_length=255)
 
@@ -26,6 +26,7 @@ class Audit(models.Model):
         """Shortcut to create a new audit entry"""
         self.user = user
         self.what = what
+        self.when = datetime.datetime.now()
         if params:
             self.params = params
 

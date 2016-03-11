@@ -201,10 +201,10 @@ def _single_record_export(request, record_id="0"):
 
     # logghiamo azione
     audit = Audit()
-    audit.user = request.user
-    audit.what = "L'utente %s ha scaricato il seguente file: %s" \
+    audit.user =
+    what = "L'utente %s ha scaricato il seguente file: %s" \
         % (request.user.username, record.filename)
-    audit.save()
+    audit.log(user=request.user, what=what)
 
     return response
 
@@ -268,11 +268,10 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
 
     # logghiamo azione
     audit = Audit()
-    audit.user_id = request.user.id
     detail = Helper.get_filter_detail(d)
-    audit.what = "Esportazione registrazioni corrispondenti ai seguenti criteri: %s" \
+    what = "Esportazione registrazioni corrispondenti ai seguenti criteri: %s" \
                             % (detail)
-    audit.save()
+    audit.log(user=request.user, what=what)
 
     return response
 
@@ -346,13 +345,12 @@ def _multi_record_remove(request):
             item.delete()
             # logghiamo azione
             audit = Audit()
-            audit.user_id = request.user.id
             detail = Helper.get_filter_detail(d)
             if detail == '':
                 detail = 'Tutte le registrazioni'
-            audit.what = "Eliminazione registrazioni corrispondenti ai seguenti criteri: %s" \
+            what = "Eliminazione registrazioni corrispondenti ai seguenti criteri: %s" \
                                     % (detail)
-            audit.save()
+            audit.log(user=request.user, what=what)
 
         except Exception as e:
             return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')

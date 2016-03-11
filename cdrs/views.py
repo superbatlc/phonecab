@@ -270,10 +270,10 @@ def cdr_export_excel(request):
 
     # logghiamo azione
     audit = Audit()
-    audit.user = request.user
+    audit.user =
     d = request.GET.dict()
-    audit.what = "Esportazione lista chiamate corrispondenti ai seguenti criteri: %s" \
+    what = "Esportazione lista chiamate corrispondenti ai seguenti criteri: %s" \
         % (urlencode(d))
-    audit.save()
+    audit.log(user=request.user, what=what)
 
     return response
