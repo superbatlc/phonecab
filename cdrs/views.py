@@ -172,10 +172,8 @@ def cdr_change_valid(request):
             detail.save()
 
             audit = Audit()
-            action = valid and 'abilitato' or 'disabilitato'
-            what = "L'utente %s ha %s la chiamata %s" % (request.user.username,
-                                                         action,
-                                                         detail)
+            action = valid and 'Abilitazione' or 'Disabilitazione'
+            what = "%s chiamata %s" % (action, detail)
             audit.log(user=request.user, what=what)
 
             return cdr_items(request)
