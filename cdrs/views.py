@@ -171,6 +171,13 @@ def cdr_change_valid(request):
             detail.valid = valid
             detail.save()
 
+            audit = Audit()
+            action = valid ? 'abilitato' : 'disailitato'
+            what = "L'utente %s ha %s la chiamata %s" % (request.user.username,
+                                                         action,
+                                                         detail)
+            audit.log(user=request.user, what=what)
+
             return cdr_items(request)
         else:
             raise Http404
