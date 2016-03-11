@@ -59,7 +59,9 @@ class SuperbaCDR(models.Model):
 
 
     def __unicode__(self):
-        return "Chiamata da %s a %s del %s" % (src, dst, calldate)
+        return "Chiamata da %s a %s del %s" % (self.src,
+                                               self.dst,
+                                               self.calldate)
 
 
 
