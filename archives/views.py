@@ -456,6 +456,8 @@ def archive_cdrs_export_excel(request):
     default_style = xlwt.Style.default_style
     datetime_style = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
 
+    d = request.GET.dict()
+
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")
     start_time = request.GET.get("start_time", None)

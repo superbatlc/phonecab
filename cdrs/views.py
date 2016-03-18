@@ -14,6 +14,7 @@ from phoneusers.models import PhoneUser, Whitelist
 from audits.models import Audit
 from acls.models import Acl
 from prefs.models import Pref, Extension
+from records.models import Record
 from helper.Helper import Helper
 
 
@@ -116,6 +117,10 @@ def cdr_items(request):
         except Exception as e:
             item.whitelist = ''
 
+        item.has_record = False
+        if Record.objects.filter(uniqueid=item.uniqueid).count():
+            item.has_record = True
+
         item.src = Extension.get_extension_name(item.src)
 
     prev_page = page - 1
@@ -193,6 +198,8 @@ def cdr_export_excel(request):
 
     default_style = xlwt.Style.default_style
     datetime_style = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
+
+    d = request.GET.dict()
 
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")

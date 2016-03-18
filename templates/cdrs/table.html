@@ -14,6 +14,7 @@
         <th style="width:180px;" class="acentro">Sorgente</th>
         <th style="width:90px;" class="acentro">Destinazione</th>
         <th style="width:320px;">Numero Autorizzato</th>
+        <th style="width:40px;" class="acentro">R</th>
         <th style="width:80px;" class="adestra">Durata</th>
         <th style="width:60px;" class="adestra">Costo</th>
         </tr>
@@ -41,6 +42,13 @@
         <td class="acentro">{{ item.src }}</td>
         <td class="acentro">{{ item.dst }}</td>
         <td>{{ item.whitelist.label }}</td>
+        <td class="acentro">
+            {% if item.has_record %}
+                <i class="zmdi zmdi-headset"></i>
+            {% else %}
+                -
+            {% endif %}
+        </td>
         <td class="adestra">{{ item.billsec|format_time }}</td>
         <td class="adestra">{{ item.price }}</td>
         </tr>
