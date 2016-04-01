@@ -12,7 +12,7 @@ class Audit(models.Model):
     """
 
     user = models.ForeignKey(User)
-    when = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
+    when = models.DateTimeField(auto_now_add=True)
     what = models.TextField()
     params = models.CharField(max_length=255)
 

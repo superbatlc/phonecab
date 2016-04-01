@@ -265,8 +265,8 @@ class ArchivedDetail(models.Model):
     def get_cost(archived_phoneuser):
         """Calcola il totale dei costi sostenuti"""
         
-        total = SuperbaCDR.objects.filter(
-            archived_phoneuser=archived_phoneuser).aggregate(total=models.Sum('price'))
+        total = ArchivedDetail.objects.filter(
+            archived_phoneuser_id=archived_phoneuser).aggregate(total=models.Sum('price'))
         cost = total['total']
         if cost:
             return cost
