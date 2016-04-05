@@ -119,7 +119,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-    'django_extensions',
     'phoneusers',
     'acls',
     'cdrs',
@@ -127,7 +126,6 @@ INSTALLED_APPS = (
     'audits',
     'prefs',
     'archives',
-    #'south',
 )
 
 

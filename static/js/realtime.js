@@ -13,7 +13,7 @@ var Realtime = {
 
     _updateActiveLoop() {
         //console.log('LOOP ACTIVE');
-        requestData("GET", "json", '/nightmode', {}, function(response) {
+        requestData("GET", "json", '/nightmode/', {}, function(response) {
             Realtime._setActive(!response.nightmode);
         });
     },
@@ -115,7 +115,7 @@ var Ami = {
         }
 
         value = $('input#add-pincode').val();
-        console.log('pincode: '+ value);
+        //console.log('pincode: '+ value);
 
         requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=CHANNEL(accountcode)&value=' + value, {}, function(response) {
             showMessageBox("Conferma", 'Associazione effettuata con successo', "green");
@@ -214,6 +214,9 @@ var Ami = {
                     bridged[channel_bridgeid].push(channel);
                 } else {
                     bridged[channel_bridgeid] = [channel];
+                }
+		// INCLUDED CALLS (SOLO MAIN CHANNEL's CONTEXTS)
+		if (['from-cabs','cabs-dial-number'].indexOf(channel.context)>-1) {
                     calls.push({
                         channel: channel_name,
                         src: '',
@@ -223,23 +226,24 @@ var Ami = {
                         duration: '',
                         bridgeid: channel_bridgeid,
                         recording: false,
+			frozen: false,
                     });
-                }
+}
 
             }); // END each channel
 
             // Cycle calls (bridges) to get data
-            calls.forEach(function(acall) {
-                var call_exists = false;
+	    for (var i=0; i<calls.length; i++) {
+		var acall = calls[i];
+                acall.exists = false;
                 var channel = {}; //temporary value
                 var current_channels = bridged[acall.bridgeid];
                 var current_contexts = utils.getValues(current_channels, 'context');
 
                 if (current_contexts.indexOf('cabs-dial-number') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
-
                     //DETENUTO [ cabs-dial-number + from-trunk]
                     channel = utils.getItem(current_channels, 'context', 'from-trunk');
-                    call_exists = true;
+                    acall.exists = true;
                     acall.pincode = channel.accountcode;
                     acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
@@ -247,11 +251,37 @@ var Ami = {
                     acall.src = channel.connectedlinenum;
                     acall.dst = channel.calleridnum;
 
-                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('outgoing-operator-dial-number') >= 0) {
+		    // CHIAMATA USCENTE PER CONTO DETENUTO
+                    channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                    acall.exists = true;
+                    acall.pincode = channel.accountcode;
+                    acall.duration = channel.duration;
+                    acall.uniqueid = channel.uniqueid;
+                    acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                    acall.src = channel.calleridnum;
+                    acall.dst = channel.connectedlinenum;
+
+                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-operatore') >= 0) {
+
+                     // CHIAMATA ENTRANTE PER CONTO DETENUTO
+		     channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                     var trunk = utils.getItem(current_channels, 'context', 'from-operatore');
+                     acall.exists = true;
+                     acall.pincode = channel.accountcode; // valorizzato dopo l'assegnazione
+		     if (!acall.pincode) acall.frozen = true; // blocca il refresh della linea per evitare di rendere l'input impossibile
+                     acall.duration = channel.duration;
+                     acall.uniqueid = channel.uniqueid;
+                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                     acall.src = trunk.calleridnum;
+                     acall.dst = channel.calleridnum;
+
+                }/* else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+
 
                     channel = utils.getItem(current_channels, 'context', 'from-cabs');
                     var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
-                    call_exists = true;
+                    acall.exists = true;
                     acall.pincode = channel.accountcode;
                     acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
@@ -265,27 +295,14 @@ var Ami = {
                         acall.src = '';
                         acall.dst = channel.calleridnum;
                     }
-                }
-                // else if (current_contexts.indexOf('from-operatore') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+                 }*/
 
-                //     channel = utils.getItem(current_channels, 'context', 'from-operatore');
-                //     var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
-                //     call_exists = true;
-                //     acall.pincode = "";
-                //     acall.duration = channel.duration;
-                //     acall.uniqueid = channel.uniqueid;
-                //     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
-                //     // PER CONTO [ from-cabs + from-trunk ]
-                //     acall.src = trunk.exten;
-                //     acall.dst = "299";
+	    }
+	    for (var i=calls.length-1; i>=0; i--) {
+		// elimino chiamate da non visualizzare
+		if (!calls[i].exists) calls.splice(i,1);
+	    }
 
-                // }
-
-                if (!call_exists) {
-                    // rimuovi la chiamata
-                    calls.pop(acall);
-                }
-            });
 
             //calls = Ami.calls;
 
@@ -317,7 +334,6 @@ var Ami = {
                     Ami._addUICall(acall);
                 }
             }); // END call each
-
 
 
             //console.log('----------');
@@ -399,9 +415,11 @@ var Ami = {
         }
         actions += '&nbsp;<button class="hangup btn btn-danger hangup-call" onclick="Ami.hangUpCall(\'' + acall.channel + '\')">Riaggancia</button>';
 
+	var element = [];
+
         if (!Ami.forceRefresh) {
-            var element = $("[data-uniqueid='" + acall.uniqueid + "']");
-            if (element.length) {
+            element = $("[data-uniqueid='" + acall.uniqueid + "']");
+            if (element.length && !acall.frozen) {
                 //console.log('UI edit ', element);
                 element.find('.call-name').html(acall.name);
                 element.find('.call-pincode').html(acall.pincode);
@@ -409,10 +427,8 @@ var Ami = {
                 element.find('.call-dst').html(acall.dst);
                 element.find('.call-startcall').html(acall.startcall);
                 element.find('.call-duration').html(acall.duration);
-                element.find('.call-actions').html(acall.actions);
+                element.find('.call-actions').html(actions);
             }
-        } else {
-            var element = [];
         }
 
         if (!element.length) {
