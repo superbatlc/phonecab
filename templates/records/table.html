@@ -28,7 +28,7 @@
                 <td><a href="/phoneusers/view/{{ item.phoneuser.id }}">{{ item.phoneuser.get_full_name }}</a></td>
                 <td class="acentro">{{ item.detail.src }}</td>
                 <td class="acentro">{{ item.detail.dst }}</td>
-                <td>{{ item.whitelist.label }}</td>
+                <td>{{ item.whitelist.label|default:"Numero sconosciuto" }}</td>
                 <td class="acentro">
                     {% if item.filename != '' %}
                     <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>

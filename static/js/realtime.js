@@ -106,7 +106,7 @@ var Ami = {
         }, errorAction);
     },
 
-    addPin: function(channel) {
+    addPin: function(channel, src, dst) {
         if (!Ami._checkAuthenticated) return;
 
         var errorAction = function(error) {
@@ -114,11 +114,28 @@ var Ami = {
             showMessageBox("Errore", "Impossibile associare il codice alla chiamata.", "alert-danger");
         }
 
-        value = $('input#add-pincode').val();
-        //console.log('pincode: '+ value);
+        var pincode = $('input#add-pincode').val();
 
-        requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=CHANNEL(accountcode)&value=' + value, {}, function(response) {
+        requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=CHANNEL(accountcode)&value=' + pincode, {}, function(response) {
+		
             showMessageBox("Conferma", 'Associazione effettuata con successo', "green");
+	    
+                    var data = {};
+                    data.pincode = pincode;
+                    data.src = src;
+                    data.dst = dst;
+                    requestData("POST", "json", '/phoneusers/realtime/info/', { data: data }, function(response) {
+			    if (response.data.recording) {
+        		        var d = new Date()
+        		        calldate = d.getUTCFullYear().toString() + twoDigitsNum(d.getUTCMonth() + 1) + twoDigitsNum(d.getUTCDate());
+        		        calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
+            		        filename = pincode + '_' + calldate + '_' + calltime + '_' + dst;
+				Ami.recordCall(channel,filename);
+			    }
+                        },
+                        function(error) {
+                    	    showMessageBox("Errore", 'Impossibile avviare la registrazione', "alert-danger");
+                        });
         }, errorAction);
     },
 
@@ -398,7 +415,7 @@ var Ami = {
         calltime = twoDigitsNum(d.getHours()) + twoDigitsNum(d.getMinutes()) + twoDigitsNum(d.getSeconds());
         var actions = '';
         if(!acall.pincode){
-            actions += '<input type="text" id="add-pincode" size="11">&nbsp;&nbsp;<button class="recording btn btn-info" onclick="Ami.addPin(\'' + acall.channel + '\')">Assegna Codice</button>';
+            actions += '<input type="text" id="add-pincode" size="11">&nbsp;&nbsp;<button class="recording btn btn-info" onclick="Ami.addPin(\'' + acall.channel + '\',\'' + acall.src + '\',\'' + acall.dst + '\')">Assegna Codice</button>';
         } else{
             filename = acall.pincode + '_' + calldate + '_' + calltime + '_' + acall.dst;
         }
