@@ -279,7 +279,7 @@ var Ami = {
                     acall.src = channel.calleridnum;
                     acall.dst = channel.connectedlinenum;
 
-                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-operatore') >= 0) {
+                }/* else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-operatore') >= 0) {
 
                      // CHIAMATA ENTRANTE PER CONTO DETENUTO
 		     channel = utils.getItem(current_channels, 'context', 'from-cabs');
@@ -293,26 +293,20 @@ var Ami = {
                      acall.src = trunk.calleridnum;
                      acall.dst = channel.calleridnum;
 
-                }/* else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+                }*/ else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
 
-
+		    // CHIAMATA ENTRANTE PER CONTO DETENUTO
                     channel = utils.getItem(current_channels, 'context', 'from-cabs');
                     var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
                     acall.exists = true;
                     acall.pincode = channel.accountcode;
-                    acall.duration = channel.duration;
+                    if (!acall.pincode) acall.frozen = true; // blocca il refresh della linea per evitare di rendere l'input impossibile
+		    acall.duration = channel.duration;
                     acall.uniqueid = channel.uniqueid;
                     acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
-                    if (!trunk.exten) {
-                        // PER CONTO [ from-cabs + from-trunk ]
-                        acall.src = channel.calleridnum;
-                        acall.dst = channel.connectedlinenum;
-                    } else {
-                        // ENTRANTE [from-cabs + from-trunk + from-trunk.exten valorizzato]
-                        acall.src = '';
-                        acall.dst = channel.calleridnum;
-                    }
-                 }*/
+                    acall.src = trunk.calleridnum;
+                    acall.dst = channel.calleridnum;
+                 }
 
 	    }
 	    for (var i=calls.length-1; i>=0; i--) {
