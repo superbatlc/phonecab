@@ -115,8 +115,11 @@ def record_items(request):
             else:
                 item.detail = details[0]
                 item.detail.src = Extension.get_extension_name(item.detail.src)
-            item.whitelist = Whitelist.objects.get(
-                phoneuser=item.phoneuser, phonenumber=item.detail.dst)
+            try:
+		item.whitelist = Whitelist.objects.get(
+                	phoneuser=item.phoneuser, phonenumber=item.detail.dst)
+	    except:
+		item.whitelist = None
         except Exception as e:
             return redirect("/records/?err=1&err_msg=Impossibile caricare la lista dei record")
 
