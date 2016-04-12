@@ -116,10 +116,10 @@ def record_items(request):
                 item.detail = details[0]
                 item.detail.src = Extension.get_extension_name(item.detail.src)
             try:
-		item.whitelist = Whitelist.objects.get(
-                	phoneuser=item.phoneuser, phonenumber=item.detail.dst)
-	    except:
-		item.whitelist = None
+                item.whitelist = Whitelist.objects.get(
+                    phoneuser=item.phoneuser, phonenumber=item.detail.dst)
+            except:
+                item.whitelist = None
         except Exception as e:
             return redirect("/records/?err=1&err_msg=Impossibile caricare la lista dei record")
 
@@ -256,7 +256,6 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
     file_counter = 0
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
-
             detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid)
             if detail.valid:
                 file_counter += 1

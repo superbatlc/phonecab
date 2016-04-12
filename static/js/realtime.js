@@ -117,9 +117,9 @@ var Ami = {
         var pincode = $('input#add-pincode').val();
 
         requestData("GET", "xml", Config.ami.url + '?action=setvar&channel=' + channel + '&variable=CHANNEL(accountcode)&value=' + pincode, {}, function(response) {
-		
+
             showMessageBox("Conferma", 'Associazione effettuata con successo', "green");
-	    
+
                     var data = {};
                     data.pincode = pincode;
                     data.src = src;
@@ -269,7 +269,7 @@ var Ami = {
                     acall.dst = channel.calleridnum;
 
                 } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('outgoing-operator-dial-number') >= 0) {
-		    // CHIAMATA USCENTE PER CONTO DETENUTO
+                    // CHIAMATA USCENTE PER CONTO DETENUTO
                     channel = utils.getItem(current_channels, 'context', 'from-cabs');
                     acall.exists = true;
                     acall.pincode = channel.accountcode;
@@ -279,34 +279,33 @@ var Ami = {
                     acall.src = channel.calleridnum;
                     acall.dst = channel.connectedlinenum;
 
-                }/* else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-operatore') >= 0) {
+                } else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
+                    // CHIAMATA ENTRANTE PER CONTO DETENUTO
+                    channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                    var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
+                    acall.exists = true;
+                    acall.pincode = channel.accountcode;
+                    if (!acall.pincode) acall.frozen = true; // blocca il refresh della linea per evitare di rendere l'input impossibile
+                    acall.duration = channel.duration;
+                    acall.uniqueid = channel.uniqueid;
+                    acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
+                    acall.src = trunk.calleridnum;
+                    acall.dst = channel.calleridnum;
+                 } /* else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-operatore') >= 0) {
 
                      // CHIAMATA ENTRANTE PER CONTO DETENUTO
-		     channel = utils.getItem(current_channels, 'context', 'from-cabs');
+                     channel = utils.getItem(current_channels, 'context', 'from-cabs');
                      var trunk = utils.getItem(current_channels, 'context', 'from-operatore');
                      acall.exists = true;
                      acall.pincode = channel.accountcode; // valorizzato dopo l'assegnazione
-		     if (!acall.pincode) acall.frozen = true; // blocca il refresh della linea per evitare di rendere l'input impossibile
+                     if (!acall.pincode) acall.frozen = true; // blocca il refresh della linea per evitare di rendere l'input impossibile
                      acall.duration = channel.duration;
                      acall.uniqueid = channel.uniqueid;
                      acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
                      acall.src = trunk.calleridnum;
                      acall.dst = channel.calleridnum;
 
-                }*/ else if (current_contexts.indexOf('from-cabs') >= 0 && current_contexts.indexOf('from-trunk') >= 0) {
-
-		    // CHIAMATA ENTRANTE PER CONTO DETENUTO
-                    channel = utils.getItem(current_channels, 'context', 'from-cabs');
-                    var trunk = utils.getItem(current_channels, 'context', 'from-trunk');
-                    acall.exists = true;
-                    acall.pincode = channel.accountcode;
-                    if (!acall.pincode) acall.frozen = true; // blocca il refresh della linea per evitare di rendere l'input impossibile
-		    acall.duration = channel.duration;
-                    acall.uniqueid = channel.uniqueid;
-                    acall.startcall = (new Date(channel.uniqueid * 1000)).toLocaleTimeString();
-                    acall.src = trunk.calleridnum;
-                    acall.dst = channel.calleridnum;
-                 }
+                }*/
 
 	    }
 	    for (var i=calls.length-1; i>=0; i--) {

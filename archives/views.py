@@ -397,8 +397,12 @@ def archive_records_items(request):
                 item.detail.dst = ''
             else:
                 item.detail = details[0]
-            item.whitelist = ArchivedWhitelist.objects.get(
-                archived_phoneuser_id=item.archived_phoneuser_id, phonenumber=item.detail.dst)
+            try:
+                item.whitelist = ArchivedWhitelist.objects.get(
+                    archived_phoneuser_id=item.archived_phoneuser_id,
+                    phonenumber=item.detail.dst)
+            except:
+                item.whitelist = None
         except Exception as e:
             pass # TODO gestire
             print "Errore nel recupero delle informazioni sulla chiamata"
