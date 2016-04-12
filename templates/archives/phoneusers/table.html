@@ -13,7 +13,7 @@
         {% if items %}
             {% for item in items %}
             <tr>
-            <td>{{ item.last_name }} {{ item.first_name }}</td>
+            <td><a href="/archives/phoneusers/view/{{ item.id }}">{{ item.last_name }} {{ item.first_name }}</a></td>
             <td style="text-align:center;">{{ item.pincode}}</td>
             <td style="text-align:center;">{{ item.serial_no}}</td>
             <td style="width:100px;text-align:center;">{{ item.balance|floatformat:2 }}</td>
