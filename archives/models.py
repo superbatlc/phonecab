@@ -61,7 +61,7 @@ class ArchivedPhoneUser(models.Model):
 
     def get_full_name(self):
         return "%s %s" % (self.last_name, self.first_name)
-    
+
     def copy(self):
         """Copys values between phoneuser and archivephoneuser"""
         self.first_name = self.phoneuser.first_name
@@ -186,6 +186,9 @@ class ArchivedWhitelist(models.Model):
     frequency = models.IntegerField(
         verbose_name="frequenza",
         choices=CALL_FREQUENCY)
+    lawyer = models.BooleanField(
+        verbose_name='avvocato',
+        default=False)
     extraordinary = models.BooleanField(
         verbose_name='straordinaria', default=False)
     real_mobile = models.BooleanField(
@@ -264,14 +267,14 @@ class ArchivedDetail(models.Model):
     @staticmethod
     def get_cost(archived_phoneuser):
         """Calcola il totale dei costi sostenuti"""
-        
+
         total = ArchivedDetail.objects.filter(
             archived_phoneuser_id=archived_phoneuser).aggregate(total=models.Sum('price'))
         cost = total['total']
         if cost:
             return cost
         return None
-    
+
 
 class ArchivedRecord(models.Model):
     """

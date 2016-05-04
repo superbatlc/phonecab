@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
+    # 'django_extensions',
     'phoneusers',
     'acls',
     'cdrs',
@@ -158,6 +159,6 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
 try:
-    from .settings_local import *
+    from settings_local import *
 except:
     pass

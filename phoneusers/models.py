@@ -98,6 +98,9 @@ class Whitelist(models.Model):
         verbose_name="frequenza",
         choices=CALL_FREQUENCY,
         default=FIRST_IN_FREQUENCY)
+    lawyer = models.BooleanField(
+        verbose_name='avvocato',
+        default=False)
     extraordinary = models.BooleanField(
         verbose_name='straordinaria',
         default=False)
