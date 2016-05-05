@@ -111,11 +111,12 @@ def cdr_items(request):
             item.price = "0.00"
             # cerchiamo di recuperare informazioni sul phoneuser
         item.phoneuser = PhoneUser.get_from_pincode(item.pincode)
+        print item.pincode
         try:
             item.whitelist = Whitelist.objects.filter(
                 phoneuser=item.phoneuser, phonenumber=item.dst)[0]
         except Exception as e:
-            item.whitelist = ''
+            item.whitelist = '-'
 
         item.has_record = False
         if Record.objects.filter(uniqueid=item.uniqueid).count():

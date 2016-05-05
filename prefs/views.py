@@ -16,6 +16,7 @@ def prefs_edit(request):
     min_duration = Pref.get('min_duration')
     alert_before_end = Pref.get('alert_before_end')
     enable_first_in = Pref.get('enable_first_in')
+    ordinary_lawyer = Pref.get('ordinary_lawyer')
     change_threshold = Pref.get('change_threshold')
     threshold = int(Pref.get('threshold')) / 60
     header = Pref.get('header')
@@ -25,6 +26,7 @@ def prefs_edit(request):
         'min_duration': min_duration,
         'alert_before_end': alert_before_end,
         'enable_first_in': enable_first_in,
+        'ordinary_lawyer': ordinary_lawyer,
         'change_threshold': change_threshold,
         'threshold': threshold,
         'fares': fares,
@@ -61,6 +63,7 @@ def prefs_save(request):
         min_duration = request.POST.get("min_duration", "0")
         alert_before_end = request.POST.get("alert_before_end", "0")
         enable_first_in = request.POST.get("enable_first_in", "0")
+        ordinary_lawyer = request.POST.get("ordinary_lawyer", "0")
         change_threshold = request.POST.get("change_threshold", "0")
         threshold = int(request.POST.get("threshold", "0")) * 60
         header = request.POST.get("header", "0")
@@ -75,6 +78,10 @@ def prefs_save(request):
 
         p = Pref.objects.get(key='enable_first_in')
         p.value = enable_first_in
+        p.save(request.user)
+
+        p = Pref.objects.get(key='ordinary_lawyer')
+        p.value = ordinary_lawyer
         p.save(request.user)
 
         p = Pref.objects.get(key='change_threshold')

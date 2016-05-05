@@ -15,6 +15,7 @@
                 <th style="width:180px;" class="acentro">Sorgente</th>
                 <th style="width:100px;" class="acentro">Destinazione</th>
                 <th style="width:320px;">Numero Autorizzato</th>
+                <th style="width:60px;" class="acentro">Avv</th>
                 <th style="width:60px;" class="acentro">File</th>
             </tr>
             </thead>
@@ -29,6 +30,7 @@
                 <td class="acentro">{{ item.detail.src }}</td>
                 <td class="acentro">{{ item.detail.dst }}</td>
                 <td>{{ item.whitelist.label|default:"Numero sconosciuto" }}</td>
+                <td class="acentro">{{ item.whitelist.lawyer|yesno:"Si,No" }}</td>
                 <td class="acentro">
                     {% if item.filename != '' %}
                     <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>

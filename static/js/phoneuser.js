@@ -214,6 +214,11 @@ var Whitelist = {
                 data.real_mobile = 1
             }
 
+            data.lawyer = 0
+            if($("input[type=checkbox]#whitelist-lawyer").is(':checked')){
+                data.lawyer = 1
+            }
+
             data.phoneuser_id = $("#phoneuser-id").val()
 
             requestData("POST", "html", '/whitelists/save/', {data : data},

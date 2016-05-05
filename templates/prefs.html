@@ -84,7 +84,7 @@
     <!-- .row -->
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card bordered">
                 <div class="card-header">
                     <span class="card-title">Preferenze Chiamate</span>
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card bordered">
                 <div class="card-header">
                     <span class="card-title">Preferenze Durata</span>
@@ -123,7 +123,25 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card bordered">
+                <div class="card-header">
+                    <span class="card-title">Preferenze Avvocato</span>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label class="control-label normal filled">AVVOCATO COME ORDINARIA</label>
+                        <div class="checkbox">
+                            <label>
+                                <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
+                                Abilitando questa modalit&agrave; si equiparano le chiamate verso i difensori a quelle verso parenti e affini
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="card bordered">
                 <div class="card-header">
                     <span class="card-title">Preferenze Autorizzazioni</span>

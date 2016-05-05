@@ -28,7 +28,7 @@
         {% if enable_first_in == "1" %}
         <option value="0" {% if whitelist.frequency == 0 %}selected{% endif %}>Primo ingresso</option>
         {% endif %}
-        <option value="1" {% if whitelist.frequency == 1 %}selected{% endif %}>Avvocato</option>
+        <!--<option value="1" {% if whitelist.frequency == 1 %}selected{% endif %}>Avvocato</option>-->
         {% if not whitelist.phoneuser.four_bis_limited %}
         <option value="2" {% if whitelist.frequency == 2 %}selected{% endif %}>Ordinaria</option>
         {% else %}
@@ -37,8 +37,17 @@
       </select>
     </div>
   </div>
-  <div class="form-group {% if whitelist.real_mobile %}hide{% endif %}" id="whitelist-real-mobile-element">
-    <label for="enabled" class="col-xs-4 control-label">Cellulare</label>
+  <div class="form-group" id="whitelist-layer-element">
+    <label for="enabled" class="col-xs-4 control-label">Avvocato</label>
+    <div class="col-xs-4">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if whitelist.lawyer %}checked="checked"{% endif %} id="whitelist-lawyer"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group" id="whitelist-real-mobile-element">
+    <label for="enabled" class="col-xs-4 control-label">Vincolo 15gg</label>
     <div class="col-xs-4">
       <div class="checkbox">
         <label class="filled">

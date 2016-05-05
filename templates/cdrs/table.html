@@ -7,13 +7,14 @@
     	<tr>
         <th style="width:40px;" class="acentro"></th>
         <th style="width:120px;" class="acentro">Data Ora</th>
-        <th style="width:40px;" class="acentro" data-help="Tipologia della chiamata:<br/>ORD Ordinaria<br>STR Straordinaria<br/>SPE Speciale<br/>(Avvocato o Primo soccorso)">Tipo</th>
+        <th style="width:40px;" class="acentro" data-help="Tipologia della chiamata:<br/>ORD Ordinaria<br>STR Straordinaria<br/>PRI Primo ingresso">Tipo</th>
         <th style="width:60px;" class="acentro">Codice</th>
         <th style="width:80px;" class="acentro">Matricola</th>
         <th style="width:auto;">Nome Cognome</th>
         <th style="width:180px;" class="acentro">Sorgente</th>
         <th style="width:90px;" class="acentro">Destinazione</th>
         <th style="width:320px;">Numero Autorizzato</th>
+        <th style="width:40px;" class="acentro">Avv</th>
         <th style="width:40px;" class="acentro">R</th>
         <th style="width:80px;" class="adestra">Durata</th>
         <th style="width:60px;" class="adestra">Costo</th>
@@ -42,6 +43,7 @@
         <td class="acentro">{{ item.src }}</td>
         <td class="acentro">{{ item.dst }}</td>
         <td>{{ item.whitelist.label }}</td>
+        <td class="acentro">{{ item.whitelist.lawyer|yesno:"Si,No" }}</td>
         <td class="acentro">
             {% if item.has_record %}
                 <i class="zmdi zmdi-headset"></i>

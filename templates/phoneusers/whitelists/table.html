@@ -17,9 +17,9 @@
         <tr>
           <th style="width:40px;">Stato</th>
           <th style="width:auto;">Etichetta</th>
-          <th style="width:50px;text-align:center;">Numero</th>
-          <th style="width:30px; text-align:center;">Cellulare</th>
-          <!--<th style="width:100px; text-align:center;">Soglia</th>-->
+          <th style="width:180px;text-align:center;">Numero</th>
+          <th style="width:30px; text-align:center;">Avvocato</th>
+          <th style="width:120px; text-align:center;">Vincolo 15gg</th>
           <th style="width:160px; text-align:center;">Tipologia</th>
           <th style="width:30px; text-align:center;">Straordinaria</th>
           <th class="noprint" style="width:120px; text-align:center;">Azioni</th>
@@ -51,7 +51,8 @@
           </td>
           <td>{{ wl.label }}</td>
           <td style="text-align:center;">{{ wl.phonenumber }}</td>
-          <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No"  }}</td>
+          <td style="text-align:center;">{{ wl.lawyer|yesno:"Si,No"  }}</td>
+          <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No" }}</td>
           <!--<td style="text-align:center;">{{ wl.duration|format_time }}</td>-->
           <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
           <td style="text-align:center;">

@@ -396,6 +396,7 @@ def whitelist_save(request):
     phonenumber = request.POST.get("data[phonenumber]", "")
     duration = int(request.POST.get("data[duration]", "0"))
     frequency = int(request.POST.get("data[frequency]", "0"))
+    lawyer = int(request.POST.get("data[lawyer]", "0"))
     real_mobile = int(request.POST.get("data[real_mobile]", "0"))
 
     # la maschera consente di inserire i minuti
@@ -415,6 +416,7 @@ def whitelist_save(request):
         whitelist.phonenumber = phonenumber
         whitelist.duration = duration
         whitelist.frequency = frequency
+        whitelist.lawyer = lawyer
         whitelist.real_mobile = real_mobile
 
         whitelist.save()
