@@ -325,7 +325,7 @@ def phoneuser_realtime_info(request):
                     try:
                         whitelist = Whitelist.objects.get(phonenumber=dst, phoneuser_id=phoneuser.id)
                         values['data']['dst'] = "%s %s" % (dst, whitelist.label)
-                        if whitelist.frequency == 1:
+                        if whitelist.lawyer:
                             values['data']['recording'] = 'hidden'
                     except:
                         values['data']['dst'] = dst
