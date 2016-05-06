@@ -4,168 +4,174 @@
 {% block title %}PhoneCab - Preferenze{% endblock %}
 {% block application %}
 
+<form action="/prefs/save/" class="form-floating" id="prefs" method="POST" onSubmit="submitPrefs">
+
 <div class="page-header">
     <h1>
         <i class="zmdi zmdi-settings"></i>
-        Preferenze Generali</h1>
+        Generali</h1>
     <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
 </div>
 
-<form action="/prefs/save/" class="form-floating" id="prefs" method="POST" onSubmit="submitPrefs">
-
-    <div class="row" style="margin-bottom:20px;">
-        <div class="col-md-12">
-            <div class="card bordered">
-                <div class="card-header">
-                    <span class="card-title">Intestazione Stampe</span>
+<div class="row" style="margin-bottom:20px;">
+    <div class="col-md-12">
+        <div class="card bordered">
+            <div class="card-header">
+                <span class="card-title">Intestazione Stampe</span>
+            </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label class="control-label normal filled">Dicitura</label>
+                    <input class="form-control" name="header" type="text" value="{{ header }}">
                 </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label class="control-label normal filled">Dicitura</label>
-                        <input class="form-control" name="header" type="text" value="{{ header }}">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-header">
+    <h1>
+        <i class="zmdi zmdi-phone"></i>
+        Chiamata</h1>
+    <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
+</div>
+<div class="row" style="margin-bottom:20px;">
+    <div class="col-md-3">
+        <div class="card bordered">
+            <div class="card-header">
+                <span class="card-title">Durata minima e Avviso</span>
+            </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label class="control-label">Durata minima in secondi (in funzione del credito disponibile)</label>
+                    <input class="form-control" name="min_duration" type="text" value="{{ min_duration }}">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Avviso fine chiamata (secondi precedenti)</label>
+                    <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bordered">
+            <div class="card-header">
+                <span class="card-title">Soglia</span>
+            </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label class="control-label normal filled">Modifica della soglia</label>
+                    <div class="checkbox">
+                        <label>
+                            <input {% if change_threshold == "1" %}checked="checked"{% endif %} name="change_threshold" type="checkbox" value="1">
+                            consenti modifica
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Valore preimpostato (in minuti)</label>
+                    <input class="form-control disabled" name="threshold" type="text" value="{{ threshold }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bordered">
+            <div class="card-header">
+                <span class="card-title">Avvocato</span>
+            </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label class="control-label normal filled">AVVOCATO COME ORDINARIA</label>
+                    <div class="checkbox">
+                        <label>
+                            <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
+                            Abilitando questa modalit&agrave; si equiparano le chiamate verso i difensori a quelle verso parenti e affini.
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="page-header">
-        <h1>
-            <i class="zmdi zmdi-settings"></i>
-            Preferenze Chiamata</h1>
-        <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
-    </div>
-    <div class="row">
-        {% for fare in fares %}
-        <div class="col-md-4">
-            <div class="card card-flip bordered">
-                <div class="card-header">
-                    <div class="pull-right">
-                        <a class="btn btn-link btn-flip btn-xs" href="javascript:;">
-                            <i class="zmdi zmdi-globe-alt"></i>
-                            Prefissi
-                        </a>
-                    </div>
-
-                    <span class="card-title">
-                        <i class="{{ fare.icon }}"></i>
-                        {{ fare.direction }}</span>
-                </div>
-
-                <div class="card-content">
-                    <input name="fare_id[]" type="hidden" value="{{fare.id}}">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="control-label">Scatto (&euro;)</label>
-                                <input class="form-control" name="fare_connection_charge[]" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="control-label">Tariffa (&euro;/minuto)</label>
-                                <input class="form-control" name="fare_fee_per_second[]" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-reveal">
-                    <span class="card-title grey-text text-darken-4">Prefissi
-                        <i class="zmdi zmdi-close pull-right btn-flip"></i>
-                    </span>
-                    <div class="form-group">
-                        <input class="form-control" class="input-small" data-role="jquerytagsinput" data-category="{{ fare.direction }}" name="fare_prefix_list[]" size="5" tabindex="-1" type="text" value="{{ fare.prefix_list }}">
-                    </div>
-                </div>
+    <div class="col-md-3">
+        <div class="card bordered">
+            <div class="card-header">
+                <span class="card-title">Autorizzazione Speciale</span>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    <!-- .row -->
-
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card bordered">
-                <div class="card-header">
-                    <span class="card-title">Preferenze Chiamate</span>
-                </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label class="control-label">Durata minima in secondi (in funzione del credito disponibile)</label>
-                        <input class="form-control" name="min_duration" type="text" value="{{ min_duration }}">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Avviso fine (secondi precedenti)</label>
-                        <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bordered">
-                <div class="card-header">
-                    <span class="card-title">Preferenze Durata</span>
-                </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label class="control-label normal filled">Soglia</label>
-                        <div class="checkbox">
-                            <label>
-                                <input {% if change_threshold == "1" %}checked="checked"{% endif %} name="change_threshold" type="checkbox" value="1">
-                                consenti modifica
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Valore preimpostato (in minuti)</label>
-                        <input class="form-control disabled" name="threshold" type="text" value="{{ threshold }}">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bordered">
-                <div class="card-header">
-                    <span class="card-title">Preferenze Avvocato</span>
-                </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label class="control-label normal filled">AVVOCATO COME ORDINARIA</label>
-                        <div class="checkbox">
-                            <label>
-                                <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
-                                Abilitando questa modalit&agrave; si equiparano le chiamate verso i difensori a quelle verso parenti e affini
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bordered">
-                <div class="card-header">
-                    <span class="card-title">Preferenze Autorizzazioni</span>
-                </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label class="control-label normal filled">Primo ingresso</label>
-                        <div class="checkbox">
-                            <label>
-                                <input {% if enable_first_in == "1" %}checked="checked"{% endif %} name="enable_first_in" type="checkbox" value="1">
-                                Consenti di impostare questa modalit&agrave;
-                            </label>
-                        </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label class="control-label normal filled">PRIMO INGRESSO</label>
+                    <div class="checkbox">
+                        <label>
+                            <input {% if enable_first_in == "1" %}checked="checked"{% endif %} name="enable_first_in" type="checkbox" value="1">
+                            Abilitando questa preferenza sar&agrave; possibile associare la modalit&agrave; a un&apos;utenza, rendendola una straordinaria ripetibile.
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="form-group" style="text-align:right;">
-        <button class="btn btn-primary btn-lg" onClick="save()" type="button">Salva
-            <div class="ripple-wrapper"></div>
-        </button>
+<div class="page-header">
+    <h1>
+        <i class="zmdi zmdi-timer"></i>
+        Tariffe</h1>
+    <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
+</div>
+<div class="row">
+    {% for fare in fares %}
+    <div class="col-md-4">
+        <div class="card card-flip bordered">
+            <div class="card-header">
+                <div class="pull-right">
+                    <a class="btn btn-link btn-flip btn-xs" href="javascript:;">
+                        <i class="zmdi zmdi-globe-alt"></i>
+                        Prefissi
+                    </a>
+                </div>
+
+                <span class="card-title">
+                    <i class="{{ fare.icon }}"></i>
+                    {{ fare.direction }}</span>
+            </div>
+
+            <div class="card-content">
+                <input name="fare_id[]" type="hidden" value="{{fare.id}}">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label">Scatto (&euro;)</label>
+                            <input class="form-control" name="fare_connection_charge[]" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label">Tariffa (&euro;/minuto)</label>
+                            <input class="form-control" name="fare_fee_per_second[]" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">Prefissi
+                    <i class="zmdi zmdi-close pull-right btn-flip"></i>
+                </span>
+                <div class="form-group">
+                    <input class="form-control" class="input-small" data-role="jquerytagsinput" data-category="{{ fare.direction }}" name="fare_prefix_list[]" size="5" tabindex="-1" type="text" value="{{ fare.prefix_list }}">
+                </div>
+            </div>
+        </div>
     </div>
+    {% endfor %}
+</div>
+<!-- .row -->
+
+<div class="form-group" style="text-align:right;margin-bottom:20px">
+    <button class="btn btn-primary btn-lg" onClick="save()" type="button">Salva
+        <div class="ripple-wrapper"></div>
+    </button>
+</div>
 
 </form>
 {% endblock application %}
