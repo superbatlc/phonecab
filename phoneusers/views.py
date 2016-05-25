@@ -168,6 +168,7 @@ def phoneuser_save(request):
     serial_no = request.POST.get("data[serial_no]", "")
     pincode = request.POST.get("data[pincode]", "")
     four_bis_limited = int(request.POST.get("data[four_bis_limited]", "0"))
+    additional_calls = int(request.POST.get("data[additional_calls]", "0"))
     listening_enabled = int(request.POST.get("data[listening_enabled]", "0"))
     recording_enabled = int(request.POST.get("data[recording_enabled]", "0"))
     language = request.POST.get("data[language]", "")
@@ -190,6 +191,7 @@ def phoneuser_save(request):
         phoneuser.serial_no = serial_no
         phoneuser.pincode = pincode
         phoneuser.four_bis_limited = four_bis_limited
+        phoneuser.additional_calls = additional_calls
         phoneuser.listening_enabled = listening_enabled
         phoneuser.recording_enabled = recording_enabled
         phoneuser.language = language
@@ -345,10 +347,6 @@ def whitelist_items(request, phoneuser_id):
     whitelists = Whitelist.objects.filter(
         phoneuser_id=phoneuser_id).order_by('label')
 
-    for wl in whitelists:
-        if wl.frequency == 0 or wl.frequency == 3:
-            wl.times = '-'
-
     variables['whitelists'] = whitelists
 
     if request.is_ajax():
@@ -368,7 +366,7 @@ def whitelist_edit(request):
         try:
             whitelist = Whitelist.objects.get(pk=whitelist_id)
             whitelist.duration = int(whitelist.duration / 60)
-            whitelist.frequency = int(whitelist.frequency)
+            whitelist.kind = int(whitelist.kind)
         except:
             raise Http404
     else:
@@ -395,7 +393,7 @@ def whitelist_save(request):
     label = request.POST.get("data[label]", "")
     phonenumber = request.POST.get("data[phonenumber]", "")
     duration = int(request.POST.get("data[duration]", "0"))
-    frequency = int(request.POST.get("data[frequency]", "0"))
+    kind = int(request.POST.get("data[kind]", "0"))
     lawyer = int(request.POST.get("data[lawyer]", "0"))
     real_mobile = int(request.POST.get("data[real_mobile]", "0"))
 
@@ -408,14 +406,13 @@ def whitelist_save(request):
             action = "Modifica"
         else:
             whitelist = Whitelist()
-            if frequency == 0:
-                whitelist.enabled = True
+            whitelist.enabled = True
 
         whitelist.phoneuser_id = phoneuser_id
         whitelist.label = label
         whitelist.phonenumber = phonenumber
         whitelist.duration = duration
-        whitelist.frequency = frequency
+        whitelist.kind = kind
         whitelist.lawyer = lawyer
         whitelist.real_mobile = real_mobile
 

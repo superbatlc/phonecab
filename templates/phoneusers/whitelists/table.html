@@ -54,12 +54,12 @@
           <td style="text-align:center;">{{ wl.lawyer|yesno:"Si,No"  }}</td>
           <td style="text-align:center;">{{ wl.real_mobile|yesno:"Si,No" }}</td>
           <!--<td style="text-align:center;">{{ wl.duration|format_time }}</td>-->
-          <td style="text-align:center;">{{ wl.get_frequency_display }}</td>
+          <td style="text-align:center;">{{ wl.get_kind_display }}</td>
           <td style="text-align:center;">
-          {% if wl.frequency > 1 %}
+          {% if wl.kind == 0 %}
             {% if wl.extraordinary %}
               {% if priv_whitelist > 0 %}
-                <button class="btn btn-xs btn-success" onClick="Whitelist.changeOrdinary({{ wl.id }},0)" title="Premi per rendere ordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinare determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
+                <button class="btn btn-xs btn-success" onClick="Whitelist.changeOrdinary({{ wl.id }},0)" title="Premi per rendere ordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinarie determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
                   <i class="zmdi zmdi-check"></i>
                 </button>
                 <i class="zmdi zmdi-check print-only"></i>
@@ -68,7 +68,7 @@
               {% endif %}
             {% else %}
               {% if priv_whitelist > 0   %}
-                <button class="btn btn-xs btn-danger" onClick="Whitelist.changeOrdinary({{ wl.id }},1)" title="Premi per rendere straordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinare determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
+                <button class="btn btn-xs btn-danger" onClick="Whitelist.changeOrdinary({{ wl.id }},1)" title="Premi per rendere straordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinarie determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
                   <i class="zmdi zmdi-close"></i>
                 </button>
                 <i class="zmdi zmdi-close print-only"></i>

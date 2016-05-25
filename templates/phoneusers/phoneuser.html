@@ -55,6 +55,15 @@
     </div>
   </div>
   <div class="form-group">
+    <label for="four-bis-limited" class="col-xs-4 control-label">Chiamate Supplementari</label>
+    <div class="col-xs-8">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if phoneuser.additional_calls %}checked="checked"{% endif %} id="additional-calls"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
     <label for="listening_enabled" class="col-xs-4 control-label">Ascolto</label>
     <div class="col-xs-8">
       <div class="checkbox">

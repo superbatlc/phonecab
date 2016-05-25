@@ -16,7 +16,6 @@
   <!-- <p class="lead">Descrizione</p> -->
 </div>
 
-
     <div class="card">
         <div class="card-content">
             <form method="GET">
@@ -49,12 +48,13 @@
                 <label>Destinazione</label>
                 <input name="dst" id="dst" type="text" value="{{ d.dst }}" maxlength="10" size="10">
             </span>
-                        </form>
-                    <div style="clear:both;"></div>
+            </form>
+            <div style="clear:both;"></div>
       </div>
+      <div class="log-records">{{ records }}</div>
     </div>
 
-            <div class="log-records">{{ records }}</div>
+
 {% endblock application %}
 {% block script %}
 <script src="{% static "js/records.js" %}" type="text/javascript" charset="utf-8"></script>

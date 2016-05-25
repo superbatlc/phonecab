@@ -141,10 +141,6 @@ def archive_whitelist_items(request, archived_phoneuser_id):
     whitelists = ArchivedWhitelist.objects.filter(
         archived_phoneuser_id=archived_phoneuser_id).order_by('label')
 
-    for wl in whitelists:
-        if wl.frequency == 0 or wl.frequency == 3:
-            wl.times = '-'
-
     variables['whitelists'] = whitelists
 
     if request.is_ajax():

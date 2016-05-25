@@ -22,11 +22,9 @@
                 {% endif%}
             </td>
             <td style="text-align:center;">
-            
             <button class="btn btn-lg btn-round btn-default{% if not item.is_active %} disabled{% endif %}" onClick="Profile.edit({{ item.id }})" data-placement="bottom" data-title="Mostra la scheda relativa a {{ item.first_name }} {{ item.last_name }}" data-toggle="tooltip" data-original-title="" title="">
                     <i class="zmdi zmdi-search mdc-text-grey"></i>
             </button>
-            
             <button class="btn btn-lg btn-round btn-default" onClick="Profile.changeStatus({{ item.id }},{{ item.is_active|yesno:"0,1"}})" data-placement="bottom" data-title="{{ item.is_active|yesno:"Disabilita,Abilita"}} {{ item.first_name }} {{ item.last_name }}" data-toggle="tooltip" data-original-title="" title="">
                 <span class="zmdi-hc-stack ">
                     <i class="zmdi zmdi-account zmdi-hc-stack-1x"></i>
@@ -37,7 +35,7 @@
             </tr>
             {% endfor %}
         {% else %}
-            <tr><td colspan="4" style="text-align:center;">Non ci sono utenti corrispondenti alla ricerca effettuata.</td></tr>
+            <tr><td colspan="4" style="text-align:center;"><h3>Non ci sono utenti corrispondenti alla ricerca effettuata.</h3></td></tr>
         {% endif %}
         </tbody>
     </table>

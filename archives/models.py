@@ -42,6 +42,8 @@ class ArchivedPhoneUser(models.Model):
         verbose_name="registrazione", default=False)
     language = models.CharField(
         max_length=4, verbose_name="lingua", choices=LANGUAGES)
+    additional_calls = models.BooleanField(
+        verbose_name="chiamate supplementari", default=False)
     vipaccount = models.BooleanField(
         verbose_name="senza restizioni", default=False)
     balance = models.DecimalField(
@@ -73,6 +75,7 @@ class ArchivedPhoneUser(models.Model):
         self.language = self.phoneuser.language
         self.vipaccount = self.phoneuser.vipaccount
         self.four_bis_limited = self.phoneuser.four_bis_limited
+        self.additional_calls = self.phoneuser.additional_calls
         self.balance = self.phoneuser.balance
 
     def delete_related(self):
@@ -167,25 +170,22 @@ class ArchivedWhitelist(models.Model):
     This class stores the whitelists of an archived phoneuser
     """
 
-    FIRST_IN_FREQUENCY = 0           # free
-    LAWYER_FREQUENCY = 1          # free
-    ORDINARY_FREQUENCY = 2        # 1 per week
-    ORDINARY_4BIS_FREQUENCY = 3   # 2 per month not in the same week
+    ORDINARY_KIND = 0           # free
+    SPECIAL_KIND = 1
 
-    CALL_FREQUENCY = (
-        (FIRST_IN_FREQUENCY, 'Primo Ingresso'),
-        (LAWYER_FREQUENCY, 'Avvocato'),
-        (ORDINARY_FREQUENCY, 'Ordinaria'),
-        (ORDINARY_4BIS_FREQUENCY, 'Ordinaria 4bis limitato')
+    KINDS = (
+        (ORDINARY_KIND, 'Ordinaria'),
+        (SPECIAL_KIND, 'Primo ingresso'),
     )
 
     archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
     duration = models.IntegerField(verbose_name="durata massima")
-    frequency = models.IntegerField(
-        verbose_name="frequenza",
-        choices=CALL_FREQUENCY)
+    kind = models.IntegerField(
+        verbose_name="tipologia",
+        choices=KINDS,
+        default=ORDINARY_KIND)
     lawyer = models.BooleanField(
         verbose_name='avvocato',
         default=False)
@@ -198,7 +198,7 @@ class ArchivedWhitelist(models.Model):
         self.label = whitelist.label
         self.phonenumber = whitelist.phonenumber
         self.duration = whitelist.duration
-        self.frequency = whitelist.frequency
+        self.kind = whitelist.kind
         self.extraordinary = whitelist.extraordinary
         self.real_mobile = whitelist.real_mobile
 
@@ -242,6 +242,7 @@ class ArchivedDetail(models.Model):
     dst = models.CharField(max_length=80, default='')
     calltype = models.IntegerField(default=0)
     direction = models.IntegerField(default=1)
+    lawyer = models.BooleanField(default=False)
     duration = models.IntegerField(default=0)
     billsec = models.IntegerField(default=0)
     # rappresenta il pincode anagrafica
@@ -262,6 +263,7 @@ class ArchivedDetail(models.Model):
         self.price = detail.price
         self.direction = detail.direction
         self.calltype = detail.calltype
+        self.lawyer = detail.lawyer
         self.valid = detail.valid
 
     @staticmethod

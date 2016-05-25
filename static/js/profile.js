@@ -126,10 +126,10 @@ var Profile = {
             function(response){
                 updateDOM('#profiles', response);
                 showMessageBox("Conferma", "Utente aggiornato con successo.", "green");
-            }, 
+            },
             function(error){
                 showMessageBox("Errore", "Errore aggiornamento utente.", "alert-danger");
-            
+
             });
     },
 
@@ -142,4 +142,15 @@ var Profile = {
             $('#privileges').fadeOut('slow');
         }
     },
+
+    suggestUsername : function(){
+        // if($('#profile-username').val() == ''){
+            first_name = $('#profile-first-name').val().toLowerCase();
+            last_name = $('#profile-last-name').val().toLowerCase();
+            if(first_name != '' && last_name != ''){
+                username = first_name + '.' + last_name;
+                $('#profile-username').val(username);
+            }
+        // }
+    }
 }

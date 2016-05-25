@@ -13,6 +13,9 @@ class SuperbaCDRManager(models.Manager):
     def outgoing(self):
         return self.filter(direction=SuperbaCDR.DIRECTION_OUTGOING)
 
+    def extraordinary(self):
+        return self.filter(calltype=SuperbaCDR.CALL_EXTRAORDINARY)
+
 
 
 class SuperbaCDR(models.Model):
@@ -28,7 +31,7 @@ class SuperbaCDR(models.Model):
 
     CALL_TYPES = (
         (CALL_ORDINARY, 'ordinaria'),
-        (CALL_EXTRAORDINARY, 'strordinaria'),
+        (CALL_EXTRAORDINARY, 'straordinaria'),
         (CALL_SPECIAL, 'speciale'),
     )
 
@@ -48,6 +51,7 @@ class SuperbaCDR(models.Model):
     pincode = models.CharField(max_length=40, default='')
     calltype = models.IntegerField(choices=CALL_TYPES, default=CALL_ORDINARY)
     direction = models.IntegerField(choices=DIRECTIONS, default=DIRECTION_OUTGOING)
+    lawyer = models.BooleanField(default=False)
     duration = models.IntegerField(default=0)
     billsec = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=7, decimal_places=4, default=0)

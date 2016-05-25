@@ -1,6 +1,16 @@
 <div class="card bordered">
     <div class="card-content">
         <div style="float: right;">
+            <span class="label {{phoneuser.additional_calls|yesno:" green,red"}}">
+              <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-phone zmdi-hc-stack-1x"></i>
+                {% if not phoneuser.additional_calls %}
+                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
+                {% endif %}
+              </span>
+              Chiamate Supplementari
+            </span>
+            &nbsp;&nbsp;
             <span class="label {{phoneuser.listening_enabled|yesno:" green,red"}}">
               <span class="zmdi-hc-stack zmdi-hc-lg">
                 <i class="zmdi zmdi-headset zmdi-hc-stack-1x"></i>
@@ -8,7 +18,7 @@
                 <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
                 {% endif %}
               </span>
-              Ascolto
+              Ascolto in diretta
             </span>
             &nbsp;&nbsp;
             <span class="label {{phoneuser.recording_enabled|yesno:" green,red"}}">

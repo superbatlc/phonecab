@@ -15,13 +15,15 @@ class PhoneUser(models.Model):
     FRENCH = 'fr'
     GERMAN = 'de'
     SPANISH = 'es'
+    ARABIC = 'ar'
 
     LANGUAGES = (
         (ITALIAN, 'Italiano'),
         (ENGLISH, 'Inglese'),
         (FRENCH, 'Francese'),
         (GERMAN, 'Tedesco'),
-        (SPANISH, 'Spagnolo')
+        (SPANISH, 'Spagnolo'),
+        (ARABIC, 'Arabo'),
     )
 
     first_name = models.CharField(max_length=35, verbose_name="nome")
@@ -41,6 +43,8 @@ class PhoneUser(models.Model):
         decimal_places=4)
     language = models.CharField(
         max_length=4, verbose_name="lingua", choices=LANGUAGES, default='it')
+    additional_calls = models.BooleanField(
+        verbose_name="chiamate supplementari", default=False)
     vipaccount = models.BooleanField(
         verbose_name="senza restizioni", default=False)
     four_bis_limited = models.BooleanField(
@@ -78,26 +82,22 @@ class Whitelist(models.Model):
     Modella i numeri che il phoneuser puo chiamare
     """
 
-    FIRST_IN_FREQUENCY = 0           # free
-    LAWYER_FREQUENCY = 1          # free
-    ORDINARY_FREQUENCY = 2        # 1 per week
-    ORDINARY_4BIS_FREQUENCY = 3   # 2 per month not in the same week
+    ORDINARY_KIND = 0           # free
+    SPECIAL_KIND = 1
 
-    CALL_FREQUENCY = (
-        (FIRST_IN_FREQUENCY, 'Primo Ingresso'),
-        (LAWYER_FREQUENCY, 'Avvocato'),
-        (ORDINARY_FREQUENCY, 'Ordinaria'),
-        (ORDINARY_4BIS_FREQUENCY, 'Ordinaria 4bis limitato')
+    KINDS = (
+        (ORDINARY_KIND, 'Ordinaria'),
+        (SPECIAL_KIND, 'Primo ingresso'),
     )
 
     phoneuser = models.ForeignKey(PhoneUser)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
     duration = models.IntegerField(verbose_name="durata massima", default=10)
-    frequency = models.IntegerField(
-        verbose_name="frequenza",
-        choices=CALL_FREQUENCY,
-        default=FIRST_IN_FREQUENCY)
+    kind = models.IntegerField(
+        verbose_name="tipologia",
+        choices=KINDS,
+        default=ORDINARY_KIND)
     lawyer = models.BooleanField(
         verbose_name='avvocato',
         default=False)

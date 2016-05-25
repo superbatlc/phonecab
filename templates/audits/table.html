@@ -11,13 +11,17 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in items %}
-        <tr>
-        <td style="text-align:center">{{ item.when|date:"d-m-Y H:i"}}</td>
-        <td style="text-align:center">{{ item.user.get_full_name }}</td>
-        <td>{{ item.what }}</td>
-        </tr>
-        {% endfor %}
+        {% if items %}
+            {% for item in items %}
+            <tr>
+            <td style="text-align:center">{{ item.when|date:"d-m-Y H:i"}}</td>
+            <td style="text-align:center">{{ item.user.get_full_name }}</td>
+            <td>{{ item.what }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr style=""><td colspan="3" style="text-align:center;"><h3>Non ci sono audit corrispondenti alla ricerca effettuata.</h3></td></tr>
+        {% endif %}
     </tbody>
     </table>
 </div>
@@ -41,6 +45,6 @@
             <input type="hidden" id="items-current-page" value="{{ current_page }}">
         </div>
     </div>
-</div>  
+</div>
 {% endif %}
 <!-- chiude paginazione cdr -->

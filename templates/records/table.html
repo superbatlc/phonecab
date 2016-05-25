@@ -20,26 +20,32 @@
             </tr>
             </thead>
             <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
-                <td class="acentro">{{ item.detail.calltype|calltype|safe }}</td>
-                <td class="acentro">{{ item.pincode }}</td>
-                <td class="acentro">{{ item.phoneuser.serial_no }}</td>
-                <td><a href="/phoneusers/view/{{ item.phoneuser.id }}">{{ item.phoneuser.get_full_name }}</a></td>
-                <td class="acentro">{{ item.detail.src }}</td>
-                <td class="acentro">{{ item.detail.dst }}</td>
-                <td>{{ item.whitelist.label|default:"Numero sconosciuto" }}</td>
-                <td class="acentro">{{ item.whitelist.lawyer|yesno:"Si,No" }}</td>
-                <td class="acentro">
-                    {% if item.filename != '' %}
-                    <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
+            {% if items %}
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
+                    <td class="acentro">{{ item.detail.calltype|calltype|safe }}</td>
+                    <td class="acentro">{{ item.pincode }}</td>
+                    <td class="acentro">{{ item.phoneuser.serial_no }}</td>
+                    <td><a href="/phoneusers/view/{{ item.phoneuser.id }}">{{ item.phoneuser.get_full_name }}</a></td>
+                    <td class="acentro">{{ item.detail.src }}</td>
+                    <td class="acentro">{{ item.detail.dst }}</td>
+                    <td>{{ item.whitelist.label|default:"Numero sconosciuto" }}</td>
+                    <td class="acentro">{{ item.whitelist.lawyer|yesno:"Si,No" }}</td>
+                    <td class="acentro">
+                        {% if item.filename != '' %}
+                        <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr style="">
+                    <td colspan="10" style="text-align:center;"><h3>Non ci sono registrazioni corrispondenti alla ricerca effettuata.</h3></td>
+                </tr>
+            {% endif %}
             </tbody>
     </table>
     </div>

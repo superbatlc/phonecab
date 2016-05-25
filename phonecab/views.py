@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from acls.models import Acl
 from helper.Helper import Helper
+from audits.models import Audit
 
 
 def phonecab_login(request):
@@ -20,6 +21,10 @@ def phonecab_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                # logghiamo accesso
+                audit = Audit()
+                what = "Accesso al sistema (login)"
+                audit.log(user=user, what=what)
                 # dobbiamo verificare se utente ha privilegi cdr
                 privs = Acl.get_permissions_for_user(user.id, user.is_staff)
                 if privs['priv_cdr'] > 0:
@@ -47,7 +52,12 @@ def phonecab_login(request):
 
 
 def phonecab_logout(request):
+    user = request.user
     logout(request)
+    # logghiamo accesso
+    audit = Audit()
+    what = "Uscita dal sistema (logout)"
+    audit.log(user=user, what=what)
     return redirect('/')
 
 
@@ -65,7 +75,7 @@ def phonecab_realtime(request):
 def phonecab_get_nightmode(request):
     """Recupera la modalita giorno notte"""
     return HttpResponse(status=200,
-                        content=("{ \"nightmode\" : %d }" % Helper.get_nightmode()), 
+                        content=("{ \"nightmode\" : %d }" % Helper.get_nightmode()),
                         content_type="application/json")
 
 def phonecab_set_nightmode(request, mode):
@@ -79,7 +89,7 @@ def phonecab_set_nightmode(request, mode):
     try:
         ret = os.system(cmd)
         return HttpResponse(status=200,
-                            content=json.dumps({'ret': ret}), 
+                            content=json.dumps({'ret': ret}),
                             content_type="application/json")
     except:
         redirect("/?err=1&err_msg=Impossibile accedere allo stato delle linee")

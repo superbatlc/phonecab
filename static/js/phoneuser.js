@@ -66,6 +66,11 @@ var Phoneuser = {
                     data.four_bis_limited = 1
                 }
 
+                data.additional_calls = 0
+                if($("input[type=checkbox]#additional-calls").is(':checked')){
+                    data.additional_calls = 1
+                }
+
                 data.listening_enabled = 0
                 if($("input[type=checkbox]#listening-enabled").is(':checked')){
                     data.listening_enabled = 1
@@ -207,7 +212,7 @@ var Whitelist = {
             data.label = $("#whitelist-label").val()
             data.phonenumber = $("#whitelist-phonenumber").val()
             data.duration = $("#whitelist-duration").val()
-            data.frequency = $("#whitelist-frequency").val()
+            data.kind = $("#whitelist-kind").val()
 
             data.real_mobile = 0
             if($("input[type=checkbox]#whitelist-real-mobile").is(':checked')){
@@ -333,15 +338,15 @@ var Whitelist = {
         });
     },
 
-    switchCell : function() {
-        var value = $('#whitelist-frequency').val();
-        console.log(value);
-        if(value == '0' || value == '1'){
-            $('#whitelist-real-mobile-element').hide();
-        }else{
-            $('#whitelist-real-mobile-element').removeClass('hide');
-        }
-    }
+    // switchCell : function() {
+    //     var value = $('#whitelist-kind').val();
+    //     console.log(value);
+    //     if(value == '0' || value == '1'){
+    //         $('#whitelist-real-mobile-element').hide();
+    //     }else{
+    //         $('#whitelist-real-mobile-element').removeClass('hide');
+    //     }
+    // }
 }
 
 

@@ -22,9 +22,11 @@ def calltype(value):
     if value == '0':
         return '<span class="label label-success">ORD</span>'
     elif value == '1':
-        return '<span class="label label-danger">STR</span>'
+        return '<span class="label label-warning">SUP</span>'
     elif value == '2':
-        return '<span class="label label-warning">SPE</span>'
+        return '<span class="label label-danger">STR</span>'
+    elif value == '3':
+        return '<span class="label label-default">SPE</span>'
 
 
 @register.filter

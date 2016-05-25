@@ -24,15 +24,10 @@
   <div class="form-group">
     <label class="col-xs-4 control-label">Tipologia</label>
     <div class="col-xs-5">
-      <select class="select2 form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true" id="whitelist-frequency">
+      <select class="select2 form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true" id="whitelist-kind">
+        <option value="0" {% if whitelist.kind == 0 %}selected{% endif %}>Ordinaria</option>
         {% if enable_first_in == "1" %}
-        <option value="0" {% if whitelist.frequency == 0 %}selected{% endif %}>Primo ingresso</option>
-        {% endif %}
-        <!--<option value="1" {% if whitelist.frequency == 1 %}selected{% endif %}>Avvocato</option>-->
-        {% if not whitelist.phoneuser.four_bis_limited %}
-        <option value="2" {% if whitelist.frequency == 2 %}selected{% endif %}>Ordinaria</option>
-        {% else %}
-        <option value="3" {% if whitelist.frequency == 3 %}selected{% endif %}>Ordinaria 4bis limitato</option>
+        <option value="1" {% if whitelist.kind == 1 %}selected{% endif %}>Primo ingresso</option>
         {% endif %}
       </select>
     </div>
