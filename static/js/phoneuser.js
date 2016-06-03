@@ -55,20 +55,19 @@ var Phoneuser = {
                     data.enabled = 1
                 }
 
-                data.first_name = $("#first-name").val()
-                data.last_name = $("#last-name").val()
-                data.serial_no = $("#serial-no").val()
-                data.pincode = $("#pincode").val()
-                data.language = $("#language").val()
+                data.first_name = $("#first-name").val();
+                data.last_name = $("#last-name").val();
+                data.serial_no = $("#serial-no").val();
+                data.pincode = $("#pincode").val();
+                data.language = $("#language").val();
+                data.additional_calls = $("#additional-calls").val();
+                if (data.additional_calls == ''){
+                    data.additional_calls = 0;
+                }
 
                 data.four_bis_limited = 0
                 if($("input[type=checkbox]#four-bis-limited").is(':checked')){
                     data.four_bis_limited = 1
-                }
-
-                data.additional_calls = 0
-                if($("input[type=checkbox]#additional-calls").is(':checked')){
-                    data.additional_calls = 1
                 }
 
                 data.listening_enabled = 0

@@ -43,8 +43,8 @@ class PhoneUser(models.Model):
         decimal_places=4)
     language = models.CharField(
         max_length=4, verbose_name="lingua", choices=LANGUAGES, default='it')
-    additional_calls = models.BooleanField(
-        verbose_name="chiamate supplementari", default=False)
+    additional_calls = models.IntegerField(
+        verbose_name="chiamate supplementari", default=0)
     vipaccount = models.BooleanField(
         verbose_name="senza restizioni", default=False)
     four_bis_limited = models.BooleanField(

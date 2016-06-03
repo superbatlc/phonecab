@@ -168,7 +168,7 @@ def phoneuser_save(request):
     serial_no = request.POST.get("data[serial_no]", "")
     pincode = request.POST.get("data[pincode]", "")
     four_bis_limited = int(request.POST.get("data[four_bis_limited]", "0"))
-    additional_calls = int(request.POST.get("data[additional_calls]", "0"))
+    additional_calls = request.POST.get("data[additional_calls]", 0)
     listening_enabled = int(request.POST.get("data[listening_enabled]", "0"))
     recording_enabled = int(request.POST.get("data[recording_enabled]", "0"))
     language = request.POST.get("data[language]", "")

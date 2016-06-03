@@ -59,3 +59,10 @@ def print_timestamp(timestamp):
 def per_minute(value):
     """Converts value per second in value per minute"""
     return float(value) * 60
+
+
+@register.filter
+def to_int(value):
+    if type(value) != 'int':
+        return int(value)
+    return value
