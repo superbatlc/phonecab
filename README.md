@@ -11,7 +11,10 @@ Kind
 * 1 Special (first in)
 
 Type
-* 0 = Ordinary
-* 1 = Additional
-* 2 = Extraordinary
-* 3 = Special
+* 0 Ordinary
+* 1 Additional
+* 2 Extraordinary
+* 3 Special
+
+Lawyer
+Lawyer call is identified with a flag in the whitelist AND with a flag in the call record.
