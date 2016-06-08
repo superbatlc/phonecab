@@ -53,7 +53,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <!-- DISABILITIAMO LA PREFERENZA SULLA SOGLIA -->
+    <!--<div class="col-md-3">
         <div class="card bordered">
             <div class="card-header">
                 <span class="card-title">Soglia</span>
@@ -74,6 +75,29 @@
                 </div>
             </div>
         </div>
+    </div>-->
+    <!-- FINE DISABILITIAMO LA PREFERENZA SULLA SOGLIA -->
+    <div class="col-md-3">
+        <div class="card bordered">
+            <div class="card-header">
+                <span class="card-title">Chiamate Addizionali</span>
+            </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label class="control-label normal filled">Modifica del numero</label>
+                    <div class="checkbox">
+                        <label>
+                            <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
+                            consenti modifica
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Valore preimpostato</label>
+                    <input class="form-control disabled" name="default_additional_calls" type="text" value="{{ default_additional_calls }}">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-3">
         <div class="card bordered">
@@ -86,7 +110,7 @@
                     <div class="checkbox">
                         <label>
                             <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
-                            Abilitando questa modalit&agrave; si equiparano le chiamate verso i difensori a quelle verso parenti e affini.<br/>(circolare n° GDAP-0177644-2010 del 28/04/2010)
+                            Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini.<br/>(circolare n° GDAP-0177644-2010 del 28/04/2010)
                         </label>
                     </div>
                 </div>

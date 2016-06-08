@@ -57,7 +57,7 @@
   <div class="form-group">
     <label for="additional-calls" class="col-xs-4 control-label">Chiamate Supplementari</label>
     <div class="col-xs-1 filled">
-      <input type="text" class="form-control" id="additional-calls" placeholder="" value="{{ phoneuser.additional_calls }}">
+      <input type="text" class="form-control" id="additional-calls" placeholder="" value="{{ phoneuser.additional_calls }}" {% if change_additional_calls == "0" %} disabled{% endif %}>
     </div>
   </div>
   <div class="form-group">

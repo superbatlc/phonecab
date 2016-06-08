@@ -19,6 +19,8 @@ def prefs_edit(request):
     ordinary_lawyer = Pref.get('ordinary_lawyer')
     change_threshold = Pref.get('change_threshold')
     threshold = int(Pref.get('threshold')) / 60
+    change_additional_calls = Pref.get('change_additional_calls')
+    default_additional_callss = Pref.get('default_additional_calls')
     header = Pref.get('header')
     fares = Fare.objects.filter(position__gt=0).order_by('position')
 
@@ -28,6 +30,8 @@ def prefs_edit(request):
         'enable_first_in': enable_first_in,
         'ordinary_lawyer': ordinary_lawyer,
         'change_threshold': change_threshold,
+        'change_additional_calls': change_additional_calls,
+        'default_additional_calls': default_additional_calls,
         'threshold': threshold,
         'fares': fares,
         'header': header,
@@ -66,6 +70,8 @@ def prefs_save(request):
         ordinary_lawyer = request.POST.get("ordinary_lawyer", "0")
         change_threshold = request.POST.get("change_threshold", "0")
         threshold = int(request.POST.get("threshold", "0")) * 60
+        change_additional_calls = request.POST.get("change_additional_calls", "0")
+        default_additional_calls = int(request.POST.get("default_additional_calls", "0"))
         header = request.POST.get("header", "0")
 
         p = Pref.objects.get(key='min_duration')
@@ -90,6 +96,14 @@ def prefs_save(request):
 
         p = Pref.objects.get(key='threshold')
         p.value = threshold
+        p.save(request.user)
+
+        p = Pref.objects.get(key='change_additional_calls')
+        p.value = change_additional_calls
+        p.save(request.user)
+
+        p = Pref.objects.get(key='default_additional_calls')
+        p.value = default_additional_calls
         p.save(request.user)
 
         p = Pref.objects.get(key='header')

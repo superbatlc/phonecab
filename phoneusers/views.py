@@ -155,6 +155,7 @@ def phoneuser_edit(request):
         phoneuser.id = 0
 
     variables['phoneuser'] = phoneuser
+    variables['change_additional_calls'] = Pref.get("change_additional_calls")
     return render_to_response('phoneusers/phoneuser.html',
         RequestContext(request,variables))
 

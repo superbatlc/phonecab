@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'audits',
     'prefs',
     'archives',
+    'logs',
 )
 
 
