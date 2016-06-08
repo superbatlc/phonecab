@@ -9,6 +9,19 @@ var Realtime = {
         // Login to AMI
         Ami.init();
         window.setInterval(Realtime._updateActiveLoop, Config.ami.loopInterval);
+        //window.setInterval(Realtime._updateLogs, Config.logs.loopInterval);
+    },
+
+    _updateLogs() {
+        //console.log('LOGS ACTIVE');
+        //if (Realtime.active){
+            requestData("GET", "json", '/logs/last/', {}, function(response) {
+                for (var i = 0; i < response.length; i++) {
+                    console.log(response[i].fields.what);
+                }
+
+            });
+        //}
     },
 
     _updateActiveLoop() {

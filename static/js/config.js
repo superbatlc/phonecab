@@ -6,4 +6,7 @@ var Config = {
       username : 'username',
       secret : 'secret',
   },
+  logs : {
+      loopInterval : 5000,
+  },
 }
