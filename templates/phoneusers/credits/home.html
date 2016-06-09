@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+    {% block title %}PhoneCab - Dettaglio Ricariche{% endblock %}
+    {% block stylesheet %}
+    <link rel="stylesheet" href="{% static "css/datepicker.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{% static "css/cdr.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    {% endblock stylesheet %}
+    {% block application %}
+
+    <div class="page-header">
+        <a href="/archives/cdrs/" class="action btn btn-info">
+        <span class="zmdi zmdi-chevron-right"></span> Archivio
+        <div class="ripple-wrapper"></div>
+      </a>
+      <h1><i class="zmdi zmdi-phone"></i> Ricariche</h1>
+      <!-- <p class="lead">Descrizione</p> -->
+    </div>
+    <div class="card bordered">
+        <div class="card-content">
+            <form method="GET">
+
+            <div style="float:right;">
+                    <button class="btn filtra btn-success credits-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
+                    <a href="/cdrs" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
+            </div>
+            <span>
+                <label>Dal</label>
+                <input type="text" name="start_date" value="{{ d.start_date }}" maxlength="12" size="8" class="input-small datepicker">
+            </span>
+            <span>
+                <label>al</label>
+                <input type="text" name="end_date" value="{{ d.end_date }}" maxlength="12" size="8" class="input-small datepicker">
+            </span>
+            <span>
+                <label>Codice</label>
+                <input name="pincode" type="text" value="{{ d.pincode }}" maxlength="10" size="12" style="text-align:center;">
+            </span>
+            </form>
+             <div style="clear:both;"></div>
+        </div>
+        <div class="credits">{{ cdr }}</div>
+    </div>
+
+{% endblock application %}
+{% block script %}
+<script src="{% static "js/credits.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock script %}
