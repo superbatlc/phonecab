@@ -1,81 +1,82 @@
-{% extends "base.html" %} {% load static %} {% load phonecabtags %} {% block title %}PhoneCab - Tempo reale{% endblock %} {% block application %}
-<div class="page-header">
-    <h1><i class="zmdi zmdi-time"></i> Tempo reale</h1>
-    <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
-</div>
-<div class="colmain">
-    <div id="daynight-div" style="float:right;">
-        <button class="btn btn-large switchable" onClick="Realtime.toggleActive();">
-            <span id="rt-modo-giorno">
-            <span class="status"><i class="zmdi zmdi-check"></i> LINEE ATTIVE</span>
-            <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LE LINEE</span>
-            </span>
-            <span id="rt-modo-notte">
-            <span class="status"><i class="zmdi zmdi-close"></i> LINEE DISATTIVE</span>
-            <span class="action"><i class="zmdi zmdi-check"></i> ATTIVA LE LINEE</span>
-            </span>
-            <span data-help="Tramite questo pulsante &egrave; possibile abilitare/disabilitare il sistema di chiamata">&nbsp;</span>
-        </button>
-    </div>
-    <br />
-    <br />
-    <br />
-    <div class="card col-lg-10 col-md-12">
-        <div class="table-responsive white">
-            <table class="table table-striped table-full table-full-small" id="realtime-table">
-                <thead>
-                    <tr>
-                        <th style="width:auto; text-align:left">Anagrafica</th>
-                        <th style="width:120px; text-align:center">Codice</th>
-                        <th style="width:120px; text-align:center">Sorgente</th>
-                        <th style="width:280px; text-align:center">Destinazione</th>
-                        <th style="width:80px; text-align:center">Ora inizio</th>
-                        <th style="width:150px; text-align:center">Durata</th>
-                        <!--<th style="width:150px; text-align:right">Credito residuo</th>-->
-                        <th style="width:240px; text-align:center;padding-right:10px">Azioni</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-2 col-md-12">
-        <div class="p-h-40">
-            <div role="tabpanel">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a aria-controls="home" role="tab" data-toggle="tab" href="#tab-log">Log<div class="ripple-wrapper"><div class="ripple ripple-on" style="left: 26.5px; top: 21.5px; background-color: rgb(233, 30, 99); transform: scale(6.5);"></div></div></a></li>
-                    <!--<li role="presentation"><a aria-controls="home" role="tab" data-toggle="tab" href="#tab-timeline">Timeline</a></li>
-              <li role="presentation"><a aria-controls="home" role="tab" data-toggle="tab" href="#tab-messages">Messages</a></li>-->
-                </ul>
-                <!-- Tab panes -->
-                <div class="tab-content m-t-10">
-                    <div role="tabpanel" class="tab-pane active" id="tab-log">
-                        <ul class="timeline">
-                            {% for log in logs %}
-                            <li>
-                                <div class="timeline-badge"> <i class="icon-circle red-border accent-1"></i> </div>
-                                <div class="timeline-panel">
-                                    <div class="timeline-heading">
-                                        <h4 class="timeline-title">Errore {{ log.get_kind_display }}</h4>
-                                    </div>
-                                    <div class="timeline-body">
-                                        <p>{{ log.what }}</p> <small class="text-muted"><i class="md md-timer"></i>{{ log.when|date:"H:i d-m-Y"}}</small>
-                                    </div>
+{% extends "base.html" %}
+{% load static %}
+{% load phonecabtags %}
+
+{% block title %}PhoneCab - Tempo reale{% endblock %} {% block application %}
+<!-- LOGS -->
+    <div class="realtime-log">
+        <div role="tabpanel">
+            <!-- Nav tabs -->
+            <div class="page-header">
+                <h1><i class="zmdi zmdi-time"></i> Errori Chiamate</h1>
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content m-t-10">
+                <div role="tabpanel" class="tab-pane active" id="tab-log">
+                    <ul class="timeline" id="error-log">
+                        <li class="template">
+                            <div class="timeline-badge"> <i class="timeline-icon zmdi" style="color: red;"></i> </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title"></h4>
                                 </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                                <div class="timeline-body">
+                                    <p class="timeline-what"></p> <small class="text-muted"><i class="md md-timer"></i><span class="timeline-when"></span></small>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    {% endblock application %} {% block script %}
-    <script src="{% static "js/realtime.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript">
-    $(function() {
-        Realtime.init({{ actual_nightmode }});
-    });
-    </script>
-    {% endblock script %}
+<!-- END LOGS -->
+
+<div style="width:80%;">
+    <div class="page-header">
+        <div id="daynight-div" style="float:right;">
+                <button class="btn btn-large switchable" onClick="Realtime.toggleActive();">
+                    <span id="rt-modo-giorno">
+                    <span class="status"><i class="zmdi zmdi-check"></i> LINEE ATTIVE</span>
+                    <span class="action"><i class="zmdi zmdi-close"></i> DISATTIVA LE LINEE</span>
+                    </span>
+                    <span id="rt-modo-notte">
+                    <span class="status"><i class="zmdi zmdi-close"></i> LINEE DISATTIVE</span>
+                    <span class="action"><i class="zmdi zmdi-check"></i> ATTIVA LE LINEE</span>
+                    </span>
+                    <span data-help="Tramite questo pulsante &egrave; possibile abilitare/disabilitare il sistema di chiamata">&nbsp;</span>
+                </button>
+        </div>
+        <h1><i class="zmdi zmdi-time"></i> Tempo reale</h1>
+        <!--<p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p>-->
+
+    </div>
+    <div class="colmain">
+        <div class="card" style="margin-top:20px;">
+            <div class="table-responsive white">
+                <table class="table table-striped table-full table-full-small" id="realtime-table">
+                    <thead>
+                        <tr>
+                            <th style="width:auto; text-align:left">Anagrafica</th>
+                            <th style="width:120px; text-align:center">Codice</th>
+                            <th style="width:120px; text-align:center">Sorgente</th>
+                            <th style="width:280px; text-align:center">Destinazione</th>
+                            <th style="width:80px; text-align:center">Ora inizio</th>
+                            <th style="width:150px; text-align:center">Durata</th>
+                            <th style="width:240px; text-align:center;padding-right:10px">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock application %} {% block script %}
+<script src="{% static "js/realtime.js" %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+$(function() {
+    Realtime.init({{ actual_nightmode }});
+});
+</script>
+{% endblock script %}
