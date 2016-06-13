@@ -20,7 +20,7 @@ def prefs_edit(request):
     change_threshold = Pref.get('change_threshold')
     threshold = int(Pref.get('threshold')) / 60
     change_additional_calls = Pref.get('change_additional_calls')
-    default_additional_callss = Pref.get('default_additional_calls')
+    default_additional_calls = Pref.get('default_additional_calls')
     header = Pref.get('header')
     fares = Fare.objects.filter(position__gt=0).order_by('position')
 
