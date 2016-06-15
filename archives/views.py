@@ -14,7 +14,7 @@ from acls.models import Acl
 from archives.models import *
 from helper.Helper import Helper
 from audits.models import Audit
-from prefs.models import Pref
+from prefs.models import Pref, Extension
 from cdrs.models import SuperbaCDR
 
 
@@ -265,6 +265,8 @@ def archive_cdrs_items(request):
                 archived_phoneuser_id=item.archived_phoneuser_id, phonenumber=item.dst)[0]
         except Exception as e:
             item.whitelist = '-'
+
+    item.src = Extension.get_extension_name(item.src)
 
     prev_page = page - 1
     prev_page_disabled = ''

@@ -256,7 +256,10 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
     file_counter = 0
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
-            detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid)
+            try:
+                detail = SuperbaCDR.objects.get(uniqueid=item.uniqueid)
+            except:
+                detail.valid = False
             if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
