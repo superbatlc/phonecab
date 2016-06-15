@@ -1,6 +1,7 @@
 var Realtime = {
 
     active: null,
+    last_log_id: null,
 
     init: function(nightMode) {
         // Set active as the server said
@@ -9,19 +10,55 @@ var Realtime = {
         // Login to AMI
         Ami.init();
         window.setInterval(Realtime._updateActiveLoop, Config.ami.loopInterval);
-        //window.setInterval(Realtime._updateLogs, Config.logs.loopInterval);
+        window.setInterval(Realtime._updateLogs, Config.logs.loopInterval);
+        Realtime._updateLogs();
     },
 
     _updateLogs() {
-        //console.log('LOGS ACTIVE');
-        //if (Realtime.active){
-            requestData("GET", "json", '/logs/last/', {}, function(response) {
-                for (var i = 0; i < response.length; i++) {
-                    console.log(response[i].fields.what);
-                }
 
-            });
-        //}
+        var kinds = {
+            0: {
+                text:'utente',
+                icon: 'zmdi-account',
+            },
+            1: {
+                text:'numero autorizzato',
+                icon: 'zmdi-phone',
+            },
+            2: {
+                text:'credito',
+                icon: 'zmdi-money',
+            },
+        }
+
+        var url = '/logs/last/';
+        if(Realtime.last_log_id){
+            url += Realtime.last_log_id+'/';
+        }
+
+        requestData("GET", "json", url, {}, function(response) {
+            if(response.length === 0) return;
+
+            for (var i = 0; i < response.length; i++) {
+                var clone = $('li.template').clone()
+                .removeClass('template');
+
+                clone.find('.timeline-title').html('Errore ' + kinds[response[i].fields.kind]['text']);
+                clone.find('.timeline-icon').addClass(kinds[response[i].fields.kind]['icon']);
+                clone.find('.timeline-what').html(response[i].fields.what);
+                var when = new Date(response[i].fields.when)
+                var when_str = "chiamata ore " + when.getUTCHours()+":"+when.getUTCMinutes()
+                when_str += " del "+when.getUTCDate()+ "-"+when.getUTCMonth()+"-"+when.getUTCFullYear();
+                clone.find('.timeline-when').html(when_str);
+
+                $('ul.timeline li').first().before(clone);
+
+                //console.log(response[i].fields.what);
+            }
+
+            Realtime.last_log_id = response.slice(-1)[0].pk;
+
+        });
     },
 
     _updateActiveLoop() {

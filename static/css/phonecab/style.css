@@ -260,5 +260,20 @@ tbody>tr>td {
 }
 
 h3.user {
-    border-bottom: 1px dashed #CCCCCC;
+  border-bottom: 1px dashed #CCCCCC;
+}
+
+li.template {
+  display: none;
+}
+
+.realtime-log {
+  padding: 40px 20px 0;
+  position:fixed;
+  right:0;
+  top: 64px;
+  width: 18%;
+  bottom:0;
+  background-color:#EEE;
+  overflow-y:auto;
 }
