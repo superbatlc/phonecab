@@ -18,7 +18,7 @@ def prefs_edit(request):
     enable_first_in = Pref.get('enable_first_in')
     ordinary_lawyer = Pref.get('ordinary_lawyer')
     change_threshold = Pref.get('change_threshold')
-    threshold = 600 #int(Pref.get('threshold')) / 60
+    threshold = int(Pref.get('threshold')) / 60
     change_additional_calls = Pref.get('change_additional_calls')
     default_additional_calls = Pref.get('default_additional_calls')
     header = Pref.get('header')
@@ -69,7 +69,7 @@ def prefs_save(request):
         enable_first_in = request.POST.get("enable_first_in", "0")
         ordinary_lawyer = request.POST.get("ordinary_lawyer", "0")
         change_threshold = request.POST.get("change_threshold", "0")
-        threshold = int(request.POST.get("threshold", "0")) * 60
+        threshold = int(request.POST.get("threshold", 10)) * 60
         change_additional_calls = request.POST.get("change_additional_calls", "0")
         default_additional_calls = int(request.POST.get("default_additional_calls", "0"))
         header = request.POST.get("header", "0")
