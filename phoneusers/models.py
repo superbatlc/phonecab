@@ -93,7 +93,7 @@ class Whitelist(models.Model):
     phoneuser = models.ForeignKey(PhoneUser)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
-    duration = models.IntegerField(verbose_name="durata massima", default=10)
+    duration = models.IntegerField(verbose_name="durata massima", default=600)
     kind = models.IntegerField(
         verbose_name="tipologia",
         choices=KINDS,
