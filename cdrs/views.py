@@ -249,20 +249,22 @@ def cdr_export_excel(request):
     sheet.write(0, 9, "Costo", style=default_style)
 
     for row, rowdata in enumerate(details):
-        has_record = "no"
         try:
             phoneuser = PhoneUser.objects.get(pincode=rowdata.pincode)
             fullname = phoneuser.get_full_name()
             matricola = phoneuser.serial_no
-            whitelist = Whitelist.objects.get(phonenumber=rowdata.dst,
-                phoneuser=phoneuser)
-            whitelist_label = whitelist.label
-            if Record.objects.filter(uniqueid=rowdata.uniqueid).count():
-                has_record = "si"
         except:
             fullname = '-'
             matricola = '-'
+        try:
+            whitelist = Whitelist.objects.get(phonenumber=rowdata.dst,
+                phoneuser=phoneuser)
+            whitelist_label = whitelist.label
+        except:
             whitelist_label = '-'
+        has_record = "no"
+        if Record.objects.filter(uniqueid=rowdata.uniqueid).count():
+            has_record = "si"
 
         calldate = time.strftime("%d-%m-%Y %H:%M:%S",
                                  time.strptime(str(rowdata.calldate),
