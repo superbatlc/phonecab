@@ -257,8 +257,8 @@ def cdr_export_excel(request):
             fullname = '-'
             matricola = '-'
         try:
-            whitelist = Whitelist.objects.get(phonenumber=rowdata.dst,
-                phoneuser=phoneuser)
+            whitelist = Whitelist.objects.filter(phonenumber=rowdata.dst,
+                phoneuser=phoneuser)[0]
             whitelist_label = whitelist.label
         except:
             whitelist_label = '-'
