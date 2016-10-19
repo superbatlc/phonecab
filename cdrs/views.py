@@ -256,9 +256,9 @@ def cdr_export_excel(request):
             whitelist = Whitelist.objects.get(phonenumber=rowdata.dst,
                 phoneuser=phoneuser)
             whitelist_label = whitelist.label
-	    has_record = "no"
-	    if Record.objects.filter(uniqueid=rowdata.uniqueid).count():
-            	has_record = "si"
+        has_record = "no"
+        if Record.objects.filter(uniqueid=rowdata.uniqueid).count():
+                has_record = "si"
         except:
             fullname = '-'
             matricola = '-'
