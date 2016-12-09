@@ -551,7 +551,7 @@ def _get_extra_call(pincode, dst):
     query = """SELECT COUNT(*) AS n FROM superbacdr
             WHERE pincode='%s' AND DATE(calldate)>='%s'
             AND DATE(calldate) <= '%s'
-            AND calltype=1 AND valid=1""" % (pincode,
+            AND calltype=2 AND valid=1""" % (pincode,
                                      previous_monday,
                                      yesterday_str)
 
@@ -565,7 +565,7 @@ def _get_extra_call(pincode, dst):
     first_of_month = today.replace(day=1).strftime("%Y-%m-%d")
     query = """SELECT COUNT(*) AS n FROM superbacdr
             WHERE pincode='%s' AND DATE(calldate)>='%s'
-            AND DATE(calldate) <= '%s' AND calltype=1
+            AND DATE(calldate) <= '%s' AND calltype=2
             AND valid=1""" % (pincode,
                                      first_of_month,
                                      yesterday_str)
