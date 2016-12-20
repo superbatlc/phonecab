@@ -64,6 +64,11 @@ var Phoneuser = {
                 if (data.additional_calls == ''){
                     data.additional_calls = 0;
                 }
+                data.additional_duedate = $("#additional-duedate").val();
+                if (data.additional_duedate == ''){
+                    data.additional_duedate = null;
+                }
+                console.log('data.additional_duedate ' + data.additional_duedate);
 
                 data.four_bis_limited = 0
                 if($("input[type=checkbox]#four-bis-limited").is(':checked')){
@@ -143,6 +148,19 @@ var Phoneuser = {
 
             return;
         },
+
+        handleAdditionalCalls : function(cb) {
+            console.log('handleAdditionalCalls: ', cb.checked);
+            if (cb.checked){
+                $('#additional-calls').removeAttr("disabled");
+                $('#additional-duedate').removeAttr("disabled");
+            } else {
+                $('#additional-calls').attr("disabled", true);
+                $('#additional-calls').val("0");
+                $('#additional-duedate').attr("disabled", true);
+                $('#additional-duedate').val("");
+            }
+        }
 }
 
 

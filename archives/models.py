@@ -44,6 +44,8 @@ class ArchivedPhoneUser(models.Model):
         max_length=4, verbose_name="lingua", choices=LANGUAGES)
     additional_calls = models.IntegerField(
         verbose_name="chiamate supplementari", default=0)
+    additional_due_date = models.DateTimeField(
+        verbose_name="scadenza chiamate supplementari", null=True)
     vipaccount = models.BooleanField(
         verbose_name="senza restizioni", default=False)
     balance = models.DecimalField(
@@ -76,6 +78,7 @@ class ArchivedPhoneUser(models.Model):
         self.vipaccount = self.phoneuser.vipaccount
         self.four_bis_limited = self.phoneuser.four_bis_limited
         self.additional_calls = self.phoneuser.additional_calls
+        self.additional_due_date = self.phoneuser.additional_due_date
         self.balance = self.phoneuser.balance
 
     def delete_related(self):

@@ -155,7 +155,7 @@ def phoneuser_edit(request):
         phoneuser.id = 0
 
     variables['phoneuser'] = phoneuser
-    variables['change_additional_calls'] = Pref.get("change_additional_calls")
+    variables['change_additional_calls'] = int(Pref.get("change_additional_calls"))
     return render_to_response('phoneusers/phoneuser.html',
         RequestContext(request,variables))
 
@@ -170,6 +170,7 @@ def phoneuser_save(request):
     pincode = request.POST.get("data[pincode]", "")
     four_bis_limited = int(request.POST.get("data[four_bis_limited]", "0"))
     additional_calls = request.POST.get("data[additional_calls]", 0)
+    additional_due_date = request.POST.get("data[additional_duedate]", "")
     listening_enabled = int(request.POST.get("data[listening_enabled]", "0"))
     recording_enabled = int(request.POST.get("data[recording_enabled]", "0"))
     language = request.POST.get("data[language]", "")
@@ -193,6 +194,12 @@ def phoneuser_save(request):
         phoneuser.pincode = pincode
         phoneuser.four_bis_limited = four_bis_limited
         phoneuser.additional_calls = additional_calls
+        if additional_due_date != "":
+            additional_due_date = Helper.convert_datestring_format(additional_due_date,
+            "%d-%m-%Y", "%Y-%m-%d 00:00:00")
+        else:
+            additional_due_date = None
+        phoneuser.additional_due_date = additional_due_date
         phoneuser.listening_enabled = listening_enabled
         phoneuser.recording_enabled = recording_enabled
         phoneuser.language = language

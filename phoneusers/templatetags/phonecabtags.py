@@ -1,5 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
+from helper.Helper import Helper
 
 register = template.Library()
 
@@ -66,3 +67,8 @@ def to_int(value):
     if type(value) != 'int':
         return int(value)
     return value
+
+@register.filter
+def italian_date(value):
+    return Helper.convert_datestring_format(value,
+            "%Y-%m-%d 00:00:00", "%d-%m-%Y")

@@ -110,10 +110,10 @@ def prefs_save(request):
         p.value = header
         p.save(request.user)
 
-        return redirect('/prefs/edit/')
-
     except Exception as e:
         print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
+
+    return redirect('/prefs/edit/')
 
 
 def get_fee(value):
