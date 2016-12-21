@@ -18,10 +18,13 @@ def privacymode(value, digits):
 
 @register.filter
 @stringfilter
-def calltype(value):
+def calltype(value, lawyer):
     """ Assigns label based on calltype value"""
     if value == '0':
-        return '<span class="label label-success">ORD</span>'
+        if lawyer == 1:
+            return '<span class="label label-success" style="background-color: black;">ORD</span>'
+        else:
+            return '<span class="label label-success">ORD</span>'
     elif value == '1':
         return '<span class="label label-warning">SUP</span>'
     elif value == '2':
@@ -70,5 +73,4 @@ def to_int(value):
 
 @register.filter
 def italian_date(value):
-    return Helper.convert_datestring_format(value,
-            "%Y-%m-%d 00:00:00", "%d-%m-%Y")
+    return value.strftime("%d-%m-%Y")

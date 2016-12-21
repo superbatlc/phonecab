@@ -48,7 +48,8 @@ var Realtime = {
                 clone.find('.timeline-what').html(response[i].fields.what);
                 var when = new Date(response[i].fields.when)
                 var when_str = "chiamata ore " + when.getUTCHours()+":"+when.getUTCMinutes()
-                when_str += " del "+when.getUTCDate()+ "-"+when.getUTCMonth()+"-"+when.getUTCFullYear();
+                var month = when.getUTCMonth() + 1;
+                when_str += " del "+when.getUTCDate()+ "-"+month+"-"+when.getUTCFullYear();
                 clone.find('.timeline-when').html(when_str);
 
                 $('ul.timeline li').first().before(clone);

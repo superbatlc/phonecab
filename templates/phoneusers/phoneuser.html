@@ -69,10 +69,10 @@
             </div>
             <label for="additional-calls" class="col-xs-4 control-label">Numero</label>
             <div class="col-xs-1 filled">
-                <input type="text" class="form-control" id="additional-calls" placeholder="" value="{{ phoneuser.additional_calls }}" {% if change_additional_calls == 0 %} disabled{% endif %}>
+                <input type="text" class="form-control" id="additional-calls" placeholder="" value="{{ phoneuser.additional_calls }}" {% if change_additional_calls == 0 or not phoneuser.id or not phoneuser.additional_calls %} disabled{% endif %}>
             </div>
             <label for="additional-duedate" class="col-xs-3 control-label">Fino al (escluso)</label>
-                <input type="text" value="{{ phoneuser.additional_due_date|date:"d-m-Y" }}" maxlength="12" size="8" class="input-small datepicker" {% if change_additional_calls == 0 %} disabled{% endif %} id="additional-duedate">
+                <input type="text" value="{{ phoneuser.additional_due_date|date:"d-m-Y" }}" maxlength="12" size="8" class="input-small datepicker" {% if change_additional_calls == 0 or not phoneuser.id or not phoneuser.additional_calls %} disabled{% endif %} id="additional-duedate">
         </div>
         <div class="form-group">
             <label for="listening_enabled" class="col-xs-4 control-label">Ascolto</label>
