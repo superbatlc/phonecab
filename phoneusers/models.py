@@ -111,6 +111,7 @@ class Whitelist(models.Model):
         verbose_name='cellulare',
         default=False)
     enabled = models.BooleanField(verbose_name="stato", default=False)
+    additional = models.BooleanField(verbose_name="abilitazione a supplementari", default=False)
 
     def __unicode__(self):
         return "Numero %s (%s) relativo a %s" % (self.phonenumber,

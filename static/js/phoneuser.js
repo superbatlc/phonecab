@@ -241,6 +241,11 @@ var Whitelist = {
                 data.lawyer = 1
             }
 
+            data.additional = 0
+            if($("input[type=checkbox]#whitelist-additional").is(':checked')){
+                data.additional = 1
+            }
+
             data.phoneuser_id = $("#phoneuser-id").val()
 
             requestData("POST", "html", '/whitelists/save/', {data : data},
@@ -307,6 +312,31 @@ var Whitelist = {
         }
 
 
+    },
+
+    changeAdditional : function(id, newstatus){
+        var data = {};
+        data.whitelist_id = id;
+        data.newstatus = newstatus;
+        data.phoneuser_id = $("#phoneuser-id").val()
+
+        var postAlert = function(callback_return) {
+            if (!callback_return.success) { return; }
+            requestData("POST", "html", '/whitelists/changeadditional/', {data : data},
+                function(response){
+                    if(response != "-1"){
+                        updateDOM('#whitelists', response);
+                        showMessageBox("Conferma", "Modifica utenza per supplementari effettuata con successo", "green");
+                    }else{
+                        showMessageBox("Errore", "Modifica utenza per supplementari non effettuata.", "alert-danger");
+                    }
+                },
+                function(error){
+                    showMessageBox("Errore", "Modifica utenza per supplementari non effettuata.", "alert-danger");
+                });
+        }
+
+        postAlert({success: true});
     },
 
     remove : function(id){

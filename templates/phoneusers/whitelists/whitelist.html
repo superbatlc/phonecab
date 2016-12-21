@@ -50,6 +50,15 @@
       </div>
     </div>
   </div>
+  <div class="form-group" id="whitelist-enable-additional-element">
+    <label for="whitelist-additional" class="col-xs-4 control-label">Supplementare</label>
+    <div class="col-xs-4">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if whitelist.additional %}checked="checked"{% endif %} id="whitelist-additional"></label>
+      </div>
+    </div>
+  </div>
   <input type="hidden" name="phoneuser_id" id="whitelist-phoneuser-id" value="{{ phoneuser_id }}">
   <input type="hidden" name="whitelist_id" id="whitelist-id" value="{{ whitelist.id }}">
 

@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^whitelists/remove/$', whitelist_remove),
     url(r'^whitelists/changestatus/$', whitelist_change_status),
     url(r'^whitelists/changeordinary/$', whitelist_change_ordinary),
+    url(r'^whitelists/changeadditional/$', whitelist_change_additional),
     url(r'^whitelists/checkextra/$', whitelist_check_extra),
     #url(r'^whitelist/edit/(?P<whitelist_id>[0-9]*)$',
     # whitelist_edit),

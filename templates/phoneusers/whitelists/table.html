@@ -22,6 +22,7 @@
           <th style="width:120px; text-align:center;">Vincolo 15gg</th>
           <th style="width:160px; text-align:center;">Tipologia</th>
           <th style="width:30px; text-align:center;">Straordinaria</th>
+          <th style="width:30px; text-align:center;">Supplementare</th>
           <th class="noprint" style="width:120px; text-align:center;">Azioni</th>
         </tr>
       </thead>
@@ -59,7 +60,7 @@
           {% if wl.kind == 0 %}
             {% if wl.extraordinary %}
               {% if priv_whitelist > 0 %}
-                <button class="btn btn-xs btn-success" onClick="Whitelist.changeOrdinary({{ wl.id }},0)" title="Premi per rendere ordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinarie determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
+                <button class="btn btn-xs btn-success" onClick="Whitelist.changeOrdinary({{ wl.id }},0)" title="Premi per rendere ordinaria" {% if forloop.first %}data-help="La disabilitazione alle chiamate straordinarie preclude la possibilit&agrave; di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza."{% endif %}>
                   <i class="zmdi zmdi-check"></i>
                 </button>
                 <i class="zmdi zmdi-check print-only"></i>
@@ -68,7 +69,7 @@
               {% endif %}
             {% else %}
               {% if priv_whitelist > 0   %}
-                <button class="btn btn-xs btn-danger" onClick="Whitelist.changeOrdinary({{ wl.id }},1)" title="Premi per rendere straordinaria" {% if forloop.first %}data-help="L'abilitazione/disabilitazione alle chiamate straordinarie determina la possibilit&agrave; o meno di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza"{% endif %}>
+                <button class="btn btn-xs btn-danger" onClick="Whitelist.changeOrdinary({{ wl.id }},1)" title="Premi per rendere straordinaria" {% if forloop.first %}data-help="L'abilitazione alle chiamate straordinarie determina la possibilit&agrave; di effettuare chiamate senza vincoli legati alle chiamate effettuate in precedenza."{% endif %}>
                   <i class="zmdi zmdi-close"></i>
                 </button>
                 <i class="zmdi zmdi-close print-only"></i>
@@ -77,6 +78,27 @@
               {% endif %}
             {% endif %}
           {% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if wl.additional %}
+              {% if priv_whitelist > 0 %}
+                <button class="btn btn-xs btn-success" onClick="Whitelist.changeAdditional({{ wl.id }},0)" title="Premi per rendere non contattabile con chiamata supplementare" {% if forloop.first %}data-help="La disabilitazione alle chiamate suplementari preclude la possibilit&agrave; effettuare chiamate verso questa utenza in tale regime."{% endif %}>
+                  <i class="zmdi zmdi-check"></i>
+                </button>
+                <i class="zmdi zmdi-check print-only"></i>
+              {% else %}
+                <i class="zmdi zmdi-check"></i>
+              {% endif %}
+            {% else %}
+              {% if priv_whitelist > 0   %}
+                <button class="btn btn-xs btn-danger" onClick="Whitelist.changeAdditional({{ wl.id }},1)" title="Premi per rendere contattabile con chiamata supplementare" {% if forloop.first %}data-help="L'abilitazione alle chiamate supplementari determina la possibilit&agrave; di effettuare chiamate verso questa utenza in tale regime."{% endif %}>
+                  <i class="zmdi zmdi-close"></i>
+                </button>
+                <i class="zmdi zmdi-close print-only"></i>
+              {% else %}
+                <i class="zmdi zmdi-close"></i>
+              {% endif %}
+            {% endif %}
           </td>
           <td class="noprint" style="text-align:center;">
             {% if priv_whitelist > 1 %}

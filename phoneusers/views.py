@@ -403,6 +403,7 @@ def whitelist_save(request):
     duration = int(request.POST.get("data[duration]", "0"))
     kind = int(request.POST.get("data[kind]", "0"))
     lawyer = int(request.POST.get("data[lawyer]", "0"))
+    additional = int(request.POST.get("data[additional]", "0"))
     real_mobile = int(request.POST.get("data[real_mobile]", "0"))
 
     # la maschera consente di inserire i minuti
@@ -423,6 +424,7 @@ def whitelist_save(request):
         whitelist.kind = kind
         whitelist.lawyer = lawyer
         whitelist.real_mobile = real_mobile
+        whitelist.additional = additional
 
         whitelist.save()
 
@@ -498,6 +500,32 @@ def whitelist_change_ordinary(request):
         try:
             whitelist = Whitelist.objects.get(pk=whitelist_id)
             whitelist.extraordinary = newstatus
+            whitelist.save()
+            audit = Audit()
+            audit.log(user=request.user,
+                what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+            return whitelist_items(request, phoneuser_id)
+        except Exception as e:
+            return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
+    else:
+        raise Http404
+
+@login_required
+def whitelist_change_additional(request):
+    whitelist_id = int(request.POST.get("data[whitelist_id]", "0"))
+    phoneuser_id = int(request.POST.get("data[phoneuser_id]", "0"))
+    newstatus = int(request.POST.get("data[newstatus]", "0"))
+
+    ret = newstatus
+
+    action = "Disabilitazione utenza a chiamata supplementare"
+    if int(newstatus):
+        action = "Abilitazione utenza a chiamata supplementare"
+
+    if(whitelist_id):
+        try:
+            whitelist = Whitelist.objects.get(pk=whitelist_id)
+            whitelist.additional = newstatus
             whitelist.save()
             audit = Audit()
             audit.log(user=request.user,
