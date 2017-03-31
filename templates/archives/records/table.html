@@ -22,7 +22,7 @@
             {% for item in items %}
             <tr>
                 <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
-                <td class="acentro">{{ item.detail.calltype|calltype|safe }}</td>
+                <td class="acentro">{{ item.detail.calltype|calltype:item.lawyer|safe }}</td>
                 <td class="acentro">{{ item.pincode }}</td>
                 <td class="acentro">{{ item.archived_phoneuser.serial_no }}</td>
                 <td>{{ item.archived_phoneuser.get_full_name }}</td>

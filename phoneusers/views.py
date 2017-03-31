@@ -1,4 +1,5 @@
 import json
+import datetime
 from urllib import urlencode
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -194,11 +195,15 @@ def phoneuser_save(request):
         phoneuser.pincode = pincode
         phoneuser.four_bis_limited = four_bis_limited
         phoneuser.additional_calls = additional_calls
+
+
         if additional_due_date != "":
-            additional_due_date = Helper.convert_datestring_format(additional_due_date,
-            "%d-%m-%Y", "%Y-%m-%d 00:00:00")
+            additional_due_date = additional_due_date.replace("/", "-").replace(".", "-")
+            additional_due_date = datetime.datetime.strptime(
+                additional_due_date, "%d-%m-%Y")
         else:
             additional_due_date = None
+
         phoneuser.additional_due_date = additional_due_date
         phoneuser.listening_enabled = listening_enabled
         phoneuser.recording_enabled = recording_enabled
