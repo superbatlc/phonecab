@@ -73,4 +73,6 @@ def to_int(value):
 
 @register.filter
 def italian_date(value):
+    if value is None:
+        return "mai"
     return value.strftime("%d-%m-%Y")
