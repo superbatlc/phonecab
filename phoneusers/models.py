@@ -26,6 +26,16 @@ class PhoneUser(models.Model):
         (ARABIC, 'Arabo'),
     )
 
+    STATO_NUOVO = 0
+    STATO_IN_ATTESA = 1
+    STATO_DEFINITIVO = 2
+
+    STATI = (
+        (STATO_NUOVO, 'nuovo arrivo'),
+        (STATO_IN_ATTESA, 'in attesa di giudizio'),
+        (STATO_DEFINITIVO, 'definitivo'),
+    )
+
     first_name = models.CharField(max_length=35, verbose_name="nome")
     last_name = models.CharField(max_length=50, verbose_name="cognome")
     pincode = models.CharField(max_length=10, verbose_name="pin")
@@ -42,7 +52,7 @@ class PhoneUser(models.Model):
         max_digits=7,
         decimal_places=4)
     language = models.CharField(
-        max_length=4, verbose_name="lingua", choices=LANGUAGES, default='it')
+        max_length=4, verbose_name="lingua", choices=LANGUAGES, default=ITALIAN)
     additional_calls = models.IntegerField(
         verbose_name="chiamate supplementari", default=0)
     additional_due_date = models.DateTimeField(
@@ -51,6 +61,8 @@ class PhoneUser(models.Model):
         verbose_name="senza restizioni", default=False)
     four_bis_limited = models.BooleanField(
         verbose_name="4bis limitato", default=False)
+    status = models.IntegerField(
+        verbose_name="stato", choices=STATI, default=STATO_NUOVO)
 
     def get_full_name(self):
         return "%s %s" % (self.last_name, self.first_name)
@@ -70,10 +82,11 @@ class PhoneUser(models.Model):
         return None
 
     def __unicode__(self):
-        return "%s %s (matricola %s codice %s)" % (self.last_name,
-            self.first_name,
-            self.serial_no,
-            self.pincode)
+        return "%s %s (matricola %s codice %s stato %s)" % (self.last_name,
+                                                            self.first_name,
+                                                            self.serial_no,
+                                                            self.pincode,
+                                                            self.status)
 
 
 class Whitelist(models.Model):

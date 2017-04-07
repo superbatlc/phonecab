@@ -60,6 +60,7 @@ var Phoneuser = {
                 data.serial_no = $("#serial-no").val();
                 data.pincode = $("#pincode").val();
                 data.language = $("#language").val();
+                data.status = $("#status").val();
                 data.additional_calls = $("#additional-calls").val();
                 if (data.additional_calls == ''){
                     data.additional_calls = 0;

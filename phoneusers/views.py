@@ -176,6 +176,7 @@ def phoneuser_save(request):
     recording_enabled = int(request.POST.get("data[recording_enabled]", "0"))
     language = request.POST.get("data[language]", "")
     vipaccount = int(request.POST.get("data[vipaccount]", "0"))
+    status = request.POST.get("data[status]", "")
 
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
     is_new = False
@@ -208,6 +209,7 @@ def phoneuser_save(request):
         phoneuser.listening_enabled = listening_enabled
         phoneuser.recording_enabled = recording_enabled
         phoneuser.language = language
+        phoneuser.status = status
         phoneuser.vipaccount = vipaccount
 
         phoneuser.save()

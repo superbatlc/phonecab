@@ -24,14 +24,17 @@
         <h3 style="border-bottom: 1px dashed #CCCCCC;">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
        {% if not phoneuser.four_bis_limited %}<small>(4bis limitato)</small>{% endif %}</h3>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h4 style="color:#666;">Codice: {{ phoneuser.pincode }}</h4>
             </div>
-            <div class="col-md-4" style="text-align:center;">
+            <div class="col-md-3" style="text-align:center;">
                 <h4 style="color:#666;">Matricola: {{ phoneuser.serial_no }}</h4>
 
             </div>
-            <div class="col-md-4" style="text-align:right;">
+            <div class="col-md-3" style="text-align:right;">
+                <h4 style="color:#666;">Stato: {{ phoneuser.get_status_display }}</h4>
+            </div>
+            <div class="col-md-3" style="text-align:right;">
                 <h4 style="color:#666;">Lingua: {{ phoneuser.get_language_display }}</h4>
             </div>
         </div>

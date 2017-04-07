@@ -29,6 +29,16 @@ class ArchivedPhoneUser(models.Model):
         (ARABIC, 'Arabo'),
     )
 
+    STATO_NUOVO = 0
+    STATO_IN_ATTESA = 1
+    STATO_DEFINITIVO = 2
+
+    STATI = (
+        (STATO_NUOVO, 'nuovo arrivo'),
+        (STATO_IN_ATTESA, 'in attesa di giudizio'),
+        (STATO_DEFINITIVO, 'definitivo'),
+    )
+
     phoneuser = None
 
     first_name = models.CharField(max_length=35, verbose_name="nome")
@@ -56,6 +66,8 @@ class ArchivedPhoneUser(models.Model):
     four_bis_limited = models.BooleanField(
         verbose_name="4bis limitato", default=False)
     archived_date = models.DateTimeField(default=datetime.datetime.now)
+    status = models.IntegerField(
+        verbose_name="stato", choices=STATI, default=STATO_NUOVO)
 
     def __unicode__(self):
         return "%s %s (matricola %s codice %s)" % (self.last_name,
@@ -80,6 +92,7 @@ class ArchivedPhoneUser(models.Model):
         self.additional_calls = self.phoneuser.additional_calls
         self.additional_due_date = self.phoneuser.additional_due_date
         self.balance = self.phoneuser.balance
+        self.status = self.phoneuser.status
 
     def delete_related(self):
         self.phoneuser.delete()
