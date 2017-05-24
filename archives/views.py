@@ -266,7 +266,7 @@ def archive_cdrs_items(request):
         except Exception as e:
             item.whitelist = '-'
 
-    item.src = Extension.get_extension_name(item.src)
+        item.src = Extension.get_extension_name(item.src)
 
     prev_page = page - 1
     prev_page_disabled = ''
