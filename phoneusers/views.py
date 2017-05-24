@@ -438,7 +438,7 @@ def whitelist_save(request):
         # log azione
         audit = Audit()
         audit.log(user=request.user,
-            what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+            what="%s autorizzazione: %s" % (action, whitelist))
         return whitelist_items(request, phoneuser_id)
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
@@ -455,7 +455,7 @@ def whitelist_remove(request):
             # log azione
             audit = Audit()
             audit.log(user=request.user,
-                what="Rimozione autorizzazione: %s" % phoneuser)
+                what="Rimozione autorizzazione: %s" % whitelist)
             return whitelist_items(request, phoneuser_id)
 
         except Exception as e:
@@ -483,7 +483,7 @@ def whitelist_change_status(request):
             whitelist.save()
             audit = Audit()
             audit.log(user=request.user,
-                what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+                what="%s autorizzazione: %s" % (action, whitelist))
             return whitelist_items(request, phoneuser_id)
         except Exception as e:
             return HttpResponse(status=400,
@@ -510,7 +510,7 @@ def whitelist_change_ordinary(request):
             whitelist.save()
             audit = Audit()
             audit.log(user=request.user,
-                what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+                what="%s autorizzazione: %s" % (action, whitelist))
             return whitelist_items(request, phoneuser_id)
         except Exception as e:
             return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
@@ -536,7 +536,7 @@ def whitelist_change_additional(request):
             whitelist.save()
             audit = Audit()
             audit.log(user=request.user,
-                what="%s autorizzazione: %s" % (action, whitelist.phoneuser))
+                what="%s autorizzazione: %s" % (action, whitelist))
             return whitelist_items(request, phoneuser_id)
         except Exception as e:
             return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
