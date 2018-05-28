@@ -620,7 +620,7 @@ def _multi_record_export_as_zip_file(request):
     file_counter = 0
     with contextlib.closing(zipfile.ZipFile(tmpzippath, 'w')) as myzip:
         for item in items_list:
-            detail = ArchivedDetail.objects.get(uniqueid=item.uniqueid)
+            detail = ArchivedDetail.objects.filter(uniqueid=item.uniqueid)[0]
             if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)

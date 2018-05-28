@@ -244,9 +244,10 @@ def cdr_export_excel(request):
     sheet.write(0, 4, "Sorgente", style=default_style)
     sheet.write(0, 5, "Destinazione", style=default_style)
     sheet.write(0, 6, "Numero Autorizzato", style=default_style)
-    sheet.write(0, 7, "Registrazione", style=default_style)
-    sheet.write(0, 8, "Durata", style=default_style)
-    sheet.write(0, 9, "Costo", style=default_style)
+    sheet.write(0, 7, "Avvocato", style=default_style)
+    sheet.write(0, 8, "Registrazione", style=default_style)
+    sheet.write(0, 9, "Durata", style=default_style)
+    sheet.write(0, 10, "Costo", style=default_style)
 
     for row, rowdata in enumerate(details):
         try:
@@ -256,12 +257,17 @@ def cdr_export_excel(request):
         except:
             fullname = '-'
             matricola = '-'
+
         try:
             whitelist = Whitelist.objects.filter(phonenumber=rowdata.dst,
                 phoneuser=phoneuser)[0]
             whitelist_label = whitelist.label
+            is_lawyer = "no"
+            if whitelist.lawyer:
+                is_lawyer = "si"
         except:
             whitelist_label = '-'
+            is_lawyer = "-"
         has_record = "no"
         if Record.objects.filter(uniqueid=rowdata.uniqueid).count():
             has_record = "si"
@@ -278,9 +284,10 @@ def cdr_export_excel(request):
         sheet.write(row + 1, 4, rowdata.src, style=default_style)
         sheet.write(row + 1, 5, rowdata.dst, style=default_style)
         sheet.write(row + 1, 6, whitelist_label, style=default_style)
-        sheet.write(row + 1, 7, has_record, style=default_style)
-        sheet.write(row + 1, 8, billsec, style=default_style)
-        sheet.write(row + 1, 9, rowdata.price, style=default_style)
+        sheet.write(row + 1, 7, is_lawyer, style=default_style)
+        sheet.write(row + 1, 8, has_record, style=default_style)
+        sheet.write(row + 1, 9, billsec, style=default_style)
+        sheet.write(row + 1, 10, rowdata.price, style=default_style)
 
     response = HttpResponse(content_type='application/vnd.ms-excel')
     filename = 'Dettaglio_chiamate.xls'
