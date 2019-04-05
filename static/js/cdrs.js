@@ -9,7 +9,7 @@ var Cdr = {
             data.id = id;
             data.valid = newstatus;
 
-            data.params = params; //# TODO pass query params
+            // data.params = params; //# TODO pass query params
 
             requestData("POST", "html", '/cdrs/changevalid/', {data : data},
                 function(response){
