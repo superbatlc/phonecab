@@ -42,7 +42,7 @@ def _get_peers_status():
 
     for extension in extensions:
         stato = 'OFF'
-        cmd = 'sudo /usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"'
+        cmd = '/usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"'
         if settings.USE_SUDO:
             cmd = "%s %s" % ('sudo', cmd)
         status = os.popen(cmd % extension.extension).read()
