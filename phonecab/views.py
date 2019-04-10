@@ -75,9 +75,8 @@ def phonecab_realtime(request):
 
 def phonecab_get_nightmode(request):
     """Recupera la modalita giorno notte"""
-    use_sudo = settings.USE_SUDO
     return HttpResponse(status=200,
-                        content=("{ \"nightmode\" : %d }" % Helper.get_nightmode(use_sudo=use_sudo)),
+                        content=("{ \"nightmode\" : %d }" % Helper.get_nightmode()),
                         content_type="application/json")
 
 
