@@ -9,6 +9,9 @@ PROJECT_DIR = Path(__file__).ancestor(2)
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+# Ubuntu installation need sudo to prefix root commands. Centos one do not.
+USE_SUDO = False
+
 ADMINS = (
     ('Admin', 'admin@example.com'),
 )

@@ -34,16 +34,19 @@ def _tool_get_disk_usage(disk):
         return float(percent.replace("%", ""))
     return 0
 
+
 def _get_peers_status():
 
     extensions = Extension.objects.all().order_by('extension')
     stati = []
-    print extensions
 
     for extension in extensions:
         stato = 'OFF'
-        status = os.popen('sudo /usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"' % extension.extension).read()
-	print status
+        cmd = 'sudo /usr/sbin/asterisk -rx "sip show peer %s" | grep "Status"'
+        if settings.USE_SUDO:
+            cmd = "%s %s" % ('sudo', cmd)
+        status = os.popen(cmd % extension.extension).read()
+
         if "OK" in status:
             stato = 'ON'
         stati.append({'extension': extension, 'status': stato})

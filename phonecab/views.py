@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -74,18 +75,23 @@ def phonecab_realtime(request):
 
 def phonecab_get_nightmode(request):
     """Recupera la modalita giorno notte"""
+    use_sudo = settings.USE_SUDO
     return HttpResponse(status=200,
-                        content=("{ \"nightmode\" : %d }" % Helper.get_nightmode()),
+                        content=("{ \"nightmode\" : %d }" % Helper.get_nightmode(use_sudo=use_sudo)),
                         content_type="application/json")
+
 
 def phonecab_set_nightmode(request, mode):
     """Modifica manualmente la modalita giorno notte"""
     import os
 
-    cmd = "sudo /etc/asterisk/notte.sh"
+    cmd = "/etc/asterisk/notte.sh"
 
     if mode == '0':
-        cmd = "sudo /etc/asterisk/giorno.sh"
+        cmd = "/etc/asterisk/giorno.sh"
+
+    if settings.USE_SUDO:
+        cmd = "%s %s" % ('sudo', cmd)
     try:
         ret = os.system(cmd)
         return HttpResponse(status=200,
