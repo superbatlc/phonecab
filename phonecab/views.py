@@ -64,9 +64,6 @@ def phonecab_logout(request):
 
 def phonecab_realtime(request):
     """Show current calls"""
-    import time
-    import datetime
-
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
     variables['actual_nightmode'] = Helper.get_nightmode()
 
@@ -90,7 +87,7 @@ def phonecab_set_nightmode(request, mode):
         cmd = "/etc/asterisk/giorno.sh"
 
     if settings.USE_SUDO:
-        cmd = "%s %s" % ('sudo', cmd)
+        cmd = "sudo %s" % cmd
     try:
         ret = os.system(cmd)
         return HttpResponse(status=200,

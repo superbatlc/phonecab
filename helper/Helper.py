@@ -95,7 +95,7 @@ class Helper(object):
         if not settings.DEBUG:
             cmd = '/usr/sbin/asterisk -rx "database get night dbnightman"'
             if settings.USE_SUDO:
-                cmd = "%s %s" % ('sudo', cmd)
-            output = os.popen().read()
+                cmd = "sudo %s" % cmd
+            output = os.popen(cmd).read()
             value = int(output[7:8])
         return value
