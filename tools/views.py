@@ -4,9 +4,11 @@ from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from acls.models import Acl
 from prefs.models import Extension
+from tools.models import Activation
 
 
 @login_required
@@ -20,6 +22,7 @@ def tools_home(request):
             variables['diskusage'] = _tool_get_disk_usage(settings.FILESYSTEM)
             variables['extdiskusage'] = _tool_get_disk_usage(settings.EXT_FILESYSTEM)
             variables['peers_status'] = _get_peers_status()
+            variables['activation_items'] = Activation.objects.all()
         except Exception as e:
             return redirect("/tools/?err=1&err_msg=%s" % format(e))
             #return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco"
@@ -52,3 +55,12 @@ def _get_peers_status():
         stati.append({'extension': extension, 'status': stato})
 
     return stati
+
+
+# def _get_activation_times(request):
+#     """Return the table of activation times"""
+#     variables = {}
+#     variables['items'] = Activation.objects.all()
+
+#     return render_to_string(
+#         'tools/activation_table.html', RequestContext(request, variables))

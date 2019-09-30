@@ -1,150 +1,191 @@
 {% extends "base.html" %}
 {% load static %}
-    {% block title %}PhoneCab - Strumenti{% endblock %}
-    {% block stylesheet %}
-    {% endblock stylesheet %}
-    {% block application %}
-    <div class="page-header">
-      <h1><i class="zmdi zmdi-remote-control"></i> Strumenti</h1>
-      <!-- <p class="lead">Descrizione</p> -->
+{% block title %}PhoneCab - Strumenti{% endblock %}
+{% block stylesheet %}
+{% endblock stylesheet %}
+{% block application %}
+<div class="page-header">
+    <h1><i class="zmdi zmdi-remote-control"></i> Strumenti</h1>
+    <!-- <p class="lead">Descrizione</p> -->
+</div>
+<div class="row" style="float:none; margin: 0 auto">
+    <div class="col-md-6">
+        <div class="card bordered">
+            <div class="card-header">
+                <div class="card-title">Occupazione Disco Interno</div>
+            </div>
+            <div class="card-content">
+                <div id="chart-diskusage" style="height:180px;"></div>
+                {% if diskusage > 80.0 %}
+                <p style="margin-top:20px;text-align:justify;">L'occupazione disco ha superato l'80%.<br />Si consiglia di eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o di verificare la loro presenza sul disco di backup.</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    <div class="row" style="float:none; margin: 0 auto">
-        <div class="col-md-4">
-            <div class="card bordered">
-                <div class="card-header">
-                    <div class="card-title">Occupazione Disco Interno</div>
-                </div>
-                <div class="card-content">
-                    <div id="chart-diskusage" style="height:180px;"></div>
-                    {% if diskusage > 80.0 %}
-                        <p style="margin-top:20px;text-align:justify;">L'occupazione disco ha superato l'80%.<br/>Si consiglia di eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o di verificare la loro presenza sul disco di backup.</p>
-                    {% endif %}
-                </div>
+    <div class="col-md-6">
+        <div class="card bordered">
+            <div class="card-header">
+                <div class="card-title">Occupazione Disco Esterno</div>
+            </div>
+            <div class="card-content">
+                <div id="chart-diskusage-ext" style="height:180px;"></div>
+                {% if extdiskusage > 80.0 %}
+                <p style="margin-top:20px;text-align:justify;">L'occupazione disco esterno ha superato l'80%.<br />Si consiglia di collegare l&apos;unit&agrave; di back a un computer ed eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o un salvatggio su altro media.</p>
+                {% endif %}
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card bordered">
-                <div class="card-header">
-                    <div class="card-title">Occupazione Disco Esterno</div>
-                </div>
-                <div class="card-content">
-                    <div id="chart-diskusage-ext" style="height:180px;"></div>
-                    {% if extdiskusage > 80.0 %}
-                        <p style="margin-top:20px;text-align:justify;">L'occupazione disco esterno ha superato l'80%.<br/>Si consiglia di collegare l&apos;unit&agrave; di back a un computer ed eliminare alcune registrazioni, avendo prima cura di effettuare un'esportazione o un salvatggio su altro media.</p>
-                    {% endif %}
-                </div>
+    </div>
+</div>
+<div class="row" style="float:none; margin: 0 auto">
+    <div class="col-md-6">
+        <div class="card bordered">
+            <div class="card-header">
+                <div class="card-title">Stato Interni Telefonici</div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card bordered">
-                <div class="card-header">
-                    <div class="card-title">Stato Interni Telefonici</div>
-                </div>
-                <div class="card-content">
-    			<div class="list-group">
+            <div class="card-content">
+                <div class="list-group">
                     {% for peer in peers_status %}
-                        {% if peer.status == 'ON' %}
-    					   <div class="pull-left m-r-10"> <i class="icon-circle green-border v-super"></i> </div>
-    				    {% else %}
-    					   <div class="pull-left m-r-10"> <i class="icon-circle red-border v-super"></i> </div>
-    				    {% endif %}
-                        <div class="list-group-item-heading">{{ peer.extension.extension }} - {{ peer.extension.name }}</div>
+                    {% if peer.status == 'ON' %}
+                    <div class="pull-left m-r-10"> <i class="icon-circle green-border v-super"></i> </div>
+                    {% else %}
+                    <div class="pull-left m-r-10"> <i class="icon-circle red-border v-super"></i> </div>
+                    {% endif %}
+                    <div class="list-group-item-heading">{{ peer.extension.extension }} - {{ peer.extension.name }}</div>
                     {% endfor %}
-    			</div>
                 </div>
             </div>
         </div>
-
-{% endblock application %}
-{% block script %}
-<script type="text/javascript">
-        var chart = c3.generate({
-            bindto: '#chart-diskusage',
-            data: {
-                columns: [
-                    ['disco', 0]
-                ],
-                type: 'gauge',
-                //onclick: function (d, i) { console.log("onclick", d, i); },
-                //onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-            },
-            gauge: {
-                //        label: {
-                //            format: function(value, ratio) {
-                //                return value;
-                //            },
-                //            show: false // to turn off the min/max labels.
-                //        },
-                //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-                //    max: 100, // 100 is default
-                //    units: ' %',
-                //    width: 39 // for adjusting arc thickness
-            },
-            color: {
-                pattern: ['#60B044', '#F97600', '#FF0000'], // the three color levels for the percentage values.
-                threshold: {
+    </div>
+    <div class="col-md-6">
+        <div class="card bordered">
+            <div class="card-header">
+                <div class="card-title">Attivazione Automatica Sistema</div>
+            </div>
+            <div class="card-content">
+                <!--<div class="list-group">-->
+                    <table class="table table-striped table-full table-full-small">
+                        <thead>
+                            <tr>
+                                <th style="width:200px;">Ora di Attivazione</th>
+                                <th style="width:40px;">Ora di Disattivazione</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if activation_items %}
+                            {% for item in activation_items %}
+                            <tr>
+                                <td>{{ item.activation_time|date:"H:i"}}</td>
+                                <td>{{ item.deactivation_time|date:"H:i"}}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr style="">
+                                <td colspan="10" style="text-align:center;">
+                                    <h3>Non ci sono attivazioni automatiche Il sistema funziona solo in modalit&agrave; manuale.</h3>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+    {% endblock application %}
+    {% block script %}
+    <script type="text/javascript">
+    var chart = c3.generate({
+        bindto: '#chart-diskusage',
+        data: {
+            columns: [
+                ['disco', 0]
+            ],
+            type: 'gauge',
+            //onclick: function (d, i) { console.log("onclick", d, i); },
+            //onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+            //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+        },
+        gauge: {
+            //        label: {
+            //            format: function(value, ratio) {
+            //                return value;
+            //            },
+            //            show: false // to turn off the min/max labels.
+            //        },
+            //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+            //    max: 100, // 100 is default
+            //    units: ' %',
+            //    width: 39 // for adjusting arc thickness
+        },
+        color: {
+            pattern: ['#60B044', '#F97600', '#FF0000'], // the three color levels for the percentage values.
+            threshold: {
                 //            unit: 'value', // percentage is default
                 //            max: 200, // 100 is default
-                    values: [60, 80]
-                }
-            },
-            size: {
-                height: 180
-            },
-            transition: {
-                duration: 1000
+                values: [60, 80]
             }
-        });
+        },
+        size: {
+            height: 180
+        },
+        transition: {
+            duration: 1000
+        }
+    });
 
-        var chart_ext = c3.generate({
-            bindto: '#chart-diskusage-ext',
-            data: {
-                columns: [
-                    ['disco', 0]
-                ],
-                type: 'gauge',
-                //onclick: function (d, i) { console.log("onclick", d, i); },
-                //onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-            },
-            gauge: {
-                //        label: {
-                //            format: function(value, ratio) {
-                //                return value;
-                //            },
-                //            show: false // to turn off the min/max labels.
-                //        },
-                //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-                //    max: 100, // 100 is default
-                //    units: ' %',
-                //    width: 39 // for adjusting arc thickness
-            },
-            color: {
-                pattern: ['#60B044', '#F97600', '#FF0000'], // the three color levels for the percentage values.
-                threshold: {
+    var chart_ext = c3.generate({
+        bindto: '#chart-diskusage-ext',
+        data: {
+            columns: [
+                ['disco', 0]
+            ],
+            type: 'gauge',
+            //onclick: function (d, i) { console.log("onclick", d, i); },
+            //onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+            //onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+        },
+        gauge: {
+            //        label: {
+            //            format: function(value, ratio) {
+            //                return value;
+            //            },
+            //            show: false // to turn off the min/max labels.
+            //        },
+            //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+            //    max: 100, // 100 is default
+            //    units: ' %',
+            //    width: 39 // for adjusting arc thickness
+        },
+        color: {
+            pattern: ['#60B044', '#F97600', '#FF0000'], // the three color levels for the percentage values.
+            threshold: {
                 //            unit: 'value', // percentage is default
                 //            max: 200, // 100 is default
-                    values: [60, 80]
-                }
-            },
-            size: {
-                height: 180
-            },
-            transition: {
-                duration: 1000
+                values: [60, 80]
             }
-        });
+        },
+        size: {
+            height: 180
+        },
+        transition: {
+            duration: 1000
+        }
+    });
 
-        $(function(){
-            setTimeout(function(){
-                chart.load({
-                    columns: [['disco', {{ diskusage }}]]
-                });
-                chart_ext.load({
-                    columns: [['disco', {{ extdiskusage }}]]
-                });
-            }, 100)
-        })
+    $(function() {
+        setTimeout(function() {
+            chart.load({
+                columns: [
+                    ['disco', { { diskusage } }]
+                ]
+            });
+            chart_ext.load({
+                columns: [
+                    ['disco', { { extdiskusage } }]
+                ]
+            });
+        }, 100)
+    })
+
     </script>
-{% endblock script %}
+    {% endblock script %}
