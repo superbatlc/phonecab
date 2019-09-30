@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'prefs',
     'archives',
     'logs',
+    'tools',
 )
 
 

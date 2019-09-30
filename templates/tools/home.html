@@ -63,36 +63,46 @@
             </div>
             <div class="card-content">
                 <!--<div class="list-group">-->
-                    <table class="table table-striped table-full table-full-small">
-                        <thead>
-                            <tr>
-                                <th style="width:200px;">Ora di Attivazione</th>
-                                <th style="width:40px;">Ora di Disattivazione</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if activation_items %}
-                            {% for item in activation_items %}
-                            <tr>
-                                <td>{{ item.activation_time|date:"H:i"}}</td>
-                                <td>{{ item.deactivation_time|date:"H:i"}}</td>
-                            </tr>
-                            {% endfor %}
-                            {% else %}
-                            <tr style="">
-                                <td colspan="10" style="text-align:center;">
-                                    <h3>Non ci sono attivazioni automatiche Il sistema funziona solo in modalit&agrave; manuale.</h3>
-                                </td>
-                            </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
+                <table class="table table-striped table-full table-full-small">
+                    <thead>
+                        <tr>
+                            <th style="width:200px;text-align:center;">Ora di Attivazione</th>
+                            <th style="width:200px;text-align:center;">Ora di Disattivazione</th>
+                            <th style="width:100px;text-align:center;">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if activation_items %}
+                        {% for item in activation_items %}
+                        <tr>
+                            <td style="text-align:center;">{{ item.activation_time|date:"H:i"}}</td>
+                            <td style="text-align:center;">{{ item.deactivation_time|date:"H:i"}}</td>
+                            <td style="text-align:center;">
+                                <button class="btn btn-sm btn-default" onClick="Tool.editActivation({{ item.id }})" title="Premi per modificare l&apos;attivazione">
+                                    <i class="zmdi zmdi-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-default" onClick="Tool.removeActivation({{ item.id }})" title="Premi per eliminare l&apos;attivazione">
+                                    <i class="zmdi zmdi-delete"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr style="">
+                            <td colspan="10" style="text-align:center;">
+                                <h3>Non ci sono attivazioni automatiche.<br />Il sistema funziona solo in modalit&agrave; manuale.</h3>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
                 <!--</div>-->
             </div>
         </div>
     </div>
     {% endblock application %}
     {% block script %}
+    <script src="{% static "js/tools.js" %}" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
     var chart = c3.generate({
         bindto: '#chart-diskusage',
@@ -176,16 +186,17 @@
         setTimeout(function() {
             chart.load({
                 columns: [
-                    ['disco', { { diskusage } }]
+                    ['disco', {{ diskusage }}]
                 ]
             });
             chart_ext.load({
                 columns: [
-                    ['disco', { { extdiskusage } }]
+                    ['disco', {{ extdiskusage }}]
                 ]
             });
         }, 100)
     })
 
     </script>
+
     {% endblock script %}

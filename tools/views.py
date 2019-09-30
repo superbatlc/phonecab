@@ -19,10 +19,12 @@ def tools_home(request):
     variables['extdiskusage'] = 0
     if request.GET.get("err") != '1':
         try:
-            variables['diskusage'] = _tool_get_disk_usage(settings.FILESYSTEM)
-            variables['extdiskusage'] = _tool_get_disk_usage(settings.EXT_FILESYSTEM)
-            variables['peers_status'] = _get_peers_status()
+            # variables['diskusage'] = _tool_get_disk_usage(settings.FILESYSTEM)
+            # variables['extdiskusage'] = _tool_get_disk_usage(settings.EXT_FILESYSTEM)
+            # variables['peers_status'] = _get_peers_status()
             variables['activation_items'] = Activation.objects.all()
+            print variables
+
         except Exception as e:
             return redirect("/tools/?err=1&err_msg=%s" % format(e))
             #return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco"

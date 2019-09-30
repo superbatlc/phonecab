@@ -9,7 +9,7 @@ class Activation(models.Model):
     """
 
     activation_time = models.TimeField(null=False)
-    disactivation_time = models.TimeField(null=False)
+    deactivation_time = models.TimeField(null=False)
 
     def check_for_clash(self,):
         """
