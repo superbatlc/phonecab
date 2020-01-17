@@ -29,7 +29,7 @@ def tools_home(request):
 
 def _tool_get_disk_usage(disk):
     import os
-    percent = os.popen("df -hl | grep '%s' | awk 'BEGIN{}{percent=$5} END{print percent}'" % settings.FILESYSTEM).read()
+    percent = os.popen("df -hl | grep '%s' | awk 'BEGIN{}{percent=$5} END{print percent}'" % disk).read()
     if percent:
         return float(percent.replace("%", ""))
     return 0
