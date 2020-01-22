@@ -16,6 +16,7 @@ from audits.urls import urlpatterns as audits_urlpatterns
 from archives.urls import urlpatterns as archives_urlpatterns
 from tools.urls import urlpatterns as tools_urlpatterns
 from logs.urls import urlpatterns as logs_urlpatterns
+from maintenance.urls import urlpatterns as maintenance_urlpatterns
 
 urlpatterns = [
     url(r'^$', 'phonecab.views.phonecab_login'),
@@ -42,3 +43,4 @@ urlpatterns += audits_urlpatterns
 urlpatterns += archives_urlpatterns
 urlpatterns += tools_urlpatterns
 urlpatterns += logs_urlpatterns
+urlpatterns += maintenance_urlpatterns
