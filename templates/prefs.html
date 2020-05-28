@@ -3,240 +3,235 @@
 {% load phonecabtags %}
 {% block title %}PhoneCab - Preferenze{% endblock %}
 {% block application %}
-
-<form action="/prefs/save/" class="form-floating" id="prefs" method="POST" onSubmit="submitPrefs">
-
-<div class="page-header">
-    <h1><i class="zmdi zmdi-settings"></i>Generali</h1>
-</div>
-<div class="row" style="margin-bottom:20px;">
-    <div class="col-md-12">
-        <div class="card bordered">
-            <div class="card-header">
-                <span class="card-title">Intestazione Stampe</span>
-            </div>
-            <div class="card-content">
-                <div class="form-group">
-                    <label class="control-label normal filled">Dicitura</label>
-                    <input class="form-control" name="header" type="text" value="{{ header }}">
-                </div>
-            </div>
-        </div>
+  <form action="/prefs/save/" class="form-floating" id="prefs" method="POST" onSubmit="submitPrefs">
+    <div class="page-header">
+      <h1><i class="zmdi zmdi-settings"></i> Generali</h1>
     </div>
-</div>
-
-<div class="page-header">
-    <h1><i class="zmdi zmdi-phone"></i>Chiamata</h1>
-</div>
-
-<div class="row" style="margin-bottom:20px;">
-    <div class="col-md-3">
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-12">
         <div class="card bordered">
-            <div class="card-header">
-                <span class="card-title">Durata minima e Avviso</span>
+          <div class="card-header">
+            <span class="card-title">Intestazione Stampe</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label normal filled">Dicitura</label>
+              <input class="form-control" name="header" type="text" value="{{ header }}">
             </div>
-            <div class="card-content">
-                <div class="form-group">
-                    <label class="control-label">Durata minima in secondi (in funzione del credito disponibile)</label>
-                    <input class="form-control" name="min_duration" type="text" value="{{ min_duration }}">
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Avviso fine chiamata (secondi precedenti)</label>
-                    <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
-    <!-- DISABILITIAMO LA PREFERENZA SULLA SOGLIA -->
-    <!--<div class="col-md-3">
-        <div class="card bordered">
-            <div class="card-header">
-                <span class="card-title">Soglia</span>
-            </div>
-            <div class="card-content">
-                <div class="form-group">
-                    <label class="control-label normal filled">Modifica della soglia</label>
-                    <div class="checkbox">
-                        <label>
-                            <input {% if change_threshold == "1" %}checked="checked"{% endif %} name="change_threshold" type="checkbox" value="1">
-                            consenti modifica
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Valore preimpostato (in minuti)</label>
-                    <input class="form-control disabled" name="threshold" type="text" value="{{ threshold }}">
-                </div>
-            </div>
-        </div>
-    </div>-->
-    <!-- FINE DISABILITIAMO LA PREFERENZA SULLA SOGLIA -->
-    <div class="col-md-3">
-        <div class="card bordered">
-            <div class="card-header">
-                <span class="card-title">Chiamate Addizionali</span>
-            </div>
-            <div class="card-content">
-                <div class="form-group">
-                    <label class="control-label normal filled">Modifica del numero</label>
-                    <div class="checkbox">
-                        <label>
-                            <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
-                            consenti modifica
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Valore preimpostato</label>
-                    <input class="form-control disabled" name="default_additional_calls" type="text" value="{{ default_additional_calls }}">
-                </div>
-            </div>
-        </div>
+    <div class="page-header">
+      <h1><i class="zmdi zmdi-phone"></i> Chiamata</h1>
     </div>
-    <div class="col-md-3">
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-4">
         <div class="card bordered">
-            <div class="card-header">
-                <span class="card-title">Avvocato</span>
+          <div class="card-header">
+            <span class="card-title">Durata minima chiamata</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">In funzione del credito disponibile in relazione alla destinazione richiesta (in secondi)</label>
+              <input
+              class="form-control"
+              name="min_duration"
+              type="text"
+              value="{{ min_duration }}"
+              >
             </div>
-            <div class="card-content">
-                <div class="form-group">
-                    <label class="control-label normal filled">AVVOCATO COME ORDINARIA</label>
-                    <div class="checkbox">
-                        <label>
-                            <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
-                            Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini.<br/>(circolare n° GDAP-0177644-2010 del 28/04/2010)
-                        </label>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </div>
-    <div class="col-md-3">
+      </div>
+      <div class="col-md-4">
         <div class="card bordered">
-            <div class="card-header">
-                <span class="card-title">Autorizzazione Speciale</span>
+          <div class="card-header">
+            <span class="card-title">Avviso fine chiamata</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">Segnale acustico che anticipa la conclusione della chiamata (in secondi)</label>
+              <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
             </div>
-            <div class="card-content">
-                <div class="form-group">
-                    <label class="control-label normal filled">PRIMO INGRESSO</label>
-                    <div class="checkbox">
-                        <label>
-                            <input {% if enable_first_in == "1" %}checked="checked"{% endif %} name="enable_first_in" type="checkbox" value="1">
-                            Abilitando questa preferenza sar&agrave; possibile associare la modalit&agrave; a un&apos;utenza, rendendola una straordinaria ripetibile.
-                        </label>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </div>
-</div>
-
-<div class="page-header">
-    <h1><i class="zmdi zmdi-timer"></i>Tariffe</h1>
-</div>
-
-<div class="row">
-    {% for fare in fares %}
-    <div class="col-md-4">
-        <div class="card card-flip bordered">
-            <div class="card-header">
-                <div class="pull-right">
-                    <a class="btn btn-link btn-flip btn-xs" href="javascript:;">
-                        <i class="zmdi zmdi-globe-alt"></i>
-                        Prefissi
-                    </a>
-                </div>
-
-                <span class="card-title">
-                    <i class="{{ fare.icon }}"></i>
-                    {{ fare.direction }}</span>
+      </div>
+      <div class="col-md-4">
+        <div class="card bordered">
+          <div class="card-header">
+            <span class="card-title">Limite chiamate nel giorno</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">Blocco indipendente dall'eventuale residuo di minuti. <br>Usare <b>0</b> per non limitare il numero.</label>
+              <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
             </div>
+          </div>
+        </div>
+      </div>
 
+    </div>
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-4">
+        <div class="card bordered">
+          <div class="card-header">
+            <span class="card-title">Chiamate addizionali</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
+                  consenti modifica
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Valore preimpostato</label>
+              <input
+              class="form-control disabled"
+              name="default_additional_calls"
+              type="text"
+              value="{{ default_additional_calls }}"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bordered">
+          <div class="card-header">
+            <span class="card-title">Equiparazione Avvocato</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
+                  Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini.<br/>(circolare n° GDAP-0177644-2010 del 28/04/2010)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bordered">
+          <div class="card-header">
+            <span class="card-title">Autorizzazione Speciale Primo Ingresso</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input {% if enable_first_in == "1" %}checked="checked"{% endif %} name="enable_first_in" type="checkbox" value="1">
+                  Abilitando questa preferenza sar&agrave; possibile associare la modalit&agrave; a un&apos;utenza, rendendola una straordinaria ripetibile.
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-header">
+      <h1><i class="zmdi zmdi-timer"></i> Tariffe</h1>
+    </div>
+    <div class="row">
+      {% for fare in fares %}
+        <div class="col-md-4">
+          <div class="card card-flip bordered">
+            <div class="card-header">
+              <div class="pull-right">
+                <a class="btn btn-link btn-flip btn-xs" href="javascript:;">
+                  <i class="zmdi zmdi-globe-alt"></i>
+                  Prefissi
+                </a>
+              </div>
+              <span class="card-title">
+                <i class="{{ fare.icon }}"></i>
+              {{ fare.direction }}</span>
+            </div>
             <div class="card-content">
-                <input name="fare_id[]" type="hidden" value="{{fare.id}}">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label">Scatto (&euro;)</label>
-                            <input class="form-control" name="fare_connection_charge[]" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label">Tariffa (&euro;/minuto)</label>
-                            <input class="form-control" name="fare_fee_per_second[]" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
-                        </div>
-                    </div>
+              <input name="fare_id[]" type="hidden" value="{{fare.id}}">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="control-label">Scatto (&euro;)</label>
+                    <input class="form-control" name="fare_connection_charge[]" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
+                  </div>
                 </div>
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="control-label">Tariffa (&euro;/minuto)</label>
+                    <input class="form-control" name="fare_fee_per_second[]" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">Prefissi
-                    <i class="zmdi zmdi-close pull-right btn-flip"></i>
-                </span>
-                <div class="form-group">
-                    <input class="form-control" class="input-small" data-role="jquerytagsinput" data-category="{{ fare.direction }}" name="fare_prefix_list[]" size="5" tabindex="-1" type="text" value="{{ fare.prefix_list }}">
-                </div>
+              <span class="card-title grey-text text-darken-4">Prefissi
+                <i class="zmdi zmdi-close pull-right btn-flip"></i>
+              </span>
+              <div class="form-group">
+                <input class="form-control" class="input-small" data-role="jquerytagsinput" data-category="{{ fare.direction }}" name="fare_prefix_list[]" size="5" tabindex="-1" type="text" value="{{ fare.prefix_list }}">
+              </div>
             </div>
+          </div>
         </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-</div>
-<!-- .row -->
-
-<div class="form-group" style="text-align:right;margin-bottom:20px">
-    <button class="btn btn-primary btn-lg" onClick="save()" type="button">Salva
-        <div class="ripple-wrapper"></div>
-    </button>
-</div>
-
-</form>
+    <!-- .row -->
+    <div class="form-group" style="text-align:right;margin-bottom:20px">
+      <button class="btn btn-primary btn-lg" onClick="save()" type="button">Salva
+      <div class="ripple-wrapper"></div>
+      </button>
+    </div>
+  </form>
 {% endblock application %}
 {% block script %}
-<script type="text/javascript">
-
-    //workaround to avoid ENTER submit the form
-    var reallySave = false;
-    var submitPrefs = function() {
-        return reallySave;
-    }
-    var save = function() {
-        reallySave = true;
-        $('#prefs').submit();
-    }
-
-    /* FORBID DUPLICATES */
-
-    var fares = [{% for fare in fares %}'{{ fare.direction }}', {% endfor %}];
-    $(function() {
-        //bootstrap-tagsinput
-        //http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
-        $('[data-role="jquerytagsinput"]').tagsinput({
-            confirmKeys: [
-                13, 44
-            ],
-            trimValue: true,
-            cancelConfirmKeysOnEmpty: true
-        });
-        $('[data-role="jquerytagsinput"]').on('itemAdded itemRemoved', function(el) {
-            $(el.target).attr('value', $(el.target).val());
-        });
-        $('[data-role="jquerytagsinput"]').on('itemAdded', function(event) {
-            var target = $(event.currentTarget);
-            var prefix = event.item;
-            var match = new RegExp("\\b" + prefix + "\\b", "gi");
-            var category = target.attr('data-category');
-            for (var i = 0; i < fares.length; i++) {
-                var fare = fares[i];
-                if (category == fare) continue;
-                var prefixes = $('[data-category=\'' + fare + '\']').val();
-                if (!!prefixes.match(match)) {
-                    target.tagsinput('remove', prefix);
-                    showMessageBox("Errore", "Il prefisso è già presente nella direttrice '" + fare + "'", "alert-danger");
-                    return;
-                }
-            }
-        });
-        $('.bootstrap-tagsinput input').attr('tabindex', '-1'); //avoid TAB on tagsinput inputs
-    });
+  <script type="text/javascript">
+  //workaround to avoid ENTER submit the form
+  var reallySave = false;
+  var submitPrefs = function() {
+  return reallySave;
+  }
+  var save = function() {
+  reallySave = true;
+  $('#prefs').submit();
+  }
+  /* FORBID DUPLICATES */
+var fares = [{% for fare in fares %}'{{ fare.direction }}', {% endfor %}];
+$(function() {
+//bootstrap-tagsinput
+//http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
+$('[data-role="jquerytagsinput"]').tagsinput({
+confirmKeys: [
+13, 44
+],
+trimValue: true,
+cancelConfirmKeysOnEmpty: true
+});
+$('[data-role="jquerytagsinput"]').on('itemAdded itemRemoved', function(el) {
+$(el.target).attr('value', $(el.target).val());
+});
+$('[data-role="jquerytagsinput"]').on('itemAdded', function(event) {
+var target = $(event.currentTarget);
+var prefix = event.item;
+var match = new RegExp("\\b" + prefix + "\\b", "gi");
+var category = target.attr('data-category');
+for (var i = 0; i < fares.length; i++) {
+var fare = fares[i];
+if (category == fare) continue;
+var prefixes = $('[data-category=\'' + fare + '\']').val();
+if (!!prefixes.match(match)) {
+target.tagsinput('remove', prefix);
+showMessageBox("Errore", "Il prefisso è già presente nella direttrice '" + fare + "'", "alert-danger");
+return;
+}
+}
+});
+$('.bootstrap-tagsinput input').attr('tabindex', '-1'); //avoid TAB on tagsinput inputs
+});
 </script>
 {% endblock script %}
