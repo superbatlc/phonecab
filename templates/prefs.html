@@ -26,14 +26,14 @@
       <h1><i class="zmdi zmdi-phone"></i> Chiamata</h1>
     </div>
     <div class="row" style="margin-bottom:20px;">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="card bordered">
           <div class="card-header">
             <span class="card-title">Durata minima chiamata</span>
           </div>
           <div class="card-content">
             <div class="form-group">
-              <label class="control-label">In funzione del credito disponibile in relazione alla destinazione richiesta (in secondi)</label>
+              <label class="control-label">In funzione del credito disponibile e della destinazione richiesta (in secondi)</label>
               <input
               class="form-control"
               name="min_duration"
@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="card bordered">
           <div class="card-header">
             <span class="card-title">Avviso fine chiamata</span>
@@ -57,20 +57,37 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="card bordered">
           <div class="card-header">
             <span class="card-title">Limite chiamate nel giorno</span>
           </div>
           <div class="card-content">
             <div class="form-group">
-              <label class="control-label">Blocco indipendente dall'eventuale residuo di minuti. <br>Usare <b>0</b> per non limitare il numero.</label>
+              <label class="control-label">Blocco indipendente dall'eventuale residuo. <br>Usare <b>0</b> per non limitare le chiamate.</label>
               <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
             </div>
           </div>
         </div>
       </div>
-
+      <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header">
+            <span class="card-title">Limite chiamate Avvocati</span>
+          </div>
+          <div class="card-content" style="padding: 20px 20px 8px 20px;">
+            <div class="form-group">
+              <label class="control-label normal filled" style="margin-top: 8px;">Estende il blocco precedente, <b>se impostato</b>, anche alle chiamate verso gli avvocati</label>
+              <div class="checkbox">
+                <label style="margin-top: 20px; margin-bottom:0;">
+                  <input {% if lawyer_call_limit == "1" %}checked="checked"{% endif %} name="lawyer_call_limit" type="checkbox" value="1">
+                  limita
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row" style="margin-bottom:20px;">
       <div class="col-md-4">
