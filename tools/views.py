@@ -31,7 +31,11 @@ def _tool_get_disk_usage(disk):
     import os
     percent = os.popen("df -hl | grep '%s' | awk 'BEGIN{}{percent=$5} END{print percent}'" % disk).read()
     if percent:
-        return float(percent.replace("%", ""))
+        real_usage = float(percent.replace("%", ""))
+        safety_usage = real_usage * 1.2
+        if safety_usage > 100:
+            safety_usage = 100
+        return safety_usage
     return 0
 
 
