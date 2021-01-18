@@ -1,7 +1,7 @@
-from django.conf.urls import patterns
+from django.conf.urls import url
 from .views import *
 
-urlpatterns = patterns('',
-    (r'^prefs/edit/$', prefs_edit),
-    (r'^prefs/save/$', prefs_save),
-                       )
+urlpatterns = [
+    url(r'^prefs/edit/$', prefs_edit),
+    url(r'^prefs/save/$', prefs_save)
+]
