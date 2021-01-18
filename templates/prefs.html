@@ -4,15 +4,11 @@
 {% block title %}PhoneCab - Preferenze{% endblock %}
 {% block application %}
   <form action="/prefs/save/" class="form-floating" id="prefs" method="POST" onSubmit="submitPrefs">
-    <div class="page-header">
-      <h1><i class="zmdi zmdi-settings"></i> Generali</h1>
-    </div>
+    <div class="page-header"><h1><i class="zmdi zmdi-settings"></i> Generali</h1></div>
     <div class="row" style="margin-bottom:20px;">
-      <div class="col-md-12">
+      <div class="col-md-4">
         <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Intestazione Stampe</span>
-          </div>
+          <div class="card-header"><span class="card-title">Intestazione Stampe</span></div>
           <div class="card-content">
             <div class="form-group">
               <label class="control-label normal filled">Dicitura</label>
@@ -22,15 +18,14 @@
         </div>
       </div>
     </div>
-    <div class="page-header">
-      <h1><i class="zmdi zmdi-phone"></i> Chiamata</h1>
-    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-phone"></i> Chiamata</h1></div>
     <div class="row" style="margin-bottom:20px;">
       <div class="col-md-3">
         <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Durata minima chiamata</span>
-          </div>
+          <div class="card-header"><span class="card-title">Durata minima chiamata</span></div>
           <div class="card-content">
             <div class="form-group">
               <label class="control-label">In funzione del credito disponibile e della destinazione richiesta (in secondi)</label>
@@ -38,17 +33,14 @@
               class="form-control"
               name="min_duration"
               type="text"
-              value="{{ min_duration }}"
-              >
+              value="{{ min_duration }}">
             </div>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Avviso fine chiamata</span>
-          </div>
+          <div class="card-header"><span class="card-title">Avviso fine chiamata</span></div>
           <div class="card-content">
             <div class="form-group">
               <label class="control-label">Segnale acustico che anticipa la conclusione della chiamata (in secondi)</label>
@@ -59,74 +51,89 @@
       </div>
       <div class="col-md-3">
         <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Limite chiamate nel giorno</span>
-          </div>
+          <div class="card-header"><span class="card-title">Chiamate addizionali</span></div>
           <div class="card-content">
-            <div class="form-group">
-              <label class="control-label">Blocco indipendente dall'eventuale residuo. <br>Usare <b>0</b> per non limitare le chiamate.</label>
-              <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Limite chiamate Avvocati</span>
-          </div>
-          <div class="card-content" style="padding: 20px 20px 8px 20px;">
-            <div class="form-group">
-              <label class="control-label normal filled" style="margin-top: 8px;">Estende il blocco precedente, <b>se impostato</b>, anche alle chiamate verso gli avvocati</label>
-              <div class="checkbox">
-                <label style="margin-top: 20px; margin-bottom:0;">
-                  <input {% if lawyer_call_limit == "1" %}checked="checked"{% endif %} name="lawyer_call_limit" type="checkbox" value="1">
-                  limita
+            <div class="form-group" style="margin-top:14px;">
+              <div class="checkbox" style="margin-top:-26px; margin-bottom:0px;">
+                <label>
+                  <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
+                  consenti modifica
                 </label>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <input
+                  class="form-control disabled"
+                  name="default_additional_calls"
+                  type="text"
+                  value="{{ default_additional_calls }}"
+                  >
+                </div>
+                <div class="col-md-6">
+                  <label class="control-label">Valore predefinito</label>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-alert-circle"></i> Limiti Giornalieri</h1></div>
+    <h4 style="margin-bottom:20px;">Blocco indipendente dall'eventuale residuo. Usare <b>0</b> per NON limitare le chiamate.</h4>
+
     <div class="row" style="margin-bottom:20px;">
-      <div class="col-md-4">
+      <!-- <div class="col-md-2">
         <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Chiamate addizionali</span>
-          </div>
+          <div class="card-header"><span class="card-title">Chiamate Ordinarie</span></div>
           <div class="card-content">
             <div class="form-group">
-              <div class="checkbox">
-                <label>
-                  <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
-                  consenti modifica
-                </label>
-              </div>
+              <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
             </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="col-md-2">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Chiamate Supplementari</span></div>
+          <div class="card-content">
             <div class="form-group">
-              <label class="control-label">Valore preimpostato</label>
-              <input
-              class="form-control disabled"
-              name="default_additional_calls"
-              type="text"
-              value="{{ default_additional_calls }}"
-              >
+              <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
             </div>
           </div>
         </div>
       </div>
+      <div class="col-md-2">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Chiamate Avvocato</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-puzzle-piece"></i> Extra</h1></div>
+    <div class="row" style="margin-bottom:20px;">
       <div class="col-md-4">
         <div class="card bordered">
-          <div class="card-header">
-            <span class="card-title">Equiparazione Avvocato</span>
-          </div>
+          <div class="card-header"><span class="card-title">Equiparazione Avvocato</span></div>
           <div class="card-content">
             <div class="form-group">
               <div class="checkbox">
                 <label>
-                  <input {% if ordinary_lawyer == "1" %}checked="checked"{% endif %} name="ordinary_lawyer" type="checkbox" value="1">
-                  Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini.<br/>(circolare n° GDAP-0177644-2010 del 28/04/2010)
+                  <input
+                    {% if ordinary_lawyer == "1" %}checked="checked"{% endif %}
+                    name="ordinary_lawyer"
+                    type="checkbox"
+                    value="1">
+                    Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini. (circolare n° GDAP-0177644-2010 del 28/04/2010)
                 </label>
               </div>
             </div>
@@ -151,9 +158,10 @@
         </div>
       </div>
     </div>
-    <div class="page-header">
-      <h1><i class="zmdi zmdi-timer"></i> Tariffe</h1>
-    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-timer"></i> Tariffe</h1></div>
     <div class="row">
       {% for fare in fares %}
         <div class="col-md-4">
