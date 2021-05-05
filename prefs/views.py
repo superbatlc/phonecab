@@ -13,7 +13,8 @@ from prefs.models import Fare, Pref
 @login_required
 def prefs_edit(request):
     # recuperiamo le preferenze e le tariffe
-    min_duration = Pref.get('min_duration')
+    # min_duration = Pref.get('min_duration')
+    min_duration_with_credit = Pref.get('min_duration_with_credit')
     alert_before_end = Pref.get('alert_before_end')
     enable_first_in = Pref.get('enable_first_in')
     ordinary_lawyer = Pref.get('ordinary_lawyer')
@@ -28,7 +29,8 @@ def prefs_edit(request):
     fares = Fare.objects.filter(position__gt=0).order_by('position')
 
     variables = {
-        'min_duration': min_duration,
+        # 'min_duration': min_duration,
+        'min_duration_with_credit': min_duration_with_credit,
         'alert_before_end': alert_before_end,
         'enable_first_in': enable_first_in,
         'ordinary_lawyer': ordinary_lawyer,
@@ -70,7 +72,8 @@ def prefs_save(request):
             f.save(request.user)
 
         # ALTRE PREFERENZE CHIAMATA -------------------------------------------
-        min_duration = request.POST.get("min_duration", "0")
+        # min_duration = request.POST.get("min_duration", "0")
+        min_duration_with_credit = request.POST.get("min_duration_with_credit", "0")
         alert_before_end = request.POST.get("alert_before_end", "0")
         enable_first_in = request.POST.get("enable_first_in", "0")
         ordinary_lawyer = request.POST.get("ordinary_lawyer", "0")
@@ -83,8 +86,12 @@ def prefs_save(request):
         limit_additional_calls_per_day = int(request.POST.get("limit_additional_calls_per_day", "0"))
         header = request.POST.get("header", "0")
 
-        p = Pref.objects.get(key='min_duration')
-        p.value = min_duration
+        # p = Pref.objects.get(key='min_duration')
+        # p.value = min_duration
+        # p.save(request.user)
+
+        p = Pref.objects.get(key='min_duration_with_credit')
+        p.value = min_duration_with_credit
         p.save(request.user)
 
         p = Pref.objects.get(key='alert_before_end')

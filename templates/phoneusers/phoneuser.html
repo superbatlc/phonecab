@@ -104,6 +104,16 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <label for="recording_enabled" class="col-xs-4 control-label">Abilitazione COVID19</label>
+            <div class="col-xs-8">
+                <div class="checkbox">
+                    <label class="filled">
+                        <input type="checkbox" {% if phoneuser.recording_enabled %}checked="checked" {% endif %} id="recording-enabled">
+                    </label>
+                </div>
+            </div>
+        </div>
         <input type="hidden" id="phoneuser-id-modal" value="{{ phoneuser.id }}">
     </fieldset>
 </form>
