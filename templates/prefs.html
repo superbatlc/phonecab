@@ -147,7 +147,7 @@
           <td>4</td><td>010860XXX</td><td>4 min</td><td>OK</td>
         </tr>
       </table>
-      <span>Esempio (tutte utenze abilitate alle Supplementari, limite impostato a <b>2</b>)</span>
+      <span>Esempio: tutte utenze abilitate alle Supplementari, limite impostato a <b>2</b></span>
       </div>
     </div>
 
@@ -156,7 +156,7 @@
     <div class="page-header"><h1><i class="zmdi zmdi-puzzle-piece"></i> Extra</h1></div>
     <div class="row" style="margin-bottom:20px;">
       <div class="col-md-4">
-        <div class="card bordered">
+        <!-- <div class="card bordered">
           <div class="card-header"><span class="card-title">Equiparazione Avvocato</span></div>
           <div class="card-content">
             <div class="form-group">
@@ -168,6 +168,23 @@
                     type="checkbox"
                     value="1">
                     Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini. (circolare n° GDAP-0177644-2010 del 28/04/2010)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Limite Avvocato</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input
+                    {% if lawyer_call_limit == "1" %}checked="checked"{% endif %}
+                    name="lawyer_call_limit"
+                    type="checkbox"
+                    value="0">
+                    <strong>1 chiamata al giorno per utenza</strong>
                 </label>
               </div>
             </div>

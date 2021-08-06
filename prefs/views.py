@@ -122,9 +122,9 @@ def prefs_save(request):
         p.value = default_additional_calls
         p.save(request.user)
 
-        p = Pref.objects.get(key='max_calls_per_day')
-        p.value = max_calls_per_day
-        p.save(request.user)
+        # p = Pref.objects.get(key='max_calls_per_day')
+        # p.value = max_calls_per_day
+        # p.save(request.user)
 
         p = Pref.objects.get(key='lawyer_call_limit')
         p.value = lawyer_call_limit
