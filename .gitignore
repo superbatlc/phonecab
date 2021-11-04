@@ -1,3 +1,6 @@
+# Virtual enviroment folder
+venv/
+
 settings_local.py
 config_local.js
 .DS_Store
