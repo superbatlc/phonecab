@@ -5,6 +5,7 @@ General Url pattern
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
+from django.views.static import serve
 admin.autodiscover()
 
 from phoneusers.urls import urlpatterns as phoneusers_urlpatterns
@@ -17,15 +18,17 @@ from archives.urls import urlpatterns as archives_urlpatterns
 from tools.urls import urlpatterns as tools_urlpatterns
 from logs.urls import urlpatterns as logs_urlpatterns
 
-urlpatterns = [
-    url(r'^$', 'phonecab.views.phonecab_login'),
-    url(r'^login/$', 'phonecab.views.phonecab_login'),
-    url(r'^logout/$', 'phonecab.views.phonecab_logout'),
-    url(r'^phonecab/$', 'phonecab.views.phonecab_realtime'),
-    url(r'^nightmode/$', 'phonecab.views.phonecab_get_nightmode'),
-    url(r'^nightmode/(?P<mode>.*)$', 'phonecab.views.phonecab_set_nightmode'),
+from phonecab.views import *
 
-    url(r'^recordings/(?P<path>.*)$', 'django.views.static.serve',
+urlpatterns = [
+    url(r'^$', phonecab_login),
+    url(r'^login/$', phonecab_login),
+    url(r'^logout/$', phonecab_logout),
+    url(r'^phonecab/$', phonecab_realtime),
+    url(r'^nightmode/$', phonecab_get_nightmode),
+    url(r'^nightmode/(?P<mode>.*)$', phonecab_set_nightmode),
+
+    url(r'^recordings/(?P<path>.*)$', serve,
         {'document_root': settings.RECORDS_ROOT}),
 
     url(r'^admin/doc/',

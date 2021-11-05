@@ -44,7 +44,6 @@ def record_home(request):
 @login_required
 def record_items(request):
     """Record Items"""
-    from urllib import urlencode
     variables = {}
 
     items_per_page = settings.ITEMS_PER_PAGE
