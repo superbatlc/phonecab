@@ -263,7 +263,10 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
             if detail.valid:
                 file_counter += 1
                 path = os.path.join(settings.RECORDS_ROOT, item.filename)
-                myzip.write(path, arcname = item.filename)
+                try:
+                    myzip.write(path, arcname = item.filename)
+                except:
+                    pass
 
     if not file_counter:
         return redirect("/records/?err=1&err_msg=Nessuno dei file soddisfa i criteri per l'esportazione&%s" % urlencode(d))

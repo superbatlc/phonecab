@@ -28,4 +28,7 @@ class Record(models.Model):
         """Rimuove il file indicato dal path"""
         import os
         path = "%s%s" % (settings.RECORDS_ROOT, self.filename)
-        os.remove(path)
+        try:
+            os.remove(path)
+        except:
+            pass
