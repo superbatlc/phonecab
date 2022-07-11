@@ -25,6 +25,8 @@ def prefs_edit(request):
     max_calls_per_day = Pref.get('max_calls_per_day')
     lawyer_call_limit = Pref.get('lawyer_call_limit')
     limit_additional_calls_per_day = Pref.get('limit_additional_calls_per_day')
+    covid_general = Pref.get('covid_general')
+    limit_duration = Pref.get('limit_duration')
     header = Pref.get('header')
     fares = Fare.objects.filter(position__gt=0).order_by('position')
 
@@ -40,6 +42,8 @@ def prefs_edit(request):
         'max_calls_per_day': max_calls_per_day,
         'lawyer_call_limit': lawyer_call_limit,
         'limit_additional_calls_per_day': limit_additional_calls_per_day,
+        'covid_general': covid_general,
+        'limit_duration': limit_duration,
         'threshold': threshold,
         'fares': fares,
         'header': header,
@@ -85,6 +89,8 @@ def prefs_save(request):
         lawyer_call_limit = int(request.POST.get("lawyer_call_limit", "0"))
         limit_additional_calls_per_day = int(request.POST.get("limit_additional_calls_per_day", "0"))
         header = request.POST.get("header", "0")
+        limit_duration = request.POST.get("limit_duration", "0")
+        covid_general = request.POST.get("covid_general", "0")
 
         # p = Pref.objects.get(key='min_duration')
         # p.value = min_duration
@@ -132,6 +138,14 @@ def prefs_save(request):
 
         p = Pref.objects.get(key='limit_additional_calls_per_day')
         p.value = limit_additional_calls_per_day
+        p.save(request.user)
+
+        p = Pref.objects.get(key='limit_duration')
+        p.value = limit_duration
+        p.save(request.user)
+
+        p = Pref.objects.get(key='covid_general')
+        p.value = covid_general
         p.save(request.user)
 
         p = Pref.objects.get(key='header')

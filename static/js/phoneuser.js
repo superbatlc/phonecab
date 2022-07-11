@@ -85,6 +85,11 @@ var Phoneuser = {
                     data.recording_enabled = 1
                 }
 
+                data.covid_enabled = 0
+                if($("input[type=checkbox]#covid-enabled").is(':checked')){
+                    data.covid_enabled = 1
+                }
+
                 //data.vipaccount = 0
                 //if($("input[type=checkbox]#vipaccount").is(':checked')){
                 //    data.vipaccount = 1

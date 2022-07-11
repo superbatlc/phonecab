@@ -45,6 +45,8 @@ class PhoneUser(models.Model):
         verbose_name="ascolto", default=False)
     recording_enabled = models.BooleanField(
         verbose_name="registrazione", default=False)
+    covid_enabled = models.BooleanField(
+        verbose_name="covid", default=False)
     enabled = models.BooleanField(verbose_name="stato", default=True)
     balance = models.DecimalField(
         verbose_name="credito residuo",

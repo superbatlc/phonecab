@@ -73,7 +73,6 @@ function requestData(method, dataType, relativeUrl, data, onSuccess, onError) {
 
 var Modal = {
   open: function(dict) {
-    console.log(dict);
     if (!dict.hasOwnProperty('title')) dict.title = 'No title';
     if (!dict.hasOwnProperty('content')) dict.content = 'No content';
     if (!dict.hasOwnProperty('onSave')) dict.onSave = null;

@@ -2,6 +2,16 @@
 <div class="card bordered">
     <div class="card-content">
         <div style="float: right;">
+            <span class="label {{phoneuser.covid_enabled|to_int|yesno:" green,red"}}">
+             <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-alert-polygon zmdi-hc-stack-1x"></i>
+                {% if phoneuser.covid_enabled|to_int == 0 %}
+                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
+                {% endif %}
+            </span>
+            Abilitazione COVID
+            </span>
+              &nbsp;&nbsp;
             <span class="label {{phoneuser.additional_calls|to_int|yesno:" green,red"}}">
               <span class="zmdi-hc-stack zmdi-hc-lg">
                 <i class="zmdi zmdi-phone zmdi-hc-stack-1x"></i>
@@ -9,28 +19,29 @@
                 <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
                 {% endif %}
               </span>
-              Chiamate Supplementari {% if phoneuser.additional_calls|to_int %} {% if phoneuser.additional_calls %} (fine: {{ phoneuser.additional_due_date|italian_date}}){% else %} a tempo indeterminato{% endif %}{% endif %}
-            </span>
-            &nbsp;&nbsp;
-            <span class="label {{phoneuser.listening_enabled|yesno:" green,red"}}">
-              <span class="zmdi-hc-stack zmdi-hc-lg">
-                <i class="zmdi zmdi-headset zmdi-hc-stack-1x"></i>
-                {% if not phoneuser.listening_enabled %}
-                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
-                {% endif %}
-              </span>
-              Ascolto in diretta
+                Supplementari {% if phoneuser.additional_calls|to_int %} {% if phoneuser.additional_calls %} (fine: {{ phoneuser.additional_due_date|italian_date}}){% else %} a tempo indeterminato{% endif %}{% endif %}
             </span>
             &nbsp;&nbsp;
             <span class="label {{phoneuser.recording_enabled|yesno:" green,red"}}">
-              <span class="zmdi-hc-stack zmdi-hc-lg">
-                <i class="zmdi zmdi-mic zmdi-hc-stack-1x"></i>
-                {% if not phoneuser.recording_enabled %}
-                <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
-                {% endif %}
+                <span class="zmdi-hc-stack zmdi-hc-lg">
+                  <i class="zmdi zmdi-mic zmdi-hc-stack-1x"></i>
+                  {% if not phoneuser.recording_enabled %}
+                  <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
+                  {% endif %}
+                </span>
+                Registrazione
               </span>
-              Registrazione
-            </span>
+
+            &nbsp;&nbsp;
+            <span class="label {{phoneuser.listening_enabled|yesno:" green,red"}}">
+                <span class="zmdi-hc-stack zmdi-hc-lg">
+                  <i class="zmdi zmdi-headset zmdi-hc-stack-1x"></i>
+                  {% if not phoneuser.listening_enabled %}
+                  <i class="zmdi zmdi-block zmdi-hc-stack-2x"></i>
+                  {% endif %}
+                </span>
+                Ascolto
+              </span>
         </div>
         <h3 class="user">{{ phoneuser.last_name }} {{ phoneuser.first_name }}
        {% if phoneuser.four_bis_limited %}<small>(4bis limitato)</small>{% endif %}</h3>

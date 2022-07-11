@@ -108,9 +108,9 @@ ROOT_URLCONF = 'phonecab.urls'
 
 WSGI_APPLICATION = 'phonecab.wsgi.application'
 
-TEMPLATE_DIRS = (
+TEMPLATE_DIRS = [
     PROJECT_DIR.child("templates"),
-)
+]
 
 INSTALLED_APPS = (
     'django.contrib.auth',

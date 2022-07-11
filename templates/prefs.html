@@ -23,6 +23,27 @@
 
     <div class="page-header"><h1><i class="zmdi zmdi-phone"></i> Chiamata</h1></div>
     <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-6">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Abilitazione COVID19</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input
+                    {% if covid_general == "1" %}checked="checked"{% endif %}
+                    name="covid_general"
+                    type="checkbox"
+                    value="0">
+                    <strong>Consente la realizzazione di una chiamata al giorno laddove indicato nella scheda detenuto</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:20px;">
       <div class="col-md-3">
         <div class="card bordered">
           <div class="card-header"><span class="card-title">Durata minima chiamata</span></div>
@@ -38,6 +59,23 @@
           </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Durata chiamata valida</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">Numero di secondi per considerare una chiamata come effettuata</label>
+              <input
+              class="form-control"
+              name="limit_duration"
+              type="text"
+              value="{{ limit_duration }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="col-md-3">
         <div class="card bordered">
           <div class="card-header"><span class="card-title">Avviso fine chiamata</span></div>

@@ -174,6 +174,7 @@ def phoneuser_save(request):
     additional_due_date = request.POST.get("data[additional_duedate]", "")
     listening_enabled = int(request.POST.get("data[listening_enabled]", "0"))
     recording_enabled = int(request.POST.get("data[recording_enabled]", "0"))
+    covid_enabled = int(request.POST.get("data[covid_enabled]", "0"))
     language = request.POST.get("data[language]", "")
     vipaccount = int(request.POST.get("data[vipaccount]", "0"))
     status = request.POST.get("data[status]", "")
@@ -208,6 +209,7 @@ def phoneuser_save(request):
         phoneuser.additional_due_date = additional_due_date
         phoneuser.listening_enabled = listening_enabled
         phoneuser.recording_enabled = recording_enabled
+        phoneuser.covid_enabled = covid_enabled
         phoneuser.language = language
         phoneuser.status = status
         phoneuser.vipaccount = vipaccount
