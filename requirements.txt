@@ -1,6 +1,6 @@
 appnope==0.1.0
 decorator==4.0.9
-Django==1.11.29
+Django==2.2.28
 django-extensions==1.6.1
 gnureadline==8.0.0
 ipython==4.1.2
