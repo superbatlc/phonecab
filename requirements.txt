@@ -5,7 +5,7 @@ django-extensions==1.6.1
 gnureadline==8.0.0
 ipython==4.1.2
 ipython-genutils==0.1.0
-MySQL-python==1.2.5
+mysqlclient
 path.py==8.1.2
 pexpect==4.0.1
 pickleshare==0.6
