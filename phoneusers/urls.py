@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^phoneusers/check/pincode/$', phoneuser_check_pincode),
     url(r'^phoneusers/check/whitelist/$', phoneuser_check_whitelist),
     url(r'^phoneusers/archive/$', phoneuser_archive),
+    url(r'^phoneusers/export/excel/$', phoneuser_export_excel),
 
     url(r'^whitelists/$', whitelist_items),
     url(r'^whitelists/edit/$', whitelist_edit),

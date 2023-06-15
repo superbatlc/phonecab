@@ -357,6 +357,78 @@ def phoneuser_realtime_info(request):
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
 @login_required
+def phoneuser_export_excel(request):
+    import time
+    import xlwt
+    book = xlwt.Workbook(encoding='utf8')
+    sheet = book.add_sheet('Esportazione Anagrafiche')
+
+    default_style = xlwt.Style.default_style
+    phone_number_format = xlwt.easyxf(num_format_str='[+0]############')
+
+    keyword = request.GET.get("keyword", "")
+    enabled = request.GET.get("enabled", True)
+
+    q_obj = Q(last_name__startswith=keyword)
+    q_obj.add(Q(enabled=enabled), Q.AND)
+
+    phoneusers = PhoneUser.objects.filter(q_obj).order_by('last_name')
+
+    sheet.write(0, 0, "COGNOME", style=default_style)
+    sheet.write(0, 1, "NOME", style=default_style)
+    sheet.write(0, 2, "MATRICOLA", style=default_style)
+    sheet.write(0, 3, "CODICE TESSERA", style=default_style)
+
+    idx_p_row = 1
+    idx_w_row = 0
+
+    for p in phoneusers:
+        whitelists = Whitelist.objects.filter(phoneuser=p)
+
+        sheet.write(idx_p_row, 0, p.last_name, style=default_style)
+        sheet.write(idx_p_row, 1, p.first_name, style=default_style)
+        sheet.write(idx_p_row, 2, p.serial_no.upper(), style=default_style)
+        sheet.write(idx_p_row, 3, p.pincode, style=default_style)
+
+        idx_p_row += 1
+
+        sheet.write(idx_p_row, 1, "ETICHETTTA", style=default_style)
+        sheet.write(idx_p_row, 2, "UTENZA AUTORIZZATA", style=default_style)
+        sheet.write(idx_p_row, 3, "TIPOLOGIA", style=default_style)
+        sheet.write(idx_p_row, 4, "AVVOCATO", style=default_style)
+        sheet.write(idx_p_row, 5, "SUPPLEMENTARE", style=default_style)
+
+        idx_w_row = 0
+
+        for w in whitelists:
+            idx_w_row += 1
+
+            lawyer = w.lawyer and "Si" or "No"
+            additional = w.additional and "Si" or "No"
+            sheet.write(idx_p_row + idx_w_row, 1, w.label, style=default_style)
+            sheet.write(idx_p_row + idx_w_row, 2, w.phonenumber, style=phone_number_format)
+            sheet.write(idx_p_row + idx_w_row, 3, w.get_kind_display(), style=default_style)
+            sheet.write(idx_p_row + idx_w_row, 4, lawyer, style=default_style)
+            sheet.write(idx_p_row + idx_w_row, 5, additional, style=default_style)
+
+
+        idx_p_row = idx_p_row + idx_w_row + 1
+
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    filename = 'Esportazione Anagrafiche e Utenze.xls'
+    response[
+        'Content-Disposition'] = 'attachment; filename=%s' % filename
+    book.save(response)
+
+    # logghiamo azione
+    audit = Audit()
+    what = "Esportazione Anagrafiche e Lista Utenze Autorizzate"
+    audit.log(user=request.user, what=what)
+
+    return response
+
+
+@login_required
 def whitelist_items(request, phoneuser_id):
     phoneuser_id = int(phoneuser_id)
     user = request.user
