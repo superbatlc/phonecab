@@ -3,7 +3,7 @@ decorator==4.0.9
 Django==1.8
 django-extensions==1.6.1
 gnureadline==6.3.3
-ipython==4.1.2
+ipython==7.16.3
 ipython-genutils==0.1.0
 mysqlclient==1.4.6
 path.py==8.1.2
