@@ -1,0 +1,87 @@
+{% load tz %}
+{% load phonecabtags %}
+<!-- tabella cdr -->
+<div class="table-responsive white">
+    <table class="table table-striped table-full table-full-small">
+    <thead>
+    	<tr>
+        <th style="width:40px;" class="acentro"></th>
+        <th style="width:120px;" class="acentro">Data Ora</th>
+        <th style="width:40px;" class="acentro" data-help="Tipologia della chiamata:<br/>ORD Ordinaria<br>SUP Supplementare<br/>STR Straordinaria{% if item.enable_first_in %}<br />PRI Primo ingresso{% endif %}">Tipo</th>
+        <th style="width:60px;" class="acentro">Codice</th>
+        <th style="width:80px;" class="acentro">Matricola</th>
+        <th style="width:auto;">Nome Cognome</th>
+        <th style="width:180px;" class="acentro">Sorgente</th>
+        <th style="width:90px;" class="acentro">Destinazione</th>
+        <th style="width:320px;">Numero Autorizzato</th>
+        <th style="width:40px;" class="acentro">Avv</th>
+        <th style="width:40px;" class="acentro">R</th>
+        <th style="width:80px;" class="adestra">Durata</th>
+        <th style="width:60px;" class="adestra">Costo</th>
+        </tr>
+    </thead>
+	<tbody>
+        {% if items %}
+            {% for item in items %}
+            <tr>
+            <td class="acentro">
+                {% if item.valid %}
+                    <button class="btn btn-round btn-link" onClick="Cdr.changeValid({{ item.id }}, 0)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endif %}>
+            		<i class="zmdi zmdi-check zmdi-hc-lg"></i>
+                    </button>
+                {% else %}
+                    <button class="btn btn-round btn-link"  onClick="Cdr.changeValid({{ item.id }}, 1)"{% if forloop.first %} data-help="L'abilitazione/disabilitazione di una chiamata determina la sua validit&agrave; ai fini del conteggio."{% endif %}>
+            		<i class="zmdi zmdi-close zmdi-hc-lg"></i>
+                    </button>
+                {% endif %}
+
+            </td>
+            <td>{{ item.calldate|date:"d-m-Y H:i"}}</td>
+            <td class="acentro">{{ item.calltype|calltype:item.lawyer|safe }}</td>
+            <td class="acentro">{{ item.pincode }}</td>
+            <td class="acentro">{{ item.phoneuser.serial_no }}</td>
+            <td><a href="/phoneusers/view/{{ item.phoneuser.id }}">{{ item.phoneuser.get_full_name }}</a></td>
+            <td class="acentro">{{ item.src }}</td>
+            <td class="acentro">{{ item.dst }}</td>
+            <td>{{ item.whitelist.label }}</td>
+            <td class="acentro">{{ item.lawyer|yesno:"Si,No" }}</td>
+            <td class="acentro">
+                {% if item.has_record %}
+                    <i class="zmdi zmdi-headset"></i>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="adestra">{{ item.billsec|format_time }}</td>
+            <td class="adestra">{{ item.price }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr style=""><td colspan="13" style="text-align:center;"><h3>Non ci sono chiamate corrispondenti alla ricerca effettuata.</h3></td></tr>
+        {% endif %}
+    </tbody>
+    </table>
+</div>
+<!-- chiude tabella cdr -->
+<!-- dati complessivi -->
+{% if items %}
+<!-- fine dati complessivi -->
+<!-- paginazione cdr -->
+<div class="card-action">
+    <div class="row">
+    	<div class="col-md-6">
+            <h4>Numero Chiamate: {{ total_items }} - Costo Chiamate: {{ total_costs }}&nbsp;&euro;</h4>
+    	</div>
+    	<div class="col-md-2">
+    		<a href="/cdrs/export/excel/?{{ query_string }}" class="btn btn-success"><i class="zmdi zmdi-download"></i> Esporta</a>
+    	</div>
+    	<div class="col-md-4" style="text-align:right;">
+    		{{ start_item }} - {{ end_item }} di {{ total_items }}&nbsp;&nbsp;
+            <a href="?page={{ prev_page }}&amp;{{ query_string }}" class="btn btn-info {{ prev_page_disabled }}"><i class="zmdi zmdi-chevron-left"></i></a>
+            <a href="?page={{ next_page }}&amp;{{ query_string }}" class="btn btn-info {{ next_page_disabled }}"><i class="zmdi zmdi-chevron-right"></i></a>
+            <input type="hidden" id="items-current-page" value="{{ current_page }}">
+    	</div>
+    </div>
+</div>
+{% endif %}
+<!-- chiude paginazione cdr -->

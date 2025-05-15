@@ -1,0 +1,66 @@
+ <!-- whitelist modal -->
+<form class="form-horizontal placeholder-form" novalidate="true">
+<fieldset>
+  <div class="form-group">
+    <label for="first-name" class="col-xs-4 control-label">Etichetta</label>
+    <div class="col-xs-6 filled">
+      <input type="text" class="form-control input-small" id="whitelist-label" placeholder="Etichetta" value="{{ whitelist.label }}" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="first-name" class="col-xs-4 control-label">Numero</label>
+    <div class="col-xs-5 filled">
+      <input type="text" class="form-control input-small" id="whitelist-phonenumber" placeholder="Numero" value="{{ whitelist.phonenumber }}" required>
+      <span class="whitelist-check hide" style="color: red;">Gi&agrave; associato</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="first-name" class="col-xs-4 control-label">Soglia</label>
+    <div class="col-xs-2 filled">
+      <input type="text" class="form-control input-small" id="whitelist-duration" placeholder="Soglia" value="{{ whitelist.duration }}" required{% if not change_threshold  == "1" %} disabled{% endif %}>
+      <label class="muted">minuti</label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-4 control-label">Tipologia</label>
+    <div class="col-xs-5">
+      <select class="select2 form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true" id="whitelist-kind">
+        <option value="0" {% if whitelist.kind == 0 %}selected{% endif %}>Ordinaria</option>
+        {% if enable_first_in == "1" %}
+        <option value="1" {% if whitelist.kind == 1 %}selected{% endif %}>Primo ingresso</option>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+  <div class="form-group" id="whitelist-layer-element">
+    <label for="enabled" class="col-xs-4 control-label">Avvocato</label>
+    <div class="col-xs-4">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if whitelist.lawyer %}checked="checked"{% endif %} id="whitelist-lawyer"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group" id="whitelist-real-mobile-element">
+    <label for="enabled" class="col-xs-4 control-label">Vincolo 15gg</label>
+    <div class="col-xs-4">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if whitelist.real_mobile %}checked="checked"{% endif %} id="whitelist-real-mobile"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group" id="whitelist-enable-additional-element">
+    <label for="whitelist-additional" class="col-xs-4 control-label">Supplementare</label>
+    <div class="col-xs-4">
+      <div class="checkbox">
+        <label class="filled">
+          <input type="checkbox" {% if whitelist.additional %}checked="checked"{% endif %} id="whitelist-additional"></label>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" name="phoneuser_id" id="whitelist-phoneuser-id" value="{{ phoneuser_id }}">
+  <input type="hidden" name="whitelist_id" id="whitelist-id" value="{{ whitelist.id }}">
+
+ </fieldset>
+ </form>

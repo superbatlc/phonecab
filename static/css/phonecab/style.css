@@ -1,0 +1,279 @@
+/*==============================*/
+
+.print-only {
+	display:none !important;
+}
+.theme-deep-orange a,
+.theme-deep-orange a:hover,
+.theme-deep-orange a:active,
+.theme-deep-orange a:focus {
+  color: inherit;
+}
+
+.phonecab-logo {
+    overflow:hidden;
+    border-radius:10px;
+    width:200px;
+    height:100px;
+    font-size:2em;
+    background-color:#d90000;
+    position:relative;
+    margin:0 auto;
+}
+
+.phonecab-wave {
+  position: relative;
+  height: 50%;
+  width: 100%;
+  /*background: #e43227;*/
+}
+
+.phonecab-wave span {
+    z-index:200;
+    position:absolute;
+    display:block;
+    text-align:center;
+    width:100%;
+    top:40%;
+    color:white;
+    text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5);
+}
+
+.phonecab-wave:before {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 100%;
+    width: 60%;
+    height: 60%;
+    top:70%;
+    left:-10%;
+    /*background-color: #e43227;*/
+}
+
+.phonecab-wave:after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 100%;
+    width: 60%;
+    height: 60%;
+    top:70%;
+    right:-10%;
+    background-color: #d90000;
+}
+
+.sidebar .phonecab-logo {
+  width: 100%;
+  height: 64px;
+  font-size: 0.5em;
+  border-radius: 0;
+}
+.sidebar .phonecab-logo span {
+  top: 0;
+  font-size: 3em;
+}
+
+.sidebar li.active{
+  background-color: red !important;
+}
+
+
+/*==============================*/
+
+
+aside.sidebar {
+  border: none !important;
+}
+
+
+aside.sidebar i {
+  top: 3px;
+  position: relative;
+}
+
+nav {
+  background-color: #444 !important;
+}
+
+.navbar-inverse {
+    background-color: #ff5722;
+}
+
+.nav .logout button {
+	color:white;
+}
+
+.nav .logout button:hover {
+	color:inherit;
+}
+
+
+.nav .search i {
+	position:relative;
+	top:6px;
+	right:10px;
+	color:white;
+}
+
+.nav .search input:focus {
+  box-shadow: inset 0 -2px 0 white !important;
+}
+
+.nav .username {
+	color:white;
+	font-size:1.2em;
+  margin: 5px 5px 0 5px;
+}
+
+a.btn,
+a:hover.btn,
+a:active.btn,
+a:focus.btn  {
+	color:white;
+}
+
+a.btn.btn-default,
+a:hover.btn.btn-default,
+a:active.btn.btn-default,
+a:focus.btn.btn-default {
+	color:#666;
+}
+
+input.timepicker {
+	width:60px;
+	text-align:center;
+}
+input.datepicker {
+	width:90px;
+	text-align:center;
+}
+
+.bootstrap-datetimepicker-widget table td span {
+	width:30%;
+}
+.bootstrap-datetimepicker-widget {
+	top:92px !important;
+}
+
+#messagebox {
+	position: fixed;
+  top: 70px;
+  right: 10px;
+  max-width: 40%;
+  z-index: 2000;
+
+}
+
+select {
+	padding: 2px;
+    background-color: transparent;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color:white;
+}
+
+@media (max-width: 992px) {
+  .navbar-toggle {
+      display: block !important; /* fix */
+  }
+}
+
+span.label {
+  font-size: 1.0em;
+}
+
+.page-header .action {
+  float: right;
+  margin-top: -10px;
+  margin-left: 6px;
+}
+
+.card-header .action {
+  float: right;
+  margin-top: -5px;
+  margin-left: 6px;
+}
+
+.switchable {
+  transition: all 0.5s ease;
+  color: white !important;
+}
+
+.switchable .action {
+  display: none;
+}
+
+.switchable:hover .action {
+  display: inherit;
+}
+
+.switchable:hover .status {
+  display: none;
+}
+
+
+.switchable.green, .switchable.green:active, .switchable.green:focus {
+  background-color: rgb(76, 175, 80);
+}
+
+.switchable.green:hover {
+  background-color: rgb(244, 67, 54);
+}
+
+.switchable.red, .switchable.red:active, .switchable.red:focus {
+  background-color: rgb(244, 67, 54);
+}
+
+.switchable.red:hover {
+  background-color: rgb(76, 175, 80);
+}
+
+.help {
+  position: absolute;
+  z-index: 3000;
+  /*background-color: #333;*/
+  color: #ff5722;
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+  border-radius: 50%;
+  padding-top: 3px;
+  /*box-shadow: 1px 1px 2px rgba(0,0,0,.3);*/
+  text-align: center;
+  margin-top: -15px;
+}
+
+
+.help::after {
+  background-color: white;
+  width: 10px;
+  height: 14px;
+  display: block;
+  content: "";
+  margin: -18px 0 0 7px;
+}
+
+tbody>tr>td {
+  cursor: default !important;
+}
+
+h3.user {
+  border-bottom: 1px dashed #CCCCCC;
+}
+
+li.template {
+  display: none;
+}
+
+.realtime-log {
+  padding: 40px 20px 0;
+  position:fixed;
+  right:0;
+  top: 64px;
+  width: 18%;
+  bottom:0;
+  background-color:#EEE;
+  overflow-y:auto;
+}

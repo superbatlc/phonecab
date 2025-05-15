@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% load static %}
+{% load phonecabtags %}
+{% block title %}PhoneCab - Preferenze{% endblock %}
+{% block application %}
+  <form action="/prefs/save/" class="form-floating" id="prefs" method="POST" onSubmit="submitPrefs">
+    <div class="page-header"><h1><i class="zmdi zmdi-settings"></i> Generali</h1></div>
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-4">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Intestazione Stampe</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label normal filled">Dicitura</label>
+              <input class="form-control" name="header" type="text" value="{{ header }}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-phone"></i> Chiamata</h1></div>
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-6">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Abilitazione COVID19</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input
+                    {% if covid_general == "1" %}checked="checked"{% endif %}
+                    name="covid_general"
+                    type="checkbox"
+                    value="0">
+                    <strong>Consente la realizzazione di una chiamata al giorno laddove indicato nella scheda detenuto</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Durata minima chiamata</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">In funzione del credito disponibile e della destinazione richiesta (in secondi)</label>
+              <input
+              class="form-control"
+              name="min_duration_with_credit"
+              type="text"
+              value="{{ min_duration_with_credit }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Durata chiamata valida</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">Numero di secondi per considerare una chiamata come effettuata</label>
+              <input
+              class="form-control"
+              name="limit_duration"
+              type="text"
+              value="{{ limit_duration }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Avviso fine chiamata</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="control-label">Segnale acustico che anticipa la conclusione della chiamata (in secondi)</label>
+              <input class="form-control" name="alert_before_end" type="text" value="{{ alert_before_end }}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Chiamate Supplementari</span></div>
+          <div class="card-content">
+            <div class="form-group" style="margin-top:14px;">
+              <div class="checkbox" style="margin-top:-26px; margin-bottom:0px;">
+                <label>
+                  <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
+                  consenti modifica
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <input
+                  class="form-control disabled"
+                  name="default_additional_calls"
+                  type="text"
+                  value="{{ default_additional_calls }}"
+                  >
+                </div>
+                <div class="col-md-6">
+                  <label class="control-label">Valore predefinito</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-3">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Abilitazione COVID19</span></div>
+          <div class="card-content">
+            <div class="form-group" style="margin-top:14px;">
+              <div class="checkbox" style="margin-top:-26px; margin-bottom:0px;">
+                <label>
+                  <input {% if change_additional_calls == "1" %}checked="checked"{% endif %} name="change_additional_calls" type="checkbox" value="1">
+                  Mostra controllo COVID19 in Anagrafica
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+
+    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-alert-circle"></i> Limiti Giornalieri</h1></div>
+    <h4 style="margin-bottom:20px;">Il limite si applica alle utenze e non al numero di chiamate effettuate.
+      <br/>Il sistema consente comunque di completare i minuti residui verso utenze gi&agrave; contattate nel giorno.
+      <br/><br/>Usare <b>0</b> per NON limitare le chiamate.</h4>
+
+    <div class="row" style="margin-bottom:20px;">
+      <!-- <div class="col-md-2">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Chiamate Ordinarie</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <input class="form-control disabled" name="max_calls_per_day" type="text" value="{{ max_calls_per_day }}">
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="col-md-2">
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Chiamate Supplementari</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <input
+                class="form-control disabled"
+                name="limit_additional_calls_per_day"
+                type="text"
+                value="{{ limit_additional_calls_per_day }}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+      <table class="table table-striped table-full table-full-small">
+        <tr>
+          <th>Nr</th><th>Utenza Chiamata</th><th>Durata</th><th>Esito</th>
+        </tr>
+        <tr>
+          <td>1</td><td>010860XXX</td><td>6 min</td><td>OK</td>
+        </tr>
+        <tr>
+          <td>2</td><td>34789XXX</td><td>3 min</td><td>OK</td>
+        </tr>
+        <tr>
+          <td>3</td><td>001234XXX</td><td>-</td><td>RESPINTA</td>
+        </tr>
+        <tr>
+          <td>4</td><td>010860XXX</td><td>4 min</td><td>OK</td>
+        </tr>
+      </table>
+      <span>Esempio: tutte utenze abilitate alle Supplementari, limite impostato a <b>2</b></span>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-puzzle-piece"></i> Extra</h1></div>
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-4">
+        <!-- <div class="card bordered">
+          <div class="card-header"><span class="card-title">Equiparazione Avvocato</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input
+                    {% if ordinary_lawyer == "1" %}checked="checked"{% endif %}
+                    name="ordinary_lawyer"
+                    type="checkbox"
+                    value="1">
+                    Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini. (circolare n° GDAP-0177644-2010 del 28/04/2010)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="card bordered">
+          <div class="card-header"><span class="card-title">Limite Avvocato</span></div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input
+                    {% if lawyer_call_limit == "1" %}checked="checked"{% endif %}
+                    name="lawyer_call_limit"
+                    type="checkbox"
+                    value="0">
+                    <strong>1 chiamata al giorno per utenza</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bordered">
+          <div class="card-header">
+            <span class="card-title">Autorizzazione Speciale Primo Ingresso</span>
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input {% if enable_first_in == "1" %}checked="checked"{% endif %} name="enable_first_in" type="checkbox" value="1">
+                  Abilitando questa preferenza sar&agrave; possibile associare la modalit&agrave; a un&apos;utenza, rendendola una straordinaria ripetibile.
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="page-header"><h1><i class="zmdi zmdi-timer"></i> Tariffe</h1></div>
+    <div class="row">
+      {% for fare in fares %}
+        <div class="col-md-4">
+          <div class="card card-flip bordered">
+            <div class="card-header">
+              <div class="pull-right">
+                <a class="btn btn-link btn-flip btn-xs" href="javascript:;">
+                  <i class="zmdi zmdi-globe-alt"></i>
+                  Prefissi
+                </a>
+              </div>
+              <span class="card-title">
+                <i class="{{ fare.icon }}"></i>
+              {{ fare.direction }}</span>
+            </div>
+            <div class="card-content">
+              <input name="fare_id[]" type="hidden" value="{{fare.id}}">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="control-label">Scatto (&euro;)</label>
+                    <input class="form-control" name="fare_connection_charge[]" type="text" value="{{ fare.connection_charge|floatformat:4 }}">
+                  </div>
+                </div>
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="control-label">Tariffa (&euro;/minuto)</label>
+                    <input class="form-control" name="fare_fee_per_second[]" type="text" value="{{ fare.fee_per_second|per_minute|floatformat:4 }}">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-reveal">
+              <span class="card-title grey-text text-darken-4">Prefissi
+                <i class="zmdi zmdi-close pull-right btn-flip"></i>
+              </span>
+              <div class="form-group">
+                <input class="form-control" class="input-small" data-role="jquerytagsinput" data-category="{{ fare.direction }}" name="fare_prefix_list[]" size="5" tabindex="-1" type="text" value="{{ fare.prefix_list }}">
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <!-- .row -->
+    <div class="form-group" style="text-align:right;margin-bottom:20px">
+      <button class="btn btn-primary btn-lg" onClick="save()" type="button">Salva
+      <div class="ripple-wrapper"></div>
+      </button>
+    </div>
+  </form>
+{% endblock application %}
+{% block script %}
+  <script type="text/javascript">
+  //workaround to avoid ENTER submit the form
+  var reallySave = false;
+  var submitPrefs = function() {
+  return reallySave;
+  }
+  var save = function() {
+  reallySave = true;
+  $('#prefs').submit();
+  }
+  /* FORBID DUPLICATES */
+var fares = [{% for fare in fares %}'{{ fare.direction }}', {% endfor %}];
+$(function() {
+//bootstrap-tagsinput
+//http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
+$('[data-role="jquerytagsinput"]').tagsinput({
+confirmKeys: [
+13, 44
+],
+trimValue: true,
+cancelConfirmKeysOnEmpty: true
+});
+$('[data-role="jquerytagsinput"]').on('itemAdded itemRemoved', function(el) {
+$(el.target).attr('value', $(el.target).val());
+});
+$('[data-role="jquerytagsinput"]').on('itemAdded', function(event) {
+var target = $(event.currentTarget);
+var prefix = event.item;
+var match = new RegExp("\\b" + prefix + "\\b", "gi");
+var category = target.attr('data-category');
+for (var i = 0; i < fares.length; i++) {
+var fare = fares[i];
+if (category == fare) continue;
+var prefixes = $('[data-category=\'' + fare + '\']').val();
+if (!!prefixes.match(match)) {
+target.tagsinput('remove', prefix);
+showMessageBox("Errore", "Il prefisso è già presente nella direttrice '" + fare + "'", "alert-danger");
+return;
+}
+}
+});
+$('.bootstrap-tagsinput input').attr('tabindex', '-1'); //avoid TAB on tagsinput inputs
+});
+</script>
+{% endblock script %}

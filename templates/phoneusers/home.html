@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}PhoneCab - Anagrafiche{% endblock %}
+{% block stylesheet %}
+{% endblock stylesheet %}
+{% block application %}
+<div class="page-header">
+  {% if priv_anagrafica > 1 %}
+  <button class="action btn btn-primary"
+          onClick="Phoneuser.edit(0)"
+          data-toggle="tooltip" type="button">
+    <span class="zmdi zmdi-plus"></span> Nuova Anagrafica
+    <div class="ripple-wrapper"></div>
+  </button>
+  {% endif %}
+
+  <a href="/archives/phoneusers/" class="action btn btn-info" data-help="Mostra le anagrafiche archiviate">
+    <span class="zmdi zmdi-chevron-right"></span> Archivio
+    <div class="ripple-wrapper"></div>
+  </a>
+  <a href="/phoneusers/export/excel/" class="action btn btn-warning" data-help="Esporta le anagrafiche">
+    <span class="zmdi zmdi-download"></span> Esporta
+    <div class="ripple-wrapper"></div>
+  </a>
+  <h1><i class="zmdi zmdi-accounts"></i> Anagrafiche in corso</h1>
+  <!-- <p class="lead">Lista delle anagrafiche in corso, con lo stato attuale della scheda e la possibilit&agrave; di esportazione dei dati</p> -->
+</div>
+<div class="card bordered">
+    <div class="card-content">
+        <form method="GET">
+        <div style="float:right;">
+                <button class="btn filtra btn-success phoneuser-do-filter"><i class="zmdi zmdi-flash"></i> Filtra</button>
+                <a href="/phoneusers" class="btn filtra btn-info"><i class="zmdi zmdi-close"></i></a>
+        </div>
+        <span>
+            <label>Cognome, Matricola o Codice&nbsp;</label>
+            <input type="text" name="keyword" value="{{ d.keyword }}" maxlength="20" size="20" class="input-small">
+        </span>
+        <span>
+            <label>Stato&nbsp;</label>
+            <select name="enabled" style="width: 160px;">
+                <option value=""{% if d.enabled == ""%} selected{% endif %}>Tutte</option>
+                <option value="1"{% if d.enabled == "1"%} selected{% endif %}>Abilitate</option>
+                <option value="0"{% if d.enabled == "0"%} selected{% endif %}>Disabilitate</option>
+            </select>
+        </span>
+
+        </form>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="inner table" id="phoneusers">{{ phoneusers }}</div>
+</div>
+{% endblock application %}
+{% block script %}
+<script src="{% static "js/phoneuser.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock script %}

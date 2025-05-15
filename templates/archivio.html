@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+        <link rel="stylesheet" href="{% static "css/vendors/bootstrap.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/materialism/styles.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/vendors/ripples.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/vendors/material-design-iconic-font.min.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="{% static "css/phonecab/style.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
+    <title>Esportazione {{ title }}</title>
+</head>
+<body class="theme-template-dark theme-deep-orange alert-open alert-with-mat-grow-top-right">
+    <main>
+        <aside class="sidebar fixed" style="left: 0px; ">
+            <div class="brand-logo"><div class="phonecab-logo"><div class="phonecab-wave"><span>PHONECAB</span></div></div></div>
+            <ul class="menu-links">
+                <li> <a href="#phoneusers" data-menu="phoneusers"><i class="zmdi zmdi-accounts"></i>&nbsp;<span>Anagrafiche</span></a></li>
+                <li> <a href="#cdrs" data-menu="cdrs"><i class="zmdi zmdi-phone"></i>&nbsp;<span>Chiamate</span></a></li>
+                <li> <a href="#records" data-menu="records"><i class="zmdi zmdi-mic"></i>&nbsp;<span>Registrazioni</span></a></li>
+            </ul>
+        </aside>
+        <div class="main-container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+            <div class="navbar-header pull-left">
+              <button type="button" class="navbar-toggle pull-left m-15" data-activates=".sidebar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+              <!-- <ul class="breadcrumb">
+                <li><a href="#/">Materialism</a></li>
+                <li class="active">Cards</li>
+              </ul> -->
+            </div>
+            <ul class="nav navbar-nav navbar-right navbar-right-no-collapse">
+              <li class="logout pull-right">
+                                <form action="/logout/">
+                     <button type="submit" class="pointer btn btn-round-sm btn-link withoutripple"><i class="zmdi zmdi-sign-in"></i> </button>
+                                </form>
+              </li>
+              <li class="username pull-right">
+                    {{ phoneuser.get_full_name }}
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div class="main-content" autoscroll="true" bs-affix-target="" init-ripples="">
+    <section>
+        <div class="row-fluid application">
+            <div id="phoneuser">{{ phoneuser }}</div>
+            <div id="cdrs">{{ cdrs }}</div>
+            <div id="records">{{ records }}</div>
+
+        </div>
+    </section>
+ </div><!--#maincontent-->
+ </main>
+        <script src="{% static "js/vendors/jquery.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/bootstrap.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/moment.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/moment.locale.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/bootstrap-datetimepicker.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/sidenav.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/ripples.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/velocity.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "js/vendors/hammer.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/hammer.jquery.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/vendors/bootstrap-tagsinput.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "js/app.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% block script %}{% endblock script %}
+</body>
+</html>
