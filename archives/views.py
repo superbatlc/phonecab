@@ -29,7 +29,7 @@ def archive_phoneuser_home(request):
     variables['d'] = d
 
     return render_to_response(
-        'archives/phoneusers/home.html', RequestContext(request, variables))
+        'archives/phoneusers/home.html', variables)
 
 def archive_phoneuser_items(request):
     """Archived Phoneuser Items List"""
@@ -94,10 +94,10 @@ def archive_phoneuser_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'archives/phoneusers/table.html', RequestContext(request, variables))
+            'archives/phoneusers/table.html', variables)
 
     return render_to_string(
-        'archives/phoneusers/table.html', RequestContext(request, variables))
+        'archives/phoneusers/table.html', variables, request=request)
 
 @login_required
 def archive_phoneuser_view(request, archived_phoneuser_id):
@@ -115,7 +115,7 @@ def archive_phoneuser_view(request, archived_phoneuser_id):
     variables['whitelists'] = whitelists
     variables['credits'] = credits
     return render_to_response('archives/phoneusers/page.html',
-        RequestContext(request,variables))
+        variables)
 
 @login_required
 def archive_phoneuser_data(request, archived_phoneuser_id):
@@ -129,9 +129,9 @@ def archive_phoneuser_data(request, archived_phoneuser_id):
     variables['phoneuser'] = archived_phoneuser
     if request.is_ajax():
         return render_to_response(
-            'archives/phoneusers/phoneuser.html', RequestContext(request, variables))
+            'archives/phoneusers/phoneuser.html', variables)
     return render_to_string(
-        'archives/phoneusers/phoneuser.html', RequestContext(request, variables))
+        'archives/phoneusers/phoneuser.html', variables, request=request)
 
 @login_required
 def archive_whitelist_items(request, archived_phoneuser_id):
@@ -145,10 +145,10 @@ def archive_whitelist_items(request, archived_phoneuser_id):
 
     if request.is_ajax():
         return render_to_response(
-            'archives/phoneusers/whitelists/table.html', RequestContext(request, variables))
+            'archives/phoneusers/whitelists/table.html', variables)
 
     return render_to_string(
-        'archives/phoneusers/whitelists/table.html', RequestContext(request, variables))
+        'archives/phoneusers/whitelists/table.html', variables)
 
 @login_required
 def archive_credit_items(request, archived_phoneuser_id):
@@ -165,10 +165,10 @@ def archive_credit_items(request, archived_phoneuser_id):
 
     if request.is_ajax():
         return render_to_response(
-            'archives/phoneusers/credits/table.html', RequestContext(request, variables))
+            'archives/phoneusers/credits/table.html', variables)
 
     return render_to_string(
-        'archives/phoneusers/credits/table.html', RequestContext(request, variables))
+        'archives/phoneusers/credits/table.html', variables)
 
 @login_required
 def archive_cdrs_home(request):
@@ -190,7 +190,7 @@ def archive_cdrs_home(request):
     variables['data_fine_cal'] = data_fine_cal
 
     return render_to_response(
-        'archives/cdrs/home.html', RequestContext(request, variables))
+        'archives/cdrs/home.html', variables)
 
 @login_required
 def archive_cdrs_items(request):
@@ -306,10 +306,10 @@ def archive_cdrs_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'archives/cdrs/table.html', RequestContext(request, variables))
+            'archives/cdrs/table.html', variables)
 
     return render_to_string(
-        'archives/cdrs/table.html', RequestContext(request, variables))
+        'archives/cdrs/table.html', variables)
 
 @login_required
 def archive_records_home(request):
@@ -331,7 +331,7 @@ def archive_records_home(request):
     variables['data_fine_cal'] = data_fine_cal
 
     return render_to_response(
-        'archives/records/home.html', RequestContext(request, variables))
+        'archives/records/home.html', variables)
 
 @login_required
 def archive_records_items(request):
@@ -442,10 +442,10 @@ def archive_records_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'archives/records/table.html', RequestContext(request, variables))
+            'archives/records/table.html', variables)
 
     return render_to_string(
-        'archives/records/table.html', RequestContext(request, variables))
+        'archives/records/table.html', variables)
 
 @login_required
 def archive_cdrs_export_excel(request):

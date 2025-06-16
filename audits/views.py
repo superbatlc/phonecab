@@ -34,7 +34,7 @@ def audit_home(request):
     variables['data_fine_cal'] = data_fine_cal
 
     return render_to_response(
-        'audits/home.html', RequestContext(request, variables))
+        'audits/home.html', variables)
 
 
 def audit_items(request):
@@ -127,7 +127,7 @@ def audit_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'audits/table.html', RequestContext(request, variables))
+            'audits/table.html', variables)
 
     return render_to_string(
-        'audits/table.html', RequestContext(request, variables))
+        'audits/table.html', variables, request=request)

@@ -32,7 +32,7 @@ def phoneuser_home(request):
     variables['d'] = d
 
     return render_to_response(
-        'phoneusers/home.html', RequestContext(request, variables))
+        'phoneusers/home.html', variables)
 
 def phoneuser_items(request):
     """Phoneuser Items List"""
@@ -101,10 +101,10 @@ def phoneuser_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'phoneusers/table.html', RequestContext(request, variables))
+            'phoneusers/table.html', variables)
 
     return render_to_string(
-        'phoneusers/table.html', RequestContext(request, variables))
+        'phoneusers/table.html', variables, request=request)
 
 @login_required
 def phoneuser_view(request, phoneuser_id="0"):
@@ -123,7 +123,7 @@ def phoneuser_view(request, phoneuser_id="0"):
     variables['credits'] = credits
     variables['carcere'] = Pref.header()
     return render_to_response('phoneusers/page.html',
-        RequestContext(request,variables))
+        variables)
 
 @login_required
 def phoneuser_data(request, phoneuser_id="0"):
@@ -137,9 +137,9 @@ def phoneuser_data(request, phoneuser_id="0"):
     variables['phoneuser'] = phoneuser
     if request.is_ajax():
         return render_to_response(
-            'phoneusers/phoneuser_data.html', RequestContext(request, variables))
+            'phoneusers/phoneuser_data.html', variables)
     return render_to_string(
-        'phoneusers/phoneuser_data.html', RequestContext(request, variables))
+        'phoneusers/phoneuser_data.html', variables, request=request)
 
 @login_required
 def phoneuser_edit(request):
@@ -156,9 +156,9 @@ def phoneuser_edit(request):
         phoneuser.id = 0
 
     variables['phoneuser'] = phoneuser
-    variables['change_additional_calls'] = int(Pref.get("change_additional_calls"))
+    variables['change_additional_calls'] = int(Pref.get("change_additional_calls") or 0)
     return render_to_response('phoneusers/phoneuser.html',
-        RequestContext(request,variables))
+        variables)
 
 @login_required
 def phoneuser_save(request):
@@ -225,7 +225,7 @@ def phoneuser_save(request):
             return phoneuser_items(request)
         variables['phoneuser'] = phoneuser
         return render_to_response(
-            'phoneusers/phoneuser_data.html', RequestContext(request, variables))
+            'phoneusers/phoneuser_data.html', variables)
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
@@ -440,10 +440,10 @@ def whitelist_items(request, phoneuser_id):
 
     if request.is_ajax():
         return render_to_response(
-            'phoneusers/whitelists/table.html', RequestContext(request, variables))
+            'phoneusers/whitelists/table.html', variables)
 
     return render_to_string(
-        'phoneusers/whitelists/table.html', RequestContext(request, variables))
+        'phoneusers/whitelists/table.html', variables, request=request)
 
 @login_required
 def whitelist_edit(request):
@@ -460,7 +460,7 @@ def whitelist_edit(request):
             raise Http404
     else:
         whitelist = Whitelist()
-        whitelist.duration = int(Pref.get("threshold")) / 60
+        whitelist.duration = int(Pref.get("threshold") or 600) / 60
         if phoneuser_id:
             try:
                 whitelist.phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
@@ -756,9 +756,9 @@ def credit_items(request, phoneuser_id):
 
     if request.is_ajax():
         return render_to_response(
-            'phoneusers/credits/table.html', RequestContext(request, variables))
+            'phoneusers/credits/table.html', variables)
     return render_to_string(
-        'phoneusers/credits/table.html', RequestContext(request, variables))
+        'phoneusers/credits/table.html', variables, request=request)
 
 
 @login_required

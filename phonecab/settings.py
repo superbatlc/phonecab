@@ -6,7 +6,7 @@ from unipath import Path
 
 PROJECT_DIR = Path(__file__).ancestor(2)
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # Ubuntu installation need sudo to prefix root commands. Centos one do not.
@@ -20,12 +20,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': PROJECT_DIR.child('db.sqlite3'),
     }
 }
 
@@ -107,6 +103,24 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'phonecab.urls'
 
 WSGI_APPLICATION = 'phonecab.wsgi.application'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [PROJECT_DIR.child("templates")],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+# Keep the old setting for backwards compatibility with very old Django
 
 TEMPLATE_DIRS = [
     PROJECT_DIR.child("templates"),

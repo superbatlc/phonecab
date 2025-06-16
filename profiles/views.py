@@ -26,7 +26,7 @@ def profile_home(request):
     variables['d'] = d
 
     return render_to_response(
-        'profiles/home.html', RequestContext(request, variables))
+        'profiles/home.html', variables)
 
 def profile_items(request):
     """Phoneuser Items Table"""
@@ -89,10 +89,10 @@ def profile_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'profiles/table.html', RequestContext(request, variables))
+            'profiles/table.html', variables)
 
     return render_to_string(
-        'profiles/table.html', RequestContext(request, variables))
+        'profiles/table.html', variables, request=request)
 
 @login_required
 def profile_edit(request):

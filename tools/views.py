@@ -24,7 +24,7 @@ def tools_home(request):
             return redirect("/tools/?err=1&err_msg=%s" % format(e))
             #return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco"
     return render_to_response(
-        'tools/home.html', RequestContext(request, variables))
+        'tools/home.html', variables)
 
 
 def _tool_get_disk_usage(disk):

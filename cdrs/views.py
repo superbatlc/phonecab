@@ -41,7 +41,7 @@ def cdr_home(request):
     variables['data_fine_cal'] = data_fine_cal
 
     return render_to_response(
-        'cdrs/home.html', RequestContext(request, variables))
+        'cdrs/home.html', variables)
 
 def cdr_items(request):
     """CDR Items"""
@@ -160,10 +160,10 @@ def cdr_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'cdrs/table.html', RequestContext(request, variables))
+            'cdrs/table.html', variables)
 
     return render_to_string(
-        'cdrs/table.html', RequestContext(request, variables))
+        'cdrs/table.html', variables, request=request)
 
 
 @login_required

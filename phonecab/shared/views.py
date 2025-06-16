@@ -16,7 +16,7 @@ class PhonecabHomeView(View):
         variables['d'] = d
 
         return render_to_response(
-            self.template, RequestContext(request, variables))
+            self.template, variables)
 
 
 

@@ -1,6 +1,6 @@
 import json
 from urllib import urlencode
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -39,7 +39,7 @@ def record_home(request):
     variables['data_fine_cal'] = data_fine_cal
 
     return render_to_response(
-        'records/home.html', RequestContext(request, variables))
+        'records/home.html', variables)
 
 @login_required
 def record_items(request):
@@ -162,10 +162,10 @@ def record_items(request):
 
     if request.is_ajax():
         return render_to_response(
-            'records/table.html', RequestContext(request, variables))
+            'records/table.html', variables)
 
     return render_to_string(
-        'records/table.html', RequestContext(request, variables))
+        'records/table.html', variables, request=request)
 
 @login_required
 def record_action(request, action, item, record_id=0):
@@ -284,7 +284,7 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
 
 def record_show_warning(request):
     return render_to_response('records/show_warning.html',
-        RequestContext(request,{}))
+        {})
 
 
 def _single_record_remove(request, record_id):
