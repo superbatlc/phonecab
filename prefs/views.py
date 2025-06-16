@@ -153,7 +153,7 @@ def prefs_save(request):
         p.save(request.user)
 
     except Exception as e:
-        print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
+        print('%s (%s)' % (e, type(e))) # TODO gestire errore
 
     return redirect('/prefs/edit/')
 

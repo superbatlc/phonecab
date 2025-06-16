@@ -1,4 +1,4 @@
-from urllib import urlencode
+from urllib.parse import urlencode
 from django.http import Http404
 from django.http import HttpResponse
 from django.conf import settings
@@ -43,7 +43,7 @@ def archive_phoneuser_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -180,10 +180,10 @@ def archive_cdrs_home(request):
     variables['d'] = d
 
     data_inizio_cal = time.strftime("%d-%m-%Y")
-    if 'start_date' in d.keys():
+    if 'start_date' in list(d.keys()):
         data_inizio_cal = d['start_date']
     data_fine_cal = time.strftime("%d-%m-%Y")
-    if 'end_date' in d.keys():
+    if 'end_date' in list(d.keys()):
         data_fine_cal = d['end_date']
 
     variables['data_inizio_cal'] = data_inizio_cal
@@ -211,7 +211,7 @@ def archive_cdrs_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -321,10 +321,10 @@ def archive_records_home(request):
     variables['d'] = d
 
     data_inizio_cal = time.strftime("%d-%m-%Y")
-    if 'start_date' in d.keys():
+    if 'start_date' in list(d.keys()):
         data_inizio_cal = d['start_date']
     data_fine_cal = time.strftime("%d-%m-%Y")
-    if 'end_date' in d.keys():
+    if 'end_date' in list(d.keys()):
         data_fine_cal = d['end_date']
 
     variables['data_inizio_cal'] = data_inizio_cal
@@ -350,7 +350,7 @@ def archive_records_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -402,7 +402,7 @@ def archive_records_items(request):
                 item.whitelist = None
         except Exception as e:
             pass # TODO gestire
-            print "Errore nel recupero delle informazioni sulla chiamata"
+            print("Errore nel recupero delle informazioni sulla chiamata")
 
         if item.filename != '':
             item.filename = "/recordings/%s" % item.filename
@@ -505,7 +505,7 @@ def archive_cdrs_export_excel(request):
     for row, rowdata in enumerate(details):
         try:
             archived_phoneuser = ArchivedPhoneUser.objects.get(id=rowdata.archived_phoneuser_id)
-            print archived_phoneuser
+            print(archived_phoneuser)
             fullname = archived_phoneuser.get_full_name()
             matricola = archived_phoneuser.serial_no
             try:

@@ -13,7 +13,7 @@ class Pref(models.Model):
     key = models.CharField(max_length=40)
     value = models.CharField(max_length=40)
 
-    def __unicode__(self):
+    def __str__(self):
         return "key: %s - value: %s" % (self.key, self.value)
 
     def save(self, user, *args, **kwargs):
@@ -25,7 +25,7 @@ class Pref(models.Model):
                 % (user.username, self.key, str(self.value))
             audit.log(user=user, what=what)
         except Exception as e:
-            print '%s (%s)' % (e.message, type(e))
+            print('%s (%s)' % (e, type(e)))
 
     @staticmethod
     def get(key):
@@ -60,7 +60,7 @@ class Fare(models.Model):
     icon = models.CharField(max_length=50, default="zmdi zmdi-home")
     position = models.IntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         return "direction: %s" % self.direction
 
     @staticmethod
@@ -94,7 +94,7 @@ class Fare(models.Model):
             what = "Modifica direttrice %s : %s" % (self.direction, detail)
             audit.log(user=user, what=what)
         except Exception as e:
-            print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
+            print('%s (%s)' % (e, type(e))) # TODO gestire errore
 
     def _create_regexp_from_prefix_list(self):
         """Crea le espressioni regolari necessarie per associare una tariffa
@@ -117,7 +117,7 @@ class Extension(models.Model):
     extension = models.CharField(max_length=5, default='')
     name = models.CharField(max_length=20, default='')
 
-    def __unicode__(self):
+    def __str__(self):
         return "extension: %s - name: %s" % (self.extension, self.name)
 
     @staticmethod

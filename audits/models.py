@@ -16,7 +16,7 @@ class Audit(models.Model):
     what = models.TextField()
     params = models.CharField(max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return "[%s - %s] %s" % (self.when, self.user.username, self.what)
 
     def get_action(self, visualized_by_user=False):

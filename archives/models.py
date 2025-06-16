@@ -69,11 +69,13 @@ class ArchivedPhoneUser(models.Model):
     status = models.IntegerField(
         verbose_name="stato", choices=STATI, default=STATO_NUOVO)
 
-    def __unicode__(self):
-        return "%s %s (matricola %s codice %s)" % (self.last_name,
+    def __str__(self):
+        return "%s %s (matricola %s codice %s)" % (
+            self.last_name,
             self.first_name,
             self.serial_no,
-            self.pincode)
+            self.pincode,
+        )
 
     def get_full_name(self):
         return "%s %s" % (self.last_name, self.first_name)

@@ -83,11 +83,13 @@ class PhoneUser(models.Model):
             return items[0]
         return None
 
-    def __unicode__(self):
-        return "%s %s (matricola %s codice %s)" % (self.last_name,
-                                                   self.first_name,
-                                                   self.serial_no,
-                                                   self.pincode)
+    def __str__(self):
+        return "%s %s (matricola %s codice %s)" % (
+            self.last_name,
+            self.first_name,
+            self.serial_no,
+            self.pincode,
+        )
 
 
 class Whitelist(models.Model):
@@ -127,10 +129,12 @@ class Whitelist(models.Model):
     enabled = models.BooleanField(verbose_name="stato", default=False)
     additional = models.BooleanField(verbose_name="abilitazione a supplementari", default=False)
 
-    def __unicode__(self):
-        return "Numero %s (%s) relativo a %s" % (self.phonenumber,
+    def __str__(self):
+        return "Numero %s (%s) relativo a %s" % (
+            self.phonenumber,
             self.label,
-            self.phoneuser,)
+            self.phoneuser,
+        )
 
 
 class Credit(models.Model):

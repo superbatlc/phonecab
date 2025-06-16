@@ -13,7 +13,7 @@ def phonecab_login(request):
     if request.user.is_authenticated():
         return redirect('/phonecab/')
 
-    print "Entering phonecab_login..."
+    print("Entering phonecab_login...")
     
     if request.POST:
         username = request.POST.get('username')

@@ -1,6 +1,6 @@
 import json
 from django.http import Http404
-from urllib import urlencode
+from urllib.parse import urlencode
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -40,7 +40,7 @@ def profile_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']

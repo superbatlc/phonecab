@@ -1,6 +1,6 @@
 import json
 import datetime
-from urllib import urlencode
+from urllib.parse import urlencode
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
@@ -47,7 +47,7 @@ def phoneuser_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -642,7 +642,7 @@ def whitelist_check_extra(request):
 
         except Exception as e:
             values['err'] = 1
-            values['err_msg'] = e.message
+            values['err_msg'] = str(e)
     else:
         raise Http404
     return HttpResponse(json.dumps(values), content_type="application/json")
@@ -712,7 +712,7 @@ def credit_items(request, phoneuser_id):
         raise Http404
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
