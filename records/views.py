@@ -1,7 +1,7 @@
 import json
-from urllib import urlencode
-from django.http import HttpResponse
-from django.shortcuts import render_to_response, redirect
+from urllib.parse import urlencode
+from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.template import RequestContext
@@ -29,17 +29,16 @@ def record_home(request):
     variables['d'] = d
 
     data_inizio_cal = time.strftime("%d-%m-%Y")
-    if 'start_date' in d.keys():
+    if 'start_date' in list(d.keys()):
         data_inizio_cal = d['start_date']
     data_fine_cal = time.strftime("%d-%m-%Y")
-    if 'end_date' in d.keys():
+    if 'end_date' in list(d.keys()):
         data_fine_cal = d['end_date']
 
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'records/home.html', RequestContext(request, variables))
+    return render(request, 'records/home.html', variables)
 
 @login_required
 def record_items(request):
@@ -58,7 +57,7 @@ def record_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -161,11 +160,10 @@ def record_items(request):
     variables['query_string'] = urlencode(d)
 
     if request.is_ajax():
-        return render_to_response(
-            'records/table.html', RequestContext(request, variables))
+        return render(request, 'records/table.html', variables)
 
     return render_to_string(
-        'records/table.html', RequestContext(request, variables))
+        'records/table.html', variables, request=request)
 
 @login_required
 def record_action(request, action, item, record_id=0):
@@ -283,8 +281,7 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
     return response
 
 def record_show_warning(request):
-    return render_to_response('records/show_warning.html',
-        RequestContext(request,{}))
+    return render(request, 'records/show_warning.html', {})
 
 
 def _single_record_remove(request, record_id):

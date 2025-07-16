@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 #from django.http import Http404
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 #from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 #from django.core.exceptions import ObjectDoesNotExist
@@ -19,7 +19,7 @@ def prefs_edit(request):
     enable_first_in = Pref.get('enable_first_in')
     ordinary_lawyer = Pref.get('ordinary_lawyer')
     change_threshold = Pref.get('change_threshold')
-    threshold = int(Pref.get('threshold')) / 60
+    threshold = int(Pref.get('threshold') or 0) / 60
     change_additional_calls = Pref.get('change_additional_calls')
     default_additional_calls = Pref.get('default_additional_calls')
     max_calls_per_day = Pref.get('max_calls_per_day')
@@ -51,8 +51,7 @@ def prefs_edit(request):
 
     variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))
 
-    return render_to_response(
-        'prefs.html', RequestContext(request, variables))
+    return render(request, 'prefs.html', variables)
 
 
 @login_required
@@ -153,7 +152,7 @@ def prefs_save(request):
         p.save(request.user)
 
     except Exception as e:
-        print '%s (%s)' % (e.message, type(e)) # TODO gestire errore
+        print('%s (%s)' % (e, type(e))) # TODO gestire errore
 
     return redirect('/prefs/edit/')
 

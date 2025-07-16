@@ -83,11 +83,13 @@ class PhoneUser(models.Model):
             return items[0]
         return None
 
-    def __unicode__(self):
-        return "%s %s (matricola %s codice %s)" % (self.last_name,
-                                                   self.first_name,
-                                                   self.serial_no,
-                                                   self.pincode)
+    def __str__(self):
+        return "%s %s (matricola %s codice %s)" % (
+            self.last_name,
+            self.first_name,
+            self.serial_no,
+            self.pincode,
+        )
 
 
 class Whitelist(models.Model):
@@ -106,7 +108,7 @@ class Whitelist(models.Model):
         (SPECIAL_KIND, 'Primo ingresso'),
     )
 
-    phoneuser = models.ForeignKey(PhoneUser)
+    phoneuser = models.ForeignKey(PhoneUser, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
     duration = models.IntegerField(verbose_name="durata massima", default=600)
@@ -127,10 +129,12 @@ class Whitelist(models.Model):
     enabled = models.BooleanField(verbose_name="stato", default=False)
     additional = models.BooleanField(verbose_name="abilitazione a supplementari", default=False)
 
-    def __unicode__(self):
-        return "Numero %s (%s) relativo a %s" % (self.phonenumber,
+    def __str__(self):
+        return "Numero %s (%s) relativo a %s" % (
+            self.phonenumber,
             self.label,
-            self.phoneuser,)
+            self.phoneuser,
+        )
 
 
 class Credit(models.Model):
@@ -140,7 +144,7 @@ class Credit(models.Model):
 
     Modella le ricariche effettuate dal phoneuser
     """
-    phoneuser = models.ForeignKey(PhoneUser)
+    phoneuser = models.ForeignKey(PhoneUser, on_delete=models.CASCADE)
     recharge = models.DecimalField(
         verbose_name="ricarica", default=0, max_digits=5, decimal_places=2)
     recharge_date = models.DateTimeField(default=datetime.datetime.now)

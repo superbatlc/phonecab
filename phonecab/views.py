@@ -1,19 +1,20 @@
 import json
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.template import RequestContext
+
 from acls.models import Acl
 from helper.Helper import Helper
 from audits.models import Audit
 
 
 def phonecab_login(request):
-    if request.user.is_authenticated():
-        return redirect('/phonecab/', RequestContext(request, {}))
+    if request.user.is_authenticated:
+        return redirect('/phonecab/')
 
-    print "Entering phonecab_login..."
+    print("Entering phonecab_login...")
+    
     if request.POST:
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -29,27 +30,25 @@ def phonecab_login(request):
                 # dobbiamo verificare se utente ha privilegi cdr
                 privs = Acl.get_permissions_for_user(user.id, user.is_staff)
                 if privs['priv_cdr'] > 0:
-                    return redirect('/phonecab/', RequestContext(request, {}))
-                return redirect('/phoneusers/', RequestContext(request, {}))
+                    return redirect('/phonecab/')
+                return redirect('/phoneusers/')
             else:
-                return render_to_response(
-                    'registration/login.html',
-                    RequestContext(
-                        request,
-                        {
-                            'error': True,
-                            'err_msg': 'Utente non attivo'}))
-        else:
-            return render_to_response(
-                'registration/login.html',
-                RequestContext(
+                return render(
                     request,
+                    'registration/login.html',
                     {
                         'error': True,
-                        'err_msg': 'Le credenziali inserite non sono corrette.'}))
+                        'err_msg': 'Utente non attivo'})
+        else:
+            return render(
+                request,
+                'registration/login.html',
+                {
+                    'error': True,
+                    'err_msg': 'Le credenziali inserite non sono corrette.'})
     else:
-        return render_to_response(
-            'registration/login.html', RequestContext(request, {}))
+        return render(
+            request, 'registration/login.html', {})
 
 
 def phonecab_logout(request):
@@ -67,7 +66,7 @@ def phonecab_realtime(request):
     variables = Acl.get_permissions_for_user(request.user.id, request.user.is_staff)
     variables['actual_nightmode'] = Helper.get_nightmode()
 
-    return render_to_response('realtime.html', RequestContext(request, variables))
+    return render(request, 'realtime.html', variables)
 
 
 def phonecab_get_nightmode(request):

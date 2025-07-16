@@ -1,8 +1,8 @@
 import json
 import datetime
-from urllib import urlencode
+from urllib.parse import urlencode
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
@@ -31,8 +31,8 @@ def phoneuser_home(request):
     variables['phoneusers'] = phoneuser_items(request)
     variables['d'] = d
 
-    return render_to_response(
-        'phoneusers/home.html', RequestContext(request, variables))
+    return render(request,
+        'phoneusers/home.html', variables)
 
 def phoneuser_items(request):
     """Phoneuser Items List"""
@@ -47,7 +47,7 @@ def phoneuser_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -100,11 +100,10 @@ def phoneuser_items(request):
     variables['d'] = d
 
     if request.is_ajax():
-        return render_to_response(
-            'phoneusers/table.html', RequestContext(request, variables))
+        return render(request, 'phoneusers/table.html', variables)
 
     return render_to_string(
-        'phoneusers/table.html', RequestContext(request, variables))
+        'phoneusers/table.html', variables, request=request)
 
 @login_required
 def phoneuser_view(request, phoneuser_id="0"):
@@ -122,8 +121,7 @@ def phoneuser_view(request, phoneuser_id="0"):
     variables['whitelists'] = whitelists
     variables['credits'] = credits
     variables['carcere'] = Pref.header()
-    return render_to_response('phoneusers/page.html',
-        RequestContext(request,variables))
+    return render(request, 'phoneusers/page.html', variables)
 
 @login_required
 def phoneuser_data(request, phoneuser_id="0"):
@@ -136,10 +134,9 @@ def phoneuser_data(request, phoneuser_id="0"):
             raise Http404
     variables['phoneuser'] = phoneuser
     if request.is_ajax():
-        return render_to_response(
-            'phoneusers/phoneuser_data.html', RequestContext(request, variables))
+        return render(request, 'phoneusers/phoneuser_data.html', variables)
     return render_to_string(
-        'phoneusers/phoneuser_data.html', RequestContext(request, variables))
+        'phoneusers/phoneuser_data.html', variables, request=request)
 
 @login_required
 def phoneuser_edit(request):
@@ -156,9 +153,8 @@ def phoneuser_edit(request):
         phoneuser.id = 0
 
     variables['phoneuser'] = phoneuser
-    variables['change_additional_calls'] = int(Pref.get("change_additional_calls"))
-    return render_to_response('phoneusers/phoneuser.html',
-        RequestContext(request,variables))
+    variables['change_additional_calls'] = int(Pref.get("change_additional_calls") or 0)
+    return render(request, 'phoneusers/phoneuser.html', variables)
 
 @login_required
 def phoneuser_save(request):
@@ -224,8 +220,7 @@ def phoneuser_save(request):
         if is_new:
             return phoneuser_items(request)
         variables['phoneuser'] = phoneuser
-        return render_to_response(
-            'phoneusers/phoneuser_data.html', RequestContext(request, variables))
+        return render(request, 'phoneusers/phoneuser_data.html', variables)
     except Exception as e:
         return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
@@ -439,11 +434,10 @@ def whitelist_items(request, phoneuser_id):
     variables['whitelists'] = whitelists
 
     if request.is_ajax():
-        return render_to_response(
-            'phoneusers/whitelists/table.html', RequestContext(request, variables))
+        return render(request, 'phoneusers/whitelists/table.html', variables)
 
     return render_to_string(
-        'phoneusers/whitelists/table.html', RequestContext(request, variables))
+        'phoneusers/whitelists/table.html', variables, request=request)
 
 @login_required
 def whitelist_edit(request):
@@ -460,7 +454,7 @@ def whitelist_edit(request):
             raise Http404
     else:
         whitelist = Whitelist()
-        whitelist.duration = int(Pref.get("threshold")) / 60
+        whitelist.duration = int(Pref.get("threshold") or 600) / 60
         if phoneuser_id:
             try:
                 whitelist.phoneuser = PhoneUser.objects.get(pk=phoneuser_id)
@@ -472,7 +466,7 @@ def whitelist_edit(request):
     variables['enable_first_in'] = Pref.get("enable_first_in")
     variables['change_threshold'] = Pref.get("change_threshold")
 
-    return render_to_response('phoneusers/whitelists/whitelist.html', variables)
+    return render(request, 'phoneusers/whitelists/whitelist.html', variables)
 
 @login_required
 def whitelist_save(request):
@@ -642,7 +636,7 @@ def whitelist_check_extra(request):
 
         except Exception as e:
             values['err'] = 1
-            values['err_msg'] = e.message
+            values['err_msg'] = str(e)
     else:
         raise Http404
     return HttpResponse(json.dumps(values), content_type="application/json")
@@ -712,7 +706,7 @@ def credit_items(request, phoneuser_id):
         raise Http404
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -755,16 +749,15 @@ def credit_items(request, phoneuser_id):
     variables['phoneuser_id'] = phoneuser_id
 
     if request.is_ajax():
-        return render_to_response(
-            'phoneusers/credits/table.html', RequestContext(request, variables))
+        return render(request, 'phoneusers/credits/table.html', variables)
     return render_to_string(
-        'phoneusers/credits/table.html', RequestContext(request, variables))
+        'phoneusers/credits/table.html', variables, request=request)
 
 
 @login_required
 def credit_new(request):
     variables = {'phoneuser_id': request.POST.get("phoneuser_id", "0")}
-    return render_to_response('phoneusers/credits/credit.html', variables)
+    return render(request, 'phoneusers/credits/credit.html', variables)
 
 
 @login_required
@@ -825,7 +818,7 @@ def credit_export(request, phoneuser_id=0):
             'tot_cost': tot_cost,
         }
 
-        return render_to_response('phoneusers/credits/report.html', variables)
+        return render(request, 'phoneusers/credits/report.html', variables)
     else:
         raise Http404
 
@@ -847,6 +840,6 @@ def credit_print_recharge(request, credit_id):
             'credit': credit,
         }
 
-        return render_to_response('phoneusers/credits/print_receipt.html', variables)
+        return render(request, 'phoneusers/credits/print_receipt.html', variables)
     else:
         raise Http404

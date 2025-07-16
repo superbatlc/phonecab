@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import re_path
 from .views import *
 
 urlpatterns = [
-    url(r'^prefs/edit/$', prefs_edit),
-    url(r'^prefs/save/$', prefs_save)
+    re_path(r'^prefs/edit/$', prefs_edit),
+    re_path(r'^prefs/save/$', prefs_save)
 ]

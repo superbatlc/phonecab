@@ -1,6 +1,6 @@
 import os
 from django.conf import settings
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
@@ -23,8 +23,7 @@ def tools_home(request):
         except Exception as e:
             return redirect("/tools/?err=1&err_msg=%s" % format(e))
             #return redirect("/tools/?err=1&err_msg=Impossibile recuperare il valore di occupazione disco"
-    return render_to_response(
-        'tools/home.html', RequestContext(request, variables))
+    return render(request, 'tools/home.html', variables)
 
 
 def _tool_get_disk_usage(disk):

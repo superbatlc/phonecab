@@ -1,0 +1,93 @@
+# docker-compose.yml
+version: "3"
+
+networks:
+  phonecab-network:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
+  db_data:
+
+services:
+  database:
+    image: mysql:8.0
+    platform: linux/arm64
+    container_name: phonecab_database
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+    networks:
+      phonecab-network:
+        aliases:
+          - phonecab-network
+
+  #---------------------
+  # Backend
+  #---------------------
+  phonecab-server:
+    container_name: phonecab_server
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: restart/phonecab:${BE_IMAGE_VERSION:-3.8}
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-dev}
+      - DB_ENGINE=${DB_ENGINE:-sqlite3}
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_NAME=${DB_NAME:-phonecab}
+      - DB_USER=${DB_USER:-phonecab}
+      - DB_PASSWORD=${DB_PASSWORD:-phonecab}
+      - DB_PORT=${DB_PORT:-5432}
+      - DEBUG=${DEBUG:-true}
+      - DJANGO_PORT=${DJANGO_PORT:-8001}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+    volumes:
+      - .:/phonecab
+    tty: true
+    stdin_open: true
+    networks:
+      phonecab-network:
+        aliases:
+          - phonecab-network
+    ports:
+      - "8001:${DJANGO_PORT:-8001}"
+
+
+  backup:
+    container_name: phonecab_backup_service
+    # In production, it is advised to lock your image tag to a proper
+    # release version instead of using `latest`.
+    # Check https://github.com/offen/docker-volume-backup/releases
+    # for a list of available releases.
+    image: offen/docker-volume-backup:latest
+    restart: always
+    env_file: ./backup.env # see below for configuration reference
+    volumes:
+      - db_data:/var/lib/mysql
+      # Mounting the Docker socket allows the script to stop and restart
+      # the container during backup and to access the container labels to
+      # specify custom commands. You can omit this if you don't want to
+      # stop the container or run custom commands. In case you need to
+      # proxy the socket, you can also provide a location by setting
+      # `DOCKER_HOST` in the container
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+      # Local backup copy
+      - ./bkps:/archive

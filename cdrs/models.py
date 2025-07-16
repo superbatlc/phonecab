@@ -62,10 +62,12 @@ class SuperbaCDR(models.Model):
         db_table = 'superbacdr'
 
 
-    def __unicode__(self):
-        return "Chiamata da %s a %s del %s" % (self.src,
-                                               self.dst,
-                                               self.calldate)
+    def __str__(self):
+        return "Chiamata da %s a %s del %s" % (
+            self.src,
+            self.dst,
+            self.calldate,
+        )
 
 
 

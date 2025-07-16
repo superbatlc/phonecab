@@ -69,11 +69,13 @@ class ArchivedPhoneUser(models.Model):
     status = models.IntegerField(
         verbose_name="stato", choices=STATI, default=STATO_NUOVO)
 
-    def __unicode__(self):
-        return "%s %s (matricola %s codice %s)" % (self.last_name,
+    def __str__(self):
+        return "%s %s (matricola %s codice %s)" % (
+            self.last_name,
             self.first_name,
             self.serial_no,
-            self.pincode)
+            self.pincode,
+        )
 
     def get_full_name(self):
         return "%s %s" % (self.last_name, self.first_name)
@@ -194,7 +196,7 @@ class ArchivedWhitelist(models.Model):
         (SPECIAL_KIND, 'Primo ingresso'),
     )
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
     duration = models.IntegerField(verbose_name="durata massima")
@@ -226,7 +228,7 @@ class ArchivedCredit(models.Model):
     This class stores the credits of an archived phoneuser
     """
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     recharge = models.DecimalField(
         verbose_name="ricarica", default=0, max_digits=5, decimal_places=2)
     recharge_date = models.DateTimeField()
@@ -252,7 +254,7 @@ class ArchivedDetail(models.Model):
     This class stores the cdr details of an archived phoneuser
     """
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     calldate = models.DateTimeField()
     src = models.CharField(max_length=80, default='')
     dst = models.CharField(max_length=80, default='')
@@ -301,7 +303,7 @@ class ArchivedRecord(models.Model):
     This class stores the records of an archived phoneuser
     """
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     calldate = models.DateTimeField()
     pincode = models.CharField(max_length=10, default='')
     uniqueid = models.CharField(max_length=32, default='')

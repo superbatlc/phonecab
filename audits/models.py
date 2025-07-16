@@ -11,12 +11,12 @@ class Audit(models.Model):
     Consente di registrare tutte le azioni che vengono compiute
     """
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     when = models.DateTimeField(auto_now_add=True)
     what = models.TextField()
     params = models.CharField(max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return "[%s - %s] %s" % (self.when, self.user.username, self.what)
 
     def get_action(self, visualized_by_user=False):

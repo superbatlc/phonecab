@@ -1,0 +1,73 @@
+/***************login page*/
+/*.pattern{
+	background:#FDFAF3 url(../img/diagEFEDE1.png) repeat;
+	margin: 100px;
+}
+img.logo{
+	margin: -50px 0 40px;
+}
+.control-group {
+    margin: 0 auto;
+    width: 500px;
+}
+
+.well {
+    background-color: #FDFAF3;
+    border: 1px solid red;
+    border-radius: 4px 4px 4px 4px;
+    -moz-box-shadow: -2px -2px 12px #CCCCCC;
+ -webkit-box-shadow: -2px -2px 12px #CCCCCC;
+         box-shadow: -2px -2px 12px #CCCCCC;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
+}*/
+
+.page-login {
+	background: #eee;
+}
+.login-background {
+	font-size: 100em;
+	color: white;
+	/* position: absolute; */
+	line-height: 0;
+	/* left: 18%; */
+	/* top: -120%; */
+	height: 1200px;
+	width: 1200px;
+	/* background: black; */
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -700px;
+	margin-left: -500px;
+}
+
+input:-webkit-autofill {
+	background-color:white !important;
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+
+.superba {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+.superba img {
+    width: 250px;
+}
+
+.superba span {
+    color: red;
+}

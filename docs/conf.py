@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PhoneCab'
-copyright = u'2014, SuperbaTLC'
+project = 'PhoneCab'
+copyright = '2014, SuperbaTLC'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -186,8 +186,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'PhoneCab.tex', u'PhoneCab Documentation',
-   u'SuperbaTLC', 'manual'),
+  ('index', 'PhoneCab.tex', 'PhoneCab Documentation',
+   'SuperbaTLC', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -216,8 +216,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'phonecab', u'PhoneCab Documentation',
-     [u'SuperbaTLC'], 1)
+    ('index', 'phonecab', 'PhoneCab Documentation',
+     ['SuperbaTLC'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -230,8 +230,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PhoneCab', u'PhoneCab Documentation',
-   u'SuperbaTLC', 'PhoneCab', 'One line description of project.',
+  ('index', 'PhoneCab', 'PhoneCab Documentation',
+   'SuperbaTLC', 'PhoneCab', 'One line description of project.',
    'Miscellaneous'),
 ]
 

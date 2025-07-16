@@ -1,7 +1,7 @@
 import json
-from urllib import urlencode
+from urllib.parse import urlencode
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
@@ -24,17 +24,16 @@ def audit_home(request):
     variables['d'] = d
 
     data_inizio_cal = time.strftime("%d-%m-%Y")
-    if 'start_date' in d.keys():
+    if 'start_date' in list(d.keys()):
         data_inizio_cal = d['start_date']
     data_fine_cal = time.strftime("%d-%m-%Y")
-    if 'end_date' in d.keys():
+    if 'end_date' in list(d.keys()):
         data_fine_cal = d['end_date']
 
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'audits/home.html', RequestContext(request, variables))
+    return render(request, 'audits/home.html', variables)
 
 
 def audit_items(request):
@@ -55,7 +54,7 @@ def audit_items(request):
     d = request.GET.dict()
 
     page = 1
-    if 'page' in d.keys():
+    if 'page' in list(d.keys()):
         page = int(d['page'])
         # elimino la pagina dal dizionario
         del d['page']
@@ -126,8 +125,7 @@ def audit_items(request):
     variables['d'] = d
 
     if request.is_ajax():
-        return render_to_response(
-            'audits/table.html', RequestContext(request, variables))
+        return render(request, 'audits/table.html', variables)
 
     return render_to_string(
-        'audits/table.html', RequestContext(request, variables))
+        'audits/table.html', variables, request=request)

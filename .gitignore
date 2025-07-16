@@ -1,6 +1,12 @@
 # Virtual enviroment folder
 venv/
 
+# Env
+.env
+
+# Local backup
+bkps/
+
 settings_local.py
 config_local.js
 .DS_Store

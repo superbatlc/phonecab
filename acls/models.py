@@ -35,7 +35,7 @@ class Acl(models.Model):
         (PERMISSION_WRITING, ('Scrittura')),
     )
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     function = models.CharField(max_length=1, choices=FUNCTION, blank=False)
     permission = models.CharField(
         max_length=1, choices=PERMISSION, blank=False)
