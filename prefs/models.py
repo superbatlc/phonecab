@@ -31,11 +31,9 @@ class Pref(models.Model):
     def get(key):
         """Returns the value corresponding to key"""
         try:
-            pref = Pref.objects.get(key=key)
-            return pref.value
-        except ObjectDoesNotExist:
-            return None
-        except MultipleObjectsReturned:
+            pref = Pref.objects.filter(key=key).order_by('id').first()
+            return pref.value if pref else None
+        except Exception:
             return None
 
     @staticmethod
@@ -129,8 +127,3 @@ class Extension(models.Model):
         except:
             name = extension
         return name
-
-
-
-
-

@@ -9,9 +9,15 @@ var Cdr = {
             data.id = id;
             data.valid = newstatus;
 
+            var url = '/cdrs/changevalid/';
+            // Preserve current filters when refreshing the table after a validity toggle
+            if (window.location.search) {
+                url += window.location.search;
+            }
+
             // data.params = params; //# TODO pass query params
 
-            requestData("POST", "html", '/cdrs/changevalid/', {data : data},
+            requestData("POST", "html", url, {data : data},
                 function(response){
                     updateDOM('.cdrs', response);
                     showMessageBox("Conferma", "Modifica stato chiamata effettuata con successo.", "green");
@@ -24,6 +30,3 @@ var Cdr = {
         return;
     },
 }
-
-
-

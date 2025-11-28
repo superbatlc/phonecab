@@ -2,7 +2,7 @@
 General Url pattern
 """
 
-from django.conf.urls import url, include
+from django.urls import re_path, include
 from django.contrib import admin
 from django.conf import settings
 from django.views.static import serve
@@ -21,19 +21,19 @@ from logs.urls import urlpatterns as logs_urlpatterns
 from phonecab.views import *
 
 urlpatterns = [
-    url(r'^$', phonecab_login),
-    url(r'^login/$', phonecab_login),
-    url(r'^logout/$', phonecab_logout),
-    url(r'^phonecab/$', phonecab_realtime),
-    url(r'^nightmode/$', phonecab_get_nightmode),
-    url(r'^nightmode/(?P<mode>.*)$', phonecab_set_nightmode),
+    re_path(r'^$', phonecab_login),
+    re_path(r'^login/$', phonecab_login),
+    re_path(r'^logout/$', phonecab_logout),
+    re_path(r'^phonecab/$', phonecab_realtime),
+    re_path(r'^nightmode/$', phonecab_get_nightmode),
+    re_path(r'^nightmode/(?P<mode>.*)$', phonecab_set_nightmode),
 
-    url(r'^recordings/(?P<path>.*)$', serve,
+    re_path(r'^recordings/(?P<path>.*)$', serve,
         {'document_root': settings.RECORDS_ROOT}),
 
-    url(r'^admin/doc/',
+    re_path(r'^admin/doc/',
         include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    re_path(r'^admin/', admin.site.urls),
 ]
 
 urlpatterns += phoneusers_urlpatterns

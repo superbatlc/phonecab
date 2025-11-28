@@ -82,19 +82,34 @@ class ArchivedPhoneUser(models.Model):
 
     def copy(self):
         """Copys values between phoneuser and archivephoneuser"""
-        self.first_name = self.phoneuser.first_name
-        self.last_name = self.phoneuser.last_name
-        self.pincode = self.phoneuser.pincode
-        self.serial_no = self.phoneuser.serial_no
+        # Clip strings to field size to avoid MySQL "Data too long" errors when
+        # the source value is wider than the archive column.
+        self.first_name = self._clip(self.phoneuser.first_name, "first_name")
+        self.last_name = self._clip(self.phoneuser.last_name, "last_name")
+        self.pincode = self._clip(self.phoneuser.pincode, "pincode")
+        self.serial_no = self._clip(self.phoneuser.serial_no, "serial_no")
         self.listening_enabled = self.phoneuser.listening_enabled
         self.recording_enabled = self.phoneuser.recording_enabled
-        self.language = self.phoneuser.language
+        self.language = self._clip(self.phoneuser.language, "language")
         self.vipaccount = self.phoneuser.vipaccount
         self.four_bis_limited = self.phoneuser.four_bis_limited
         self.additional_calls = self.phoneuser.additional_calls
         self.additional_due_date = self.phoneuser.additional_due_date
         self.balance = self.phoneuser.balance
         self.status = self.phoneuser.status
+
+    def _clip(self, value, field_name):
+        """
+        Trim string values to the destination field max_length.
+        Useful when source data is longer than the archived table allows.
+        """
+        if value is None:
+            return value
+
+        max_length = self._meta.get_field(field_name).max_length
+        if max_length and len(value) > max_length:
+            return value[:max_length]
+        return value
 
     def delete_related(self):
         self.phoneuser.delete()
@@ -196,7 +211,7 @@ class ArchivedWhitelist(models.Model):
         (SPECIAL_KIND, 'Primo ingresso'),
     )
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
     duration = models.IntegerField(verbose_name="durata massima")
@@ -228,7 +243,7 @@ class ArchivedCredit(models.Model):
     This class stores the credits of an archived phoneuser
     """
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     recharge = models.DecimalField(
         verbose_name="ricarica", default=0, max_digits=5, decimal_places=2)
     recharge_date = models.DateTimeField()
@@ -254,7 +269,7 @@ class ArchivedDetail(models.Model):
     This class stores the cdr details of an archived phoneuser
     """
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     calldate = models.DateTimeField()
     src = models.CharField(max_length=80, default='')
     dst = models.CharField(max_length=80, default='')
@@ -303,7 +318,7 @@ class ArchivedRecord(models.Model):
     This class stores the records of an archived phoneuser
     """
 
-    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser)
+    archived_phoneuser = models.ForeignKey(ArchivedPhoneUser, on_delete=models.CASCADE)
     calldate = models.DateTimeField()
     pincode = models.CharField(max_length=10, default='')
     uniqueid = models.CharField(max_length=32, default='')

@@ -85,17 +85,36 @@ class Helper(object):
 
         return detail
 
+    # @staticmethod
+    # def get_nightmode():
+    #     """Restituisce lo stato GIORNO/NOTTE del sistema"""
+    #     import os
+    #     from django.conf import settings
+    #     value = 1
+
+    #     if not settings.DEBUG:
+    #         cmd = '/usr/sbin/asterisk -rx "database get night dbnightman"'
+    #         if settings.USE_SUDO:
+    #             cmd = "sudo %s" % cmd
+    #         output = os.popen(cmd).read()
+    #         value = int(output[7:8])
+    #     return value
+
     @staticmethod
     def get_nightmode():
         """Restituisce lo stato GIORNO/NOTTE del sistema"""
-        import os
+        import requests
         from django.conf import settings
+
         value = 1
 
-        if not settings.DEBUG:
-            cmd = '/usr/sbin/asterisk -rx "database get night dbnightman"'
-            if settings.USE_SUDO:
-                cmd = "sudo %s" % cmd
-            output = os.popen(cmd).read()
-            value = int(output[7:8])
+        try:
+            base = settings.REMOTE_TOOLS_SERVER
+            resp = requests.get(f"{base}/get_nightmode", timeout=10).json()
+            value = int(resp.get("nightmode", 1))
+        except Exception as e:
+            # In caso di errore, ritorna valore di default
+            print(f"Errore nel recupero nightmode: {e}")
+            value = 1
+
         return value

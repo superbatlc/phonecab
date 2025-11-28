@@ -3,7 +3,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import Q
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
@@ -28,8 +28,7 @@ def archive_phoneuser_home(request):
     variables['phoneusers'] = archive_phoneuser_items(request)
     variables['d'] = d
 
-    return render_to_response(
-        'archives/phoneusers/home.html', variables)
+    return render(request, 'archives/phoneusers/home.html', variables)
 
 def archive_phoneuser_items(request):
     """Archived Phoneuser Items List"""
@@ -93,8 +92,7 @@ def archive_phoneuser_items(request):
     variables['d'] = d
 
     if request.is_ajax():
-        return render_to_response(
-            'archives/phoneusers/table.html', variables)
+        return render(request, 'archives/phoneusers/table.html', variables)
 
     return render_to_string(
         'archives/phoneusers/table.html', variables, request=request)
@@ -114,8 +112,7 @@ def archive_phoneuser_view(request, archived_phoneuser_id):
     variables['phoneuser'] = phoneuser
     variables['whitelists'] = whitelists
     variables['credits'] = credits
-    return render_to_response('archives/phoneusers/page.html',
-        variables)
+    return render(request, 'archives/phoneusers/page.html', variables)
 
 @login_required
 def archive_phoneuser_data(request, archived_phoneuser_id):
@@ -128,8 +125,7 @@ def archive_phoneuser_data(request, archived_phoneuser_id):
             raise Http404
     variables['phoneuser'] = archived_phoneuser
     if request.is_ajax():
-        return render_to_response(
-            'archives/phoneusers/phoneuser.html', variables)
+        return render(request, 'archives/phoneusers/phoneuser.html', variables)
     return render_to_string(
         'archives/phoneusers/phoneuser.html', variables, request=request)
 
@@ -144,8 +140,7 @@ def archive_whitelist_items(request, archived_phoneuser_id):
     variables['whitelists'] = whitelists
 
     if request.is_ajax():
-        return render_to_response(
-            'archives/phoneusers/whitelists/table.html', variables)
+        return render(request, 'archives/phoneusers/whitelists/table.html', variables)
 
     return render_to_string(
         'archives/phoneusers/whitelists/table.html', variables)
@@ -164,8 +159,7 @@ def archive_credit_items(request, archived_phoneuser_id):
     variables['archived_phoneuser_id'] = archived_phoneuser_id
 
     if request.is_ajax():
-        return render_to_response(
-            'archives/phoneusers/credits/table.html', variables)
+        return render(request, 'archives/phoneusers/credits/table.html', variables)
 
     return render_to_string(
         'archives/phoneusers/credits/table.html', variables)
@@ -189,8 +183,7 @@ def archive_cdrs_home(request):
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'archives/cdrs/home.html', variables)
+    return render(request, 'archives/cdrs/home.html', variables)
 
 @login_required
 def archive_cdrs_items(request):
@@ -305,8 +298,7 @@ def archive_cdrs_items(request):
     variables['archived_phoneuser_id'] = archived_phoneuser_id
 
     if request.is_ajax():
-        return render_to_response(
-            'archives/cdrs/table.html', variables)
+        return render(request, 'archives/cdrs/table.html', variables)
 
     return render_to_string(
         'archives/cdrs/table.html', variables)
@@ -330,8 +322,7 @@ def archive_records_home(request):
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'archives/records/home.html', variables)
+    return render(request, 'archives/records/home.html', variables)
 
 @login_required
 def archive_records_items(request):
@@ -346,6 +337,7 @@ def archive_records_items(request):
     end_time = request.GET.get("end_time", None)
     archived_phoneuser_id = request.GET.get("archived_phoneuser_id", "")
     pincode = request.GET.get("pincode", "")
+    dst = request.GET.get("dst", "")
     page = int(request.GET.get("page", "1"))
     d = request.GET.dict()
 
@@ -381,7 +373,20 @@ def archive_records_items(request):
         q_obj.add(Q(calldate__lte=end_date), Q.AND)
 
     items_list = ArchivedRecord.objects.filter(q_obj).order_by('-calldate')
-    total_items = items_list.count()
+
+    if dst != '':
+        filtered_item_list = []
+        for item in items_list:
+            try:
+                detail = ArchivedDetail.objects.get(uniqueid=item.uniqueid)
+                if dst == detail.dst:
+                    filtered_item_list.append(item)
+            except:
+                pass
+        items_list = filtered_item_list
+        total_items = len(items_list)
+    else:
+        total_items = items_list.count()
 
     items, items_range, items_next_page = Helper.make_pagination(
         items_list, page, items_per_page)
@@ -441,8 +446,7 @@ def archive_records_items(request):
     variables['query_string'] = urlencode(d)
 
     if request.is_ajax():
-        return render_to_response(
-            'archives/records/table.html', variables)
+        return render(request, 'archives/records/table.html', variables)
 
     return render_to_string(
         'archives/records/table.html', variables)
@@ -659,7 +663,7 @@ def archive_credit_print_recharge(request, archived_credit_id):
             'credit': archived_credit,
         }
 
-        return render_to_response('phoneusers/credits/print_receipt.html', variables)
+        return render(request, 'phoneusers/credits/print_receipt.html', variables)
     else:
         raise Http404
 
@@ -687,6 +691,6 @@ def archive_credit_export(request, archived_phoneuser_id=0):
             'tot_cost': tot_cost,
         }
 
-        return render_to_response('phoneusers/credits/report.html', variables)
+        return render(request, 'phoneusers/credits/report.html', variables)
     else:
         raise Http404

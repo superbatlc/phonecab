@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 #from django.http import Http404
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 #from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 #from django.core.exceptions import ObjectDoesNotExist
@@ -50,9 +50,7 @@ def prefs_edit(request):
     }
 
     variables.update(Acl.get_permissions_for_user(request.user.id, request.user.is_staff))
-
-    return render_to_response(
-        'prefs.html', variables)
+    return render(request, 'prefs.html', variables)
 
 
 @login_required
@@ -82,12 +80,12 @@ def prefs_save(request):
         enable_first_in = request.POST.get("enable_first_in", "0")
         ordinary_lawyer = request.POST.get("ordinary_lawyer", "0")
         change_threshold = request.POST.get("change_threshold", "0")
-        threshold = int(request.POST.get("threshold", 10)) * 60
+        threshold = to_int(request.POST.get("threshold", 10), 10) * 60
         change_additional_calls = request.POST.get("change_additional_calls", "0")
-        default_additional_calls = int(request.POST.get("default_additional_calls", "0"))
-        max_calls_per_day = int(request.POST.get("max_calls_per_day", "0"))
-        lawyer_call_limit = int(request.POST.get("lawyer_call_limit", "0"))
-        limit_additional_calls_per_day = int(request.POST.get("limit_additional_calls_per_day", "0"))
+        default_additional_calls = to_int(request.POST.get("default_additional_calls", "0"))
+        max_calls_per_day = to_int(request.POST.get("max_calls_per_day", "0"))
+        lawyer_call_limit = to_int(request.POST.get("lawyer_call_limit", "0"))
+        limit_additional_calls_per_day = to_int(request.POST.get("limit_additional_calls_per_day", "0"))
         header = request.POST.get("header", "0")
         limit_duration = request.POST.get("limit_duration", "0")
         covid_general = request.POST.get("covid_general", "0")
@@ -96,61 +94,24 @@ def prefs_save(request):
         # p.value = min_duration
         # p.save(request.user)
 
-        p = Pref.objects.get(key='min_duration_with_credit')
-        p.value = min_duration_with_credit
-        p.save(request.user)
-
-        p = Pref.objects.get(key='alert_before_end')
-        p.value = alert_before_end
-        p.save(request.user)
-
-        p = Pref.objects.get(key='enable_first_in')
-        p.value = enable_first_in
-        p.save(request.user)
-
-        p = Pref.objects.get(key='ordinary_lawyer')
-        p.value = ordinary_lawyer
-        p.save(request.user)
-
-        p = Pref.objects.get(key='change_threshold')
-        p.value = change_threshold
-        p.save(request.user)
-
-        p = Pref.objects.get(key='threshold')
-        p.value = threshold
-        p.save(request.user)
-
-        p = Pref.objects.get(key='change_additional_calls')
-        p.value = change_additional_calls
-        p.save(request.user)
-
-        p = Pref.objects.get(key='default_additional_calls')
-        p.value = default_additional_calls
-        p.save(request.user)
+        set_pref('min_duration_with_credit', min_duration_with_credit, request.user)
+        set_pref('alert_before_end', alert_before_end, request.user)
+        set_pref('enable_first_in', enable_first_in, request.user)
+        set_pref('ordinary_lawyer', ordinary_lawyer, request.user)
+        set_pref('change_threshold', change_threshold, request.user)
+        set_pref('threshold', threshold, request.user)
+        set_pref('change_additional_calls', change_additional_calls, request.user)
+        set_pref('default_additional_calls', default_additional_calls, request.user)
 
         # p = Pref.objects.get(key='max_calls_per_day')
         # p.value = max_calls_per_day
         # p.save(request.user)
 
-        p = Pref.objects.get(key='lawyer_call_limit')
-        p.value = lawyer_call_limit
-        p.save(request.user)
-
-        p = Pref.objects.get(key='limit_additional_calls_per_day')
-        p.value = limit_additional_calls_per_day
-        p.save(request.user)
-
-        p = Pref.objects.get(key='limit_duration')
-        p.value = limit_duration
-        p.save(request.user)
-
-        p = Pref.objects.get(key='covid_general')
-        p.value = covid_general
-        p.save(request.user)
-
-        p = Pref.objects.get(key='header')
-        p.value = header
-        p.save(request.user)
+        set_pref('lawyer_call_limit', lawyer_call_limit, request.user)
+        set_pref('limit_additional_calls_per_day', limit_additional_calls_per_day, request.user)
+        set_pref('limit_duration', limit_duration, request.user)
+        set_pref('covid_general', covid_general, request.user)
+        set_pref('header', header, request.user)
 
     except Exception as e:
         print('%s (%s)' % (e, type(e))) # TODO gestire errore
@@ -159,4 +120,25 @@ def prefs_save(request):
 
 
 def get_fee(value):
-    return float(value.replace(",", "."))
+    try:
+        return float(str(value).replace(",", "."))
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def to_int(value, default=0):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def set_pref(key, value, user):
+    """
+    Aggiorna o crea la preferenza evitando errori in caso di duplicati o chiavi mancanti.
+    """
+    pref = Pref.objects.filter(key=key).first()
+    if pref is None:
+        pref = Pref(key=key)
+    pref.value = value
+    pref.save(user)

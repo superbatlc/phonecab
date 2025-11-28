@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlencode
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
@@ -33,8 +33,7 @@ def audit_home(request):
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'audits/home.html', variables)
+    return render(request, 'audits/home.html', variables)
 
 
 def audit_items(request):
@@ -126,8 +125,7 @@ def audit_items(request):
     variables['d'] = d
 
     if request.is_ajax():
-        return render_to_response(
-            'audits/table.html', variables)
+        return render(request, 'audits/table.html', variables)
 
     return render_to_string(
         'audits/table.html', variables, request=request)

@@ -11,7 +11,7 @@ class Audit(models.Model):
     Consente di registrare tutte le azioni che vengono compiute
     """
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     when = models.DateTimeField(auto_now_add=True)
     what = models.TextField()
     params = models.CharField(max_length=255)

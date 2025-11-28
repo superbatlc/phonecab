@@ -15,6 +15,7 @@ services:
     image: mysql:8.0
     platform: linux/arm64
     container_name: phonecab_database
+    restart: always
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -44,6 +45,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     image: restart/phonecab:${BE_IMAGE_VERSION:-3.8}
+    restart: always
     depends_on:
       database:
         condition: service_healthy
@@ -58,8 +60,10 @@ services:
       - DEBUG=${DEBUG:-true}
       - DJANGO_PORT=${DJANGO_PORT:-8001}
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - FLASK_ASTERISK_BRIDGE_URL=${FLASK_ASTERISK_BRIDGE_URL}
     volumes:
-      - data:/phonecab
+      - .:/phonecab 
+      - /var/spool/asterisk/monitor:/var/spool/asterisk/monitor
     tty: true
     stdin_open: true
     networks:

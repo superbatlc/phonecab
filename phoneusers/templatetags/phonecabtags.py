@@ -36,16 +36,16 @@ def calltype(value, lawyer):
 @register.filter
 @stringfilter
 def format_time(value):
-    value = int(value)
+    value = float(value)
 
-    minutes = value / 60
-    seconds = value % 60
+    minutes = int(value // 60)
+    seconds = int(round(value % 60))
 
     ret = ''
 
     if minutes:
         ret = "%sm " % minutes
-    if seconds:
+    if seconds or not ret:
         ret += "%ss" % seconds
 
     return ret

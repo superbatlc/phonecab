@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.views.generic import View
 
 
@@ -12,10 +13,11 @@ class PhonecabHomeView(View):
 
     def get(self, request):
         d = request.GET.dict()
+        variables = {}
         variables['items'] = self.get_objects(request)
         variables['d'] = d
 
-        return render_to_response(
+        return render(request,
             self.template, variables)
 
 

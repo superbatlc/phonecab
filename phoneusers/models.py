@@ -108,7 +108,7 @@ class Whitelist(models.Model):
         (SPECIAL_KIND, 'Primo ingresso'),
     )
 
-    phoneuser = models.ForeignKey(PhoneUser)
+    phoneuser = models.ForeignKey(PhoneUser, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, verbose_name="etichetta")
     phonenumber = models.CharField(max_length=40, verbose_name="telefono")
     duration = models.IntegerField(verbose_name="durata massima", default=600)
@@ -144,7 +144,7 @@ class Credit(models.Model):
 
     Modella le ricariche effettuate dal phoneuser
     """
-    phoneuser = models.ForeignKey(PhoneUser)
+    phoneuser = models.ForeignKey(PhoneUser, on_delete=models.CASCADE)
     recharge = models.DecimalField(
         verbose_name="ricarica", default=0, max_digits=5, decimal_places=2)
     recharge_date = models.DateTimeField(default=datetime.datetime.now)

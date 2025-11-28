@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlencode
 from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext
@@ -16,10 +16,6 @@ from acls.models import Acl
 from prefs.models import Pref, Extension
 from records.models import Record
 from helper.Helper import Helper
-
-
-
-
 
 @login_required
 def cdr_home(request):
@@ -40,8 +36,7 @@ def cdr_home(request):
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'cdrs/home.html', variables)
+    return render(request, 'cdrs/home.html', variables)
 
 def cdr_items(request):
     """CDR Items"""
@@ -159,8 +154,7 @@ def cdr_items(request):
     variables['d'] = d
 
     if request.is_ajax():
-        return render_to_response(
-            'cdrs/table.html', variables)
+        return render(request, 'cdrs/table.html', variables)
 
     return render_to_string(
         'cdrs/table.html', variables, request=request)
@@ -248,6 +242,7 @@ def cdr_export_excel(request):
     sheet.write(0, 8, "Registrazione", style=default_style)
     sheet.write(0, 9, "Durata", style=default_style)
     sheet.write(0, 10, "Costo", style=default_style)
+
 
     for row, rowdata in enumerate(details):
         try:

@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 from .views import *
 
 urlpatterns = [
-   url(r'^audits/$', audit_home),
-   url(r'^audits/data/$', audit_items),
-   #url(r'^audits/export/excel/$', audit_export_excel),
+   re_path(r'^audits/$', audit_home),
+   re_path(r'^audits/data/$', audit_items),
+   #re_path(r'^audits/export/excel/$', audit_export_excel),
 ]

@@ -10,11 +10,11 @@ from audits.models import Audit
 
 
 def phonecab_login(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('/phonecab/')
 
     print("Entering phonecab_login...")
-    
+
     if request.POST:
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -52,12 +52,13 @@ def phonecab_login(request):
 
 
 def phonecab_logout(request):
-    user = request.user
+    # catturiamo l'utente prima di invalidare la sessione, altrimenti diventa AnonymousUser
+    user = request.user if request.user.is_authenticated else None
+    if user:
+        audit = Audit()
+        what = "Uscita dal sistema (logout)"
+        audit.log(user=user, what=what)
     logout(request)
-    # logghiamo accesso
-    audit = Audit()
-    what = "Uscita dal sistema (logout)"
-    audit.log(user=user, what=what)
     return redirect('/')
 
 
@@ -79,16 +80,21 @@ def phonecab_get_nightmode(request):
 def phonecab_set_nightmode(request, mode):
     """Modifica manualmente la modalita giorno notte"""
     import os
+    import requests
 
     cmd = "/etc/asterisk/notte.sh"
 
-    if mode == '0':
-        cmd = "/etc/asterisk/giorno.sh"
+    #if mode == '0':
+    #    cmd = "/etc/asterisk/giorno.sh"
 
     if settings.USE_SUDO:
         cmd = "sudo %s" % cmd
+
+    base = settings.REMOTE_TOOLS_SERVER
     try:
-        ret = os.system(cmd)
+        resp = requests.post(f'{base}/set_nightmode', json={'mode': mode}).json()
+        ret = resp['ret']
+        # ret = os.system(cmd)
         return HttpResponse(status=200,
                             content=json.dumps({'ret': ret}),
                             content_type="application/json")

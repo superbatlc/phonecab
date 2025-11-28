@@ -12,3 +12,4 @@ python3 manage.py collectstatic --noinput --clear
 
 echo "Starting server..."
 exec python3 manage.py runserver 0.0.0.0:8001
+# exec gunicorn --bind 0.0.0.0:8001 --workers 3 --threads 2 phonecab.wsgi

@@ -34,7 +34,7 @@
                     {% if covid_general == "1" %}checked="checked"{% endif %}
                     name="covid_general"
                     type="checkbox"
-                    value="0">
+                    value="1">
                     <strong>Consente la realizzazione di una chiamata al giorno laddove indicato nella scheda detenuto</strong>
                 </label>
               </div>
@@ -205,7 +205,7 @@
                     name="ordinary_lawyer"
                     type="checkbox"
                     value="1">
-                    Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini. (circolare n° GDAP-0177644-2010 del 28/04/2010)
+                    Le chiamate verso i difensori sono equiparate a quelle verso parenti e affini. (circolare nÂ° GDAP-0177644-2010 del 28/04/2010)
                 </label>
               </div>
             </div>
@@ -221,7 +221,7 @@
                     {% if lawyer_call_limit == "1" %}checked="checked"{% endif %}
                     name="lawyer_call_limit"
                     type="checkbox"
-                    value="0">
+                    value="1">
                     <strong>1 chiamata al giorno per utenza</strong>
                 </label>
               </div>
@@ -340,7 +340,7 @@ if (category == fare) continue;
 var prefixes = $('[data-category=\'' + fare + '\']').val();
 if (!!prefixes.match(match)) {
 target.tagsinput('remove', prefix);
-showMessageBox("Errore", "Il prefisso è già presente nella direttrice '" + fare + "'", "alert-danger");
+showMessageBox("Errore", "Il prefisso Ã¨ giÃ  presente nella direttrice '" + fare + "'", "alert-danger");
 return;
 }
 }

@@ -3,8 +3,8 @@ var Config = {
   ami : {
       loopInterval : 3000,
       url : '/asterisk/mxml',
-      username : 'username',
-      secret : 'secret',
+      username : 'phonecab3',
+      secret : 'ph0n3c@b',
   },
   logs : {
       loopInterval : 5000,

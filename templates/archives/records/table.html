@@ -31,7 +31,7 @@
                 <td>{{ item.whitelist.label|default:"Numero sconosciuto" }}</td>
                 <td class="acentro">
                     {% if item.filename != '' %}
-                    <a href="{{item.filename}}" target="_blank"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>
+                    <a href="{{ item.filename }}" target="_blank" class="recording-download" data-url="{{ item.filename }}"><i class="zmdi zmdi-headset zmdi-hc-2x"></i></a>
                     {% else %}
                     -
                     {% endif %}

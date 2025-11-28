@@ -8,7 +8,6 @@ import os
 PROJECT_DIR = Path(__file__).ancestor(2)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 # Ubuntu installation need sudo to prefix root commands. Centos one do not.
 USE_SUDO = False
@@ -43,14 +42,17 @@ ALLOWED_HOSTS = ['*', '127.0.0.1']
 
 # APP SETTINGS
 # Numero elementi per pagina
-ITEMS_PER_PAGE = 5
+ITEMS_PER_PAGE = 15
 
 # percorso file audio
 RECORDS_ROOT = '/var/spool/asterisk/monitor'
 TMP_ZIP_ROOT = '/tmp/'
 
 FILESYSTEM = '/dev/sda1'
-EXT_FILESYSTEM = '/dev/sdb1'
+EXT_FILESYSTEM = '/var/spool/asterisk/monitor/'
+
+# Flask asterisk microservice
+REMOTE_TOOLS_SERVER = os.getenv("FLASK_ASTERISK_BRIDGE_URL")
 
 # Chiusura sessione alla chiusura del browser
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -96,14 +98,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'dr-a*1et&hso645hjua&0(plo6v=cpn9ve3gerdg9ydmpk0hxt'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    #     'django.template.loaders.eggs.Loader',
-)
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
@@ -111,7 +106,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 ROOT_URLCONF = 'phonecab.urls'
 
@@ -133,11 +128,8 @@ TEMPLATES = [
     },
 ]
 
-# Keep the old setting for backwards compatibility with very old Django
-
-TEMPLATE_DIRS = [
-    PROJECT_DIR.child("templates"),
-]
+# Default AutoField for Django 3.2+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -156,8 +148,10 @@ INSTALLED_APPS = (
     'records',
     'audits',
     'prefs',
+    'profiles',
     'archives',
     'logs',
+    'tools',
 )
 
 

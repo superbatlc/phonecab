@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.db.models import Q
@@ -25,8 +25,7 @@ def profile_home(request):
     variables['profiles'] = profile_items(request)
     variables['d'] = d
 
-    return render_to_response(
-        'profiles/home.html', variables)
+    return render(request, 'profiles/home.html', variables)
 
 def profile_items(request):
     """Phoneuser Items Table"""
@@ -88,8 +87,7 @@ def profile_items(request):
     variables['d'] = d
 
     if request.is_ajax():
-        return render_to_response(
-            'profiles/table.html', variables)
+        return render(request, 'profiles/table.html', variables)
 
     return render_to_string(
         'profiles/table.html', variables, request=request)
@@ -107,7 +105,7 @@ def profile_edit(request):
         except ObjectDoesNotExist:
             raise Http404
 
-    return render_to_response('profiles/profile.html', variables)
+    return render(request, 'profiles/profile.html', variables)
 
 @login_required
 def profile_save(request):

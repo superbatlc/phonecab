@@ -49,6 +49,9 @@
                 <label>Destinazione:</label>
                 <input name="dst" type="text" value="{{ d.dst }}" maxlength="10" size="10">
             </span>
+            {% if d.archived_phoneuser_id %}
+            <input type="hidden" name="archived_phoneuser_id" value="{{ d.archived_phoneuser_id }}">
+            {% endif %}
                         </form>
                     <div style="clear:both;"></div>
       </div>
@@ -57,4 +60,5 @@
             <div class="log-records">{{ records }}</div>
 {% endblock application %}
 {% block script %}
+<script src="{% static "js/records.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock script %}

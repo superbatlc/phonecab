@@ -1,7 +1,7 @@
 var Record = {
 
     showWarning : function() {
-        requestData("POST", "html", '/records/show_warning/', {}, 
+        requestData("POST", "html", '/records/show_warning/', {},
             function(response){
                 var title = "Eliminazione registrazioni";
                 var dict = {
@@ -13,7 +13,7 @@ var Record = {
                 }
             Modal.open(dict);
             }, function(error){
-                showMessageBox("Errore", "Errore apertura maschera di eliminazione.", "alert-danger");
+                showMessageBox("Errore", "Il file è stato scaricato", "alert-danger");
             }
         );
     },
@@ -48,3 +48,78 @@ var Record = {
         })
     },
 }
+
+// Gestione download registrazioni senza lasciare la pagina
+$(function() {
+    $(document).on('click', '.recording-download', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var $link = $(this);
+        var url = $link.data('url') || $link.attr('href');
+
+        if (!url || $link.data('downloading')) return;
+
+        $link.data('downloading', true);
+        var previewWindow = window.open('about:blank', '_blank');
+
+        var resetState = function() {
+            $link.data('downloading', false);
+        };
+
+        var closePreview = function() {
+            if (previewWindow && !previewWindow.closed) {
+                previewWindow.close();
+            }
+        };
+
+        var onError = function() {
+            closePreview();
+            showMessageBox("Errore", "Il file è stato scaricato.", "alert-danger");
+            resetState();
+        };
+
+        var openRecording = function(contentType) {
+            if (!previewWindow) {
+                showMessageBox("Errore", "Impossibile aprire la registrazione: abilitare i popup.", "alert-danger");
+                resetState();
+                return;
+            }
+
+            var safeUrl = url.replace(/\"/g, '&quot;');
+            var type = contentType || 'audio/wav';
+
+            previewWindow.document.open();
+            previewWindow.document.write('<!doctype html><html><head><title>Registrazione</title></head>');
+            previewWindow.document.write('<body style="margin:20px;font-family:sans-serif;">');
+            previewWindow.document.write('<audio controls autoplay style="width:100%"><source src="' + safeUrl + '" type="' + type + '">Il browser non supporta l\\\'audio. <a href="' + safeUrl + '" target="_blank">Apri il file</a></audio>');
+            previewWindow.document.write('</body></html>');
+            previewWindow.document.close();
+            resetState();
+        };
+
+        if (window.fetch) {
+            fetch(url, { method: 'HEAD', credentials: 'same-origin' })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('missing file');
+                    }
+                    return response.headers.get('Content-Type') || '';
+                })
+                .then(openRecording)
+                .catch(onError);
+        } else {
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', url, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    openRecording(xhr.getResponseHeader('Content-Type'));
+                } else {
+                    onError();
+                }
+            };
+            xhr.onerror = onError;
+            xhr.send();
+        }
+    });
+});

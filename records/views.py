@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlencode
 from django.http import Http404, HttpResponse
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.template import RequestContext
@@ -38,8 +38,7 @@ def record_home(request):
     variables['data_inizio_cal'] = data_inizio_cal
     variables['data_fine_cal'] = data_fine_cal
 
-    return render_to_response(
-        'records/home.html', variables)
+    return render(request, 'records/home.html', variables)
 
 @login_required
 def record_items(request):
@@ -161,8 +160,7 @@ def record_items(request):
     variables['query_string'] = urlencode(d)
 
     if request.is_ajax():
-        return render_to_response(
-            'records/table.html', variables)
+        return render(request, 'records/table.html', variables)
 
     return render_to_string(
         'records/table.html', variables, request=request)
@@ -283,8 +281,7 @@ def _multi_record_export_as_zip_file(request): #TODO VERIFICARE
     return response
 
 def record_show_warning(request):
-    return render_to_response('records/show_warning.html',
-        {})
+    return render(request, 'records/show_warning.html', {})
 
 
 def _single_record_remove(request, record_id):
@@ -349,18 +346,20 @@ def _multi_record_remove(request):
 
         try:
             os.remove(path)
-            item.delete()
-            # logghiamo azione
-            audit = Audit()
-            detail = Helper.get_filter_detail(d)
-            if detail == '':
-                detail = 'Tutte le registrazioni'
-            what = "Eliminazione registrazioni corrispondenti ai seguenti criteri: %s" \
-                                    % (detail)
-            audit.log(user=request.user, what=what)
-
+        except FileNotFoundError:
+            # se il file non esiste piu', continuiamo comunque con la cancellazione dal db
+            pass
         except Exception as e:
             return HttpResponse(status=400, content=json.dumps({'err_msg': format(e)}), content_type='application/json')
 
-    return HttpResponse(status=200)
+        item.delete()
+        # logghiamo azione
+        audit = Audit()
+        detail = Helper.get_filter_detail(d)
+        if detail == '':
+            detail = 'Tutte le registrazioni'
+        what = "Eliminazione registrazioni corrispondenti ai seguenti criteri: %s" \
+                                % (detail)
+        audit.log(user=request.user, what=what)
 
+    return HttpResponse(status=200)
