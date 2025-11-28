@@ -68,3 +68,5 @@ docs/_build/
 
 # PyBuilder
 target/
+db.sqlite3
+phonecab_sanremo_191125.sql.gz
